@@ -4,8 +4,12 @@ set -eu
 TASK_VM=${1:-root@192.168.114.210}
 TASK_ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 TASK_IDLE_SECONDS=${IDLE_SECONDS:-300}
+# A failed early suite must not inherit later-suite PASS files from an old run.
+if [ -d "$TASK_ROOT/reports/repeat" ]; then
+	mv "$TASK_ROOT/reports/repeat" "$TASK_ROOT/reports/repeat-$(date +%s)"
+fi
 scp -O "$TASK_ROOT/scripts/lab.sh" "$TASK_ROOT/scripts/integration.py" "$TASK_ROOT/scripts/extended.py" "$TASK_ROOT/scripts/lifecycle.py" "$TASK_ROOT/scripts/soak.py" "$TASK_VM:/tmp/"
-ssh "$TASK_VM" 'mkdir -p /root/upnp-test-results; /tmp/lab.sh setup'
+ssh "$TASK_VM" 'if [ -d /root/upnp-test-results ]; then mv /root/upnp-test-results "/root/upnp-test-results-$(date +%s)"; fi; mkdir /root/upnp-test-results; /tmp/lab.sh setup'
 restore_lab() {
 	TASK_STATUS=$?
 	trap - EXIT HUP INT TERM

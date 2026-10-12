@@ -90,7 +90,7 @@ fw4 在装载新规则和租约恢复之间有短暂窗口。删除/过期测试
 IDLE_SECONDS=3600 ./scripts/run-vm-tests.sh root@192.168.114.210
 ```
 
-默认包括快速主回归、UCI 开关及同名 WAN 重建测试、需要等待真实 120 秒 PCP 租约的扩展测试，以及并发负载后的 300 秒空闲监测。测试在 VM `/root/upnp-test-results/` 留下原始证据，主机收集到 `reports/repeat/`。中断后可执行 `ssh root@192.168.114.210 /tmp/lab.sh cleanup`。拓扑配置备份在 VM `/root/upnp-lab-backup-*`。
+默认包括快速主回归、UCI 开关及同名 WAN 重建测试、需要等待真实 120 秒 PCP 租约的扩展测试，以及并发负载后的 300 秒空闲监测。测试在 VM `/root/upnp-test-results/` 留下原始证据，主机收集到 `reports/repeat/`。中断后可执行 `ssh root@192.168.114.210 /tmp/lab.sh cleanup`。拓扑配置备份在 VM `/root/upnp-lab-backup-*`。再次运行会先归档旧结果到 `reports/repeat-时间戳` 和 VM `/root/upnp-test-results-时间戳`，失败时不会混入上次后续测试的 PASS 文件。
 
 首次获取 Python 等测试依赖应使用与系统 ABI 兼容的 23.05 软件源，核对下载 SHA256；测试机原来的 vsean SNAPSHOT 镜像已不可访问，不要为此升级整个系统或强装不同内核的 kmod。
 

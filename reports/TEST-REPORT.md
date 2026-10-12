@@ -42,7 +42,7 @@ WAN IPv4 类别覆盖公网、RFC1918、CGNAT、benchmark 单播；IPv6 使用 U
 - LuCI 关闭服务后 procd 的 UCI 触发器也被删除，重新勾选启用不会启动。禁用状态改为保留没有运行实例的 procd 服务与配置触发器，真实浏览器关闭/启用通过；生命周期回归改为直接发配置事件，不再用手动 reload 掩盖这个路径。
 - 初次 LuCI 包目录层级不对，修正安装到 `/www/luci-static/` 后真实浏览器验证。
 
-`first/second/third/fourth-functional-attempt.txt`、`lifecycle-first.json` 和首次 reboot 记录保留失败过程。`luci-browser-first/second-attempt.txt` 保留浏览器等待与导航的问题，`luci-browser-third-attempt.txt` 记录上述真实触发器缺陷，最终 `luci-browser.json` 为实际通过结果。部分初始失败来自测试脚本的等待窗口、Linux down 后自动删除 IPv6 地址、字符串格式或日志环形缓冲比较；这些与上列实际产品缺陷分别处理。额外保留 `after-reboot-attempt/`：开机后立即运行时，日志显示 23:38:45 的 WAN6 初次 ifup 触发 fw4 reload，与第一批映射请求重叠；一次 PCP 转发失败后，未清理测试条目导致后续断言连带失败。再次运行未复现。由日志推断与启动阶段 fw4 规则空窗相关，不能把该次结果标为通过；实验脚本现先等待 VM WAN/WAN6 的 pending 协议初始化结束。
+`first/second/third/fourth-functional-attempt.txt`、`lifecycle-first.json` 和首次 reboot 记录保留失败过程。`luci-browser-first/second-attempt.txt` 保留浏览器等待与导航的问题，`luci-browser-third-attempt.txt` 记录上述真实触发器缺陷，最终 `luci-browser.json` 为实际通过结果。部分初始失败来自测试脚本的等待窗口、Linux down 后自动删除 IPv6 地址、字符串格式或日志环形缓冲比较；这些与上列实际产品缺陷分别处理。额外保留 `after-reboot-attempt/`（该次只执行了主回归；后续组未运行，不沿用以前的 PASS 文件）：开机后立即运行时，日志显示 23:38:45 的 WAN6 初次 ifup 触发 fw4 reload，与第一批映射请求重叠；一次 PCP 转发失败后，未清理测试条目导致后续断言连带失败。再次运行未复现。由日志推断与启动阶段 fw4 规则空窗相关，不能把该次结果标为通过；实验脚本现先等待 VM WAN/WAN6 的 pending 协议初始化结束。
 
 最终通过状态以 `repeat/`、`reboot-final.txt` 和最终浏览器结果为准。
 
