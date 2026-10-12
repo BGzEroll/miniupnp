@@ -2,7 +2,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=luci-app-upnp
 PKG_VERSION:=23.05-custom
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_LICENSE:=Apache-2.0
 PKG_BUILD_DEPENDS:=luci-base/host
 include $(INCLUDE_DIR)/package.mk

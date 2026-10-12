@@ -55,7 +55,7 @@ uci commit upnpd
 | `external_iface` / `external_iface6` | `wan` / `wan6`，OpenWrt 逻辑接口 |
 | `internal_iface` | `lan`，可配置多个逻辑 LAN 接口 |
 | `log_output` | `0`；开启时增加 INFO 请求日志，不全局屏蔽 syslog/stderr |
-| `upnp_lease_file` / `upnp_lease_file6` | `/etc/miniupnpd/leases` / `/etc/miniupnpd/leases6`，跨重启保存 |
+| `upnp_lease_file` / `upnp_lease_file6` | `/var/run/miniupnpd.leases` / `/var/run/miniupnpd.leases6`，服务重启可恢复，系统重启后清空 |
 
 `perm_rule` 保留旧 IPv4 ACL 格式，默认仅允许 1024–65535 内外端口。IPv6 使用同一请求者、可路由 LAN 地址、TCP/UDP、非特权端口等检查；旧 IPv4 地址 ACL **不扩展解释为 IPv6 ACL**。服务不对外网可达性作承诺，只操作本机 NAT/防火墙。有效时间依赖系统时钟正确；无法凭租约文件证明断电前尚未写入的数据。
 
@@ -77,7 +77,7 @@ uci commit upnpd
 
 fw4 在装载新规则和租约恢复之间有短暂窗口。删除/过期测试检查的是**新连接**；已有 conntrack 会话遵循 fw4 的正常连接跟踪行为。网络断线恢复允许邻居发现收敛，测试采用 5 秒的恢复上限。
 
-租约每次实际变更写入持久路径；IPv6 清理仅在确实有过期规则时改写文件，空闲不会持续写文件。大量映射变更会增加 Flash 写入；本次 VM 数据不能代表 360T7 Flash 寿命。可以改用 `/var/run` 路径减少持久写入，但系统重启会失去租约。
+租约沿用上游 `/var/run` 临时文件路径，默认不写 Flash。服务 restart、stop/start 和 fw4 reload 可恢复尚未过期的租约；系统重启后租约文件清空，由客户端重新申请。IPv6 清理仅在确实有过期规则时改写文件。
 
 ## 重复测试
 
@@ -94,7 +94,7 @@ IDLE_SECONDS=3600 ./scripts/run-vm-tests.sh root@192.168.114.210
 
 首次获取 Python 等测试依赖应使用与系统 ABI 兼容的 23.05 软件源，核对下载 SHA256；测试机原来的 vsean SNAPSHOT 镜像已不可访问，不要为此升级整个系统或强装不同内核的 kmod。
 
-`scripts/upstream-tests.sh` 使用相同 SDK 和补丁构建并运行上游权限、接口地址、SSDP 和 HTTP 测试。`scripts/boot-smoke.sh` 需复制到 VM 的 `/root/`，依次执行 `setup`、重启 VM、`check`、`cleanup`，在不接物理端口的虚拟 LAN 上检查跨系统重启的双栈租约恢复。必须先确认 `check` 成功再执行清理。
+`scripts/upstream-tests.sh` 使用相同 SDK 和补丁构建并运行上游权限、接口地址、SSDP 和 HTTP 测试。`scripts/boot-smoke.sh` 需复制到 VM 的 `/root/`，依次执行 `setup`、重启 VM、`check`、`cleanup`，在不接物理端口的虚拟 LAN 上检查系统重启后服务自动启动且临时租约不恢复。必须先确认 `check` 成功再执行清理。
 
 `scripts/run-luci-test.sh` 自动建立隔离实验和浏览器测试映射，再调用 `scripts/luci-browser.py`。主机需安装 Playwright/Chromium，可通过 `BROWSER_PYTHON` 指定已安装 Playwright 的 Python。检查双栈列表、删除和“保存并应用”的启用/关闭操作，结果写入 `reports/luci-browser.json`；结束自动恢复实验配置。设置 `BROWSER_LOCALE=zh-CN` 可验证简体中文词条及菜单；主机需有中文字体才能生成正常的中文截图。`python3 scripts/check-translations.py` 检查页面与菜单的完整翻译覆盖。
 

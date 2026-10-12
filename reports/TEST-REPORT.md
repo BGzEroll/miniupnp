@@ -22,7 +22,7 @@ MiniUPnP 固定在 `f8c4f4c3320820e615b281147b3043f66c195f17`，包含 2.3.11 �
 | 生命周期，8 项 | `repeat/lifecycle.json`：同名 WAN 新 ifindex、仅 link-local 的 WAN6 路由、UCI 总开关/协议开关/IPv6 开关、禁用 secure_mode 后的非法目标拒绝、LAN IPv6 前缀淘汰 |
 | 扩展，9 项 | `repeat/extended.json`：PCP nonce 跨恢复保留、WAN6 ULA 前缀变化后实际转发、RemoteHost 限制、续期保持其他 IPv6 ID、长 IPv6 租约行恢复/续期/删除、多客户端并发、真实 NAT-PMP 和 PCP 到期、反复缺址无日志洪泛 |
 | 负载与空闲 | `repeat/soak.json` / `.stdout`：两个客户端 320 次双栈 TCP/UDP PCP 创建/删除；随后 300 秒空闲，前半无 WAN IPv4、后半双栈，记录 RSS/CPU/FD/规则/PID/日志 |
-| 系统冷启动 | `reboot-final.txt`：boot ID 改变、procd 自动运行、有效 IPv4 租约和 IPv6 ID 1234 恢复；测试目标仅在空虚拟 LAN 上，不向真实 LAN 添加映射 |
+| 系统冷启动（旧持久路径配置） | `reboot-final.txt`：boot ID 改变、procd 自动运行、有效 IPv4 租约和 IPv6 ID 1234 恢复；测试目标仅在空虚拟 LAN 上，不向真实 LAN 添加映射 |
 | 上游测试 | `upstream-tests-final.log`：权限解析、接口地址、SSDP 报文生成、HTTP GET/1 MiB POST/超限 header 拒绝；使用相同源码和补丁交叉编译，在 VM 执行 |
 | LuCI 浏览器 | `luci-browser.json` / `luci.png`：真实 Chromium 页面、双栈列表、删除对应实际规则、删除保留 PID、总开关保存并应用、JavaScript 错误采集 |
 | 构建与脚本 | `rebuild.log`、`reproducible-build.txt`、`shellcheck.txt`：最终 IPK 重复构建 SHA256 一致，补丁可应用，Python 语法检查、ShellCheck dash 检查通过 |
@@ -56,7 +56,7 @@ SDK 构建日志仍包含 SDK 元数据的 bool/tristate 重定义提示及上�
 
 IPv6 Pinhole 没有 IPv4 NAT 外部端口概念，LuCI 显示为横线；主机名称未解析时如实显示 Unknown。nft comment 最长 127 字节，较长描述在规则/查询/界面中可能截断。PCP nonce 不在界面展示。旧 IPv4 ACL 不自动变成 IPv6 ACL。
 
-映射删除后测试新连接关闭；已有 conntrack 会话沿用系统正常语义。租约依赖正确时钟，持久化路径实际变更会写 Flash；空闲 IPv6 过期扫描不会反复改写文件。fw4 reload 与恢复信号之间存在短暂规则空窗。
+映射删除后测试新连接关闭；已有 conntrack 会话沿用系统正常语义。租约依赖正确时钟；旧 /etc 持久化配置实际变更会写 Flash，当前默认 /var 路径不写 Flash；空闲 IPv6 过期扫描不会反复改写文件。fw4 reload 与恢复信号之间存在短暂规则空窗。
 
 尚未验证：aarch64/360T7 构建与刷机、固件 CI、真实 Windows/Apple/Xbox 等客户端、多天连续运行、Flash 寿命、目标硬件 offload/fullcone 与其他代理组件组合。协议支持结论来自报文与数据平面测试，不等同于所有消费设备互操作认证。
 
@@ -69,3 +69,9 @@ IPv6 Pinhole 没有 IPv4 NAT 外部端口概念，LuCI 显示为横线；主机�
 此前仅验证英文页面，漏打包 UPnP 中文词典，导致共用词条为中文、应用词条仍为英文。LuCI 包升级为 23.05-custom-2，编译并安装标准 upnp.zh-cn.lmo，沿用固定 23.05 的 PO 词条并补齐新开关和菜单。47 个页面/菜单词条覆盖通过，zh-CN 浏览器的列表、删除、关闭/再启用和 JavaScript 检查通过，截图为 luci-zh.png、luci-zh-advanced.png。中文截图的主机浏览器使用 Noto CJK 字体，路由器未安装字体。
 
 仅 LuCI 数据包变化，MiniUPnPd IPK SHA256 与原 45 项回归版本完全一致。更新中文包的干净重建校验通过，见 reproducible-i18n-build.txt。规则命名对照见 nft-format.md。
+
+## 2026-10-13 恢复上游临时租约路径
+
+按用户要求，默认配置、init 回退值、LuCI 提示和测试机 UCI 改为 /var/run/miniupnpd.leases 与 /var/run/miniupnpd.leases6。服务重启及 fw4 reload 仍能恢复有效租约，系统重启不再保留租约。先前 reboot-final.txt 的跨系统恢复结果属于旧 /etc 配置，不能用于描述新默认策略。boot-smoke.sh 的预期已改为服务启动、旧临时租约消失；本次路径修改未再次重启 VM。
+
+本次两个包实际构建并升级测试机通过，var-lease-install.txt 确认运行配置使用上述 /var/run 路径。daemon ELF 校验值与原回归版本一致；boot-smoke.sh 只调整预期，没有把未执行的新 reboot 检查标为通过。

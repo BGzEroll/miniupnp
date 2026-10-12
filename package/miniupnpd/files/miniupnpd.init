@@ -66,8 +66,8 @@ generate_config() {
 		# A physical device may be down or lack either address family.
 		[ -n "$ifname" ] || return 0
 		config_get port config port 5000
-		config_get lease4 config upnp_lease_file /var/lib/miniupnpd/leases
-		config_get lease6 config upnp_lease_file6 /var/lib/miniupnpd/leases6
+		config_get lease4 config upnp_lease_file /var/run/miniupnpd.leases
+		config_get lease6 config upnp_lease_file6 /var/run/miniupnpd.leases6
 		config_get uuid config uuid
 		if [ -z "$uuid" ]; then
 			uuid=$(cat /proc/sys/kernel/random/uuid)

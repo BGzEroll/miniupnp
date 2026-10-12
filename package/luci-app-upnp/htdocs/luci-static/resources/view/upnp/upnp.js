@@ -127,7 +127,7 @@ return view.extend({
 		o = s.taboption('general', form.Flag, 'ipv6_disable', _('Disable IPv6 pinholes'));
 	o.default = '0';
 	o.rmempty = false;
-	s.taboption('advanced', form.Value, 'upnp_lease_file6', _('IPv6 lease file')).placeholder = '/etc/miniupnpd/leases6';
+	s.taboption('advanced', form.Value, 'upnp_lease_file6', _('IPv6 lease file')).placeholder = '/var/run/miniupnpd.leases6';
 
 	s.taboption('general', form.Flag, 'secure_mode', _('Enable secure mode'),
 			_('Allow adding forwards only to requesting ip addresses')).default = '1'
@@ -162,7 +162,7 @@ return view.extend({
 		o.placeholder = 'http://192.168.1.1/'
 
 		o = s.taboption('advanced', form.Value, 'upnp_lease_file', _('UPnP lease file'))
-		o.placeholder = '/etc/miniupnpd/leases'
+		o.placeholder = '/var/run/miniupnpd.leases'
 
 		s = m.section(form.GridSection, 'perm_rule', _('MiniUPnP ACLs'),
 			_('ACLs specify which external ports may be redirected to which internal addresses and ports'))
