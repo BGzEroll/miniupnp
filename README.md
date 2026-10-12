@@ -3,7 +3,7 @@
 面向 Linux、fw4/nftables，默认 IGDv2、IPv6、NAT-PMP/PCP 同时工作，私有 IPv4 和 CGNAT 不作为本级映射的拒绝条件。保留 23.05 的 `upnpd.config`、`perm_rule` 和 LuCI 页面交互。当前交付 x86_64；aarch64、360T7 和固件 CI 未实施。
 
 - `package/miniupnpd/`：固定上游源码、OpenWrt 包、procd/hotplug/fw4 集成及四组补丁。
-- `package/luci-app-upnp/`：23.05 页面，读取真实 nft JSON、展示 IPv6 Pinhole，通过 root 专用控制接口删除实际映射。
+- `package/luci-app-upnp/`：23.05 页面，内置标准简体中文 LMO 翻译，读取真实 nft JSON、展示 IPv6 Pinhole，通过 root 专用控制接口删除实际映射。
 - `scripts/`：构建、隔离拓扑、协议与数据转发测试、扩展测试及资源监测。
 - `sources.json`、`reports/upstream.md`：源码锁定及选用理由。
 - `reports/`：实际通过/失败记录、日志、规则和浏览器证据。
@@ -96,7 +96,7 @@ IDLE_SECONDS=3600 ./scripts/run-vm-tests.sh root@192.168.114.210
 
 `scripts/upstream-tests.sh` 使用相同 SDK 和补丁构建并运行上游权限、接口地址、SSDP 和 HTTP 测试。`scripts/boot-smoke.sh` 需复制到 VM 的 `/root/`，依次执行 `setup`、重启 VM、`check`、`cleanup`，在不接物理端口的虚拟 LAN 上检查跨系统重启的双栈租约恢复。必须先确认 `check` 成功再执行清理。
 
-`scripts/run-luci-test.sh` 自动建立隔离实验和浏览器测试映射，再调用 `scripts/luci-browser.py`。主机需安装 Playwright/Chromium，可通过 `BROWSER_PYTHON` 指定已安装 Playwright 的 Python。检查双栈列表、删除和“保存并应用”的启用/关闭操作，结果写入 `reports/luci-browser.json`；结束自动恢复实验配置。
+`scripts/run-luci-test.sh` 自动建立隔离实验和浏览器测试映射，再调用 `scripts/luci-browser.py`。主机需安装 Playwright/Chromium，可通过 `BROWSER_PYTHON` 指定已安装 Playwright 的 Python。检查双栈列表、删除和“保存并应用”的启用/关闭操作，结果写入 `reports/luci-browser.json`；结束自动恢复实验配置。设置 `BROWSER_LOCALE=zh-CN` 可验证简体中文词条及菜单；主机需有中文字体才能生成正常的中文截图。`python3 scripts/check-translations.py` 检查页面与菜单的完整翻译覆盖。
 
 ## 回滚
 

@@ -24,8 +24,11 @@ mkdir -p "$TASK_SDK/package/libs"
 cp -a "$TASK_CORE/package/libs/libmnl" "$TASK_CORE/package/libs/libnftnl" "$TASK_SDK/package/libs/"
 cat > "$TASK_SDK/feeds.conf.default" <<'EOT'
 src-git packages https://github.com/immortalwrt/packages.git^9d567f8ed5f99833e4bffe734e047d0a01b57ce5
+src-git luci https://github.com/immortalwrt/luci.git^d4189db0d76c02e24087298327ec40a59fcfb2aa
 EOT
-(cd "$TASK_SDK" && ./scripts/feeds update packages && ./scripts/feeds install libcap-ng)
+(cd "$TASK_SDK" && ./scripts/feeds update packages luci && ./scripts/feeds install libcap-ng luci-base)
+# Build LuCI's standard PO compiler on the host; do not install/upgrade luci-base on the VM.
+(cd "$TASK_SDK/feeds/luci/modules/luci-base" && make TOPDIR="$TASK_SDK" HOST_BUILD_PREFIX="$TASK_SDK/staging_dir/hostpkg" host-compile host-install V=s)
 for package in miniupnpd luci-app-upnp; do
 	if [ -e "$TASK_SDK/package/$package" ] || [ -L "$TASK_SDK/package/$package" ]; then
 		[ "$(readlink "$TASK_SDK/package/$package")" = "$TASK_ROOT/package/$package" ] || { echo "Package path already occupied: $package" >&2; exit 1; }
@@ -50,6 +53,9 @@ EOT
 # Its existing runtime dependencies are not rebuilt or upgraded on the VM.
 (cd "$TASK_ROOT/package/luci-app-upnp" && make TOPDIR="$TASK_SDK" compile V=s)
 cp "$TASK_SDK"/bin/packages/x86_64/base/miniupnpd-nftables_*.ipk "$TASK_ROOT/artifacts/"
-cp "$TASK_SDK"/bin/packages/x86_64/base/luci-app-upnp_*.ipk "$TASK_ROOT/artifacts/"
+cp "$TASK_SDK"/bin/packages/x86_64/base/luci-app-upnp_23.05-custom-2_all.ipk "$TASK_ROOT/artifacts/"
+if [ -f "$TASK_ROOT/artifacts/luci-app-upnp_23.05-custom-1_all.ipk" ]; then
+	mv "$TASK_ROOT/artifacts/luci-app-upnp_23.05-custom-1_all.ipk" "$TASK_WORK/"
+fi
 cp "$TASK_SDK"/bin/packages/x86_64/packages/libcap-ng_*.ipk "$TASK_ROOT/artifacts/"
 (cd "$TASK_ROOT/artifacts" && sha256sum ./*.ipk > SHA256SUMS)

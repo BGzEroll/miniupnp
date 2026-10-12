@@ -44,5 +44,6 @@
     "patches/110-nftables-comments-pinhole-and-cache.patch": "57e8e33439d14db75ebcc58606c71c513d08fbee380b7256930c074fc044b0a9",
     "patches/120-ipv6-lease-records-and-restore.patch": "0ef83fc8aff72dc7e148668e61ba29a49e0dd0ff3586d526f99d19875f5249d1",
     "patches/130-soap-numeric-bounds-and-missing-pinhole.patch": "5ecb4ed71dee7ae956c3aafb971bd956a990e92285fca48db414db4c2303fcfd"
-  }
+  },
+  "luci_zh_Hans_translation_base": "3d39e8c38cfa276d5cdfad7105dbf47933eaed4f"
 }

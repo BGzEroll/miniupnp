@@ -63,3 +63,9 @@ IPv6 Pinhole 没有 IPv4 NAT 外部端口概念，LuCI 显示为横线；主机�
 `final-cleanup-check.txt` 严格校验 network/firewall/upnpd 已恢复至实验前配置、没有残留实验 namespace，服务启用且运行。普通 WAN IPv4 的 HTTP 5000 连接被拒绝，见 `physical-wan-http.json`。最终 daemon/控制工具/init 文件 SHA256 与 IPK 内容一致，见 `build-manifest.json`、`installed-sha256.txt`。
 
 测试结束恢复 VM 原网络/firewall 设置及普通 `upnpd` 配置，保留安装好的定制包和启用的服务；实验备份、测试工具与结果在 VM `/root/`，可按 README 回滚或使用用户快照。
+
+## 2026-10-13 中文修复
+
+此前仅验证英文页面，漏打包 UPnP 中文词典，导致共用词条为中文、应用词条仍为英文。LuCI 包升级为 23.05-custom-2，编译并安装标准 upnp.zh-cn.lmo，沿用固定 23.05 的 PO 词条并补齐新开关和菜单。47 个页面/菜单词条覆盖通过，zh-CN 浏览器的列表、删除、关闭/再启用和 JavaScript 检查通过，截图为 luci-zh.png、luci-zh-advanced.png。中文截图的主机浏览器使用 Noto CJK 字体，路由器未安装字体。
+
+仅 LuCI 数据包变化，MiniUPnPd IPK SHA256 与原 45 项回归版本完全一致。更新中文包的干净重建校验通过，见 reproducible-i18n-build.txt。规则命名对照见 nft-format.md。

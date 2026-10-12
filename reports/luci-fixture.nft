@@ -1,0 +1,11 @@
+table inet fw4 {
+	chain upnp_prerouting {
+		iifname "upnp-w" ip protocol tcp tcp dport 51910 counter packets 0 bytes 0 dnat ip to 198.18.0.2:51911 comment "upnp-lab"
+	}
+}
+table inet fw4 {
+	chain upnp_forward {
+		iifname "upnp-w" th dport 51911 ip daddr 198.18.0.2 ip protocol tcp accept comment "upnp-lab"
+		iifname "upnp-w" th dport 51912 ip6 daddr fd42:100::2 meta l4proto tcp counter packets 0 bytes 0 accept comment "pinhole-1 ts-1888: IGD2 pinhole"
+	}
+}

@@ -20,4 +20,5 @@ import integration as t
 t.ok(t.mapping(eport=51910,iport=51911,lease=240))
 t.ok(t.pinhole(port=51912,lease=240))
 PY
+ssh "$TASK_VM" 'nft list chain inet fw4 upnp_prerouting; nft list chain inet fw4 upnp_forward' > "$TASK_ROOT/reports/luci-fixture.nft"
 "$TASK_BROWSER_PYTHON" "$TASK_ROOT/scripts/luci-browser.py"
