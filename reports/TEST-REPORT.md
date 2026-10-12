@@ -75,3 +75,7 @@ IPv6 Pinhole 没有 IPv4 NAT 外部端口概念，LuCI 显示为横线；主机�
 按用户要求，默认配置、init 回退值、LuCI 提示和测试机 UCI 改为 /var/run/miniupnpd.leases 与 /var/run/miniupnpd.leases6。服务重启及 fw4 reload 仍能恢复有效租约，系统重启不再保留租约。先前 reboot-final.txt 的跨系统恢复结果属于旧 /etc 配置，不能用于描述新默认策略。boot-smoke.sh 的预期已改为服务启动、旧临时租约消失；本次路径修改未再次重启 VM。
 
 本次两个包实际构建并升级测试机通过，var-lease-install.txt 确认运行配置使用上述 /var/run 路径。daemon ELF 校验值与原回归版本一致；boot-smoke.sh 只调整预期，没有把未执行的新 reboot 检查标为通过。
+
+## 2026-10-13 恢复上游 ACL 备注
+
+默认第一条 ACL 备注恢复为 Allow high ports，第二条保持 Default deny。新的 miniupnpd-nftables release 3 已构建，直接解包确认没有追加 secure_mode 说明；测试机升级后备注也为上游原文。仅默认配置备注变化，daemon、控制工具和 init 的校验值均未变化，权限规则保持原样。

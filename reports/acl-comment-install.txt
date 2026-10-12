@@ -1,0 +1,6 @@
+Upgrading miniupnpd-nftables on root from 2.3.11-git20261009-2 to 2.3.11-git20261009-3...
+Configuring miniupnpd-nftables.
+Collected errors:
+ * resolve_conffiles: Existing conffile /etc/config/upnpd is different from the conffile in the new package. The new conffile will be placed at /etc/config/upnpd-opkg.
+upnpd.@perm_rule[0].comment='Allow high ports'
+upnpd.@perm_rule[1].comment='Default deny'
