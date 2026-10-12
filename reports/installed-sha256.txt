@@ -1,0 +1,3 @@
+14493c7f17121a5bc8f5da8dcc7316cce87ccdd00b2acf524996873bfce7c821  /usr/sbin/miniupnpd
+dbf5c549110450b715b87d65ac1a75d92deed84c96dcb661b5485b2a11efc691  /usr/sbin/miniupnpdctl
+b83eddd63aaa76fc03063e8b857441d39b5f597a85412d587c74b75bf99eea0e  /etc/init.d/miniupnpd

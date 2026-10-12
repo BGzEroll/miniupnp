@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: GPL-2.0-only
+/etc/init.d/miniupnpd enabled || exit 0
+[ "$(uci -q get upnpd.config.enabled)" = 1 ] || exit 0
+case "$ACTION" in ifup|ifdown|ifupdate) ;; *) exit 0 ;; esac
+external=$(uci -q get upnpd.config.external_iface)
+external6=$(uci -q get upnpd.config.external_iface6)
+internal=$(uci -q get upnpd.config.internal_iface)
+for iface in ${external:-wan} ${external6:-wan6} ${internal:-lan}; do
+	[ "$INTERFACE" = "$iface" ] || continue
+	/etc/init.d/miniupnpd reload
+	exit 0
+done

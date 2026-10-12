@@ -1,0 +1,536 @@
+diff --git a/miniupnpd/asyncsendto.c b/miniupnpd/asyncsendto.c
+index b76d0db..f99ef92 100644
+--- a/miniupnpd/asyncsendto.c
++++ b/miniupnpd/asyncsendto.c
+@@ -254,7 +254,8 @@ int try_sendto(fd_set * writefds)
+ 					/* uncatched error */
+ 					if(sockaddr_to_string(elt->dest_addr, addr_str, sizeof(addr_str)) <= 0)
+ 						addr_str[0] = '\0';
+-					syslog(LOG_ERR, "%s(sock=%d, len=%u, dest=%s): sendto: %m",
++					syslog((errno == EADDRNOTAVAIL || errno == ENETUNREACH || errno == ENETDOWN || errno == ENODEV)
++					       ? LOG_DEBUG : LOG_ERR, "%s(sock=%d, len=%u, dest=%s): sendto: %m",
+ 					       "try_sendto", elt->sockfd, (unsigned)elt->len,
+ 					       addr_str);
+ 					ret--;
+@@ -313,7 +314,8 @@ void finalize_sendto(void)
+ 						max_fd = elt->sockfd;
+ 					continue;
+ 				}
+-				syslog(LOG_WARNING, "finalize_sendto(): socket=%d sendto: %m", elt->sockfd);
++				syslog((errno == EADDRNOTAVAIL || errno == ENETUNREACH || errno == ENETDOWN || errno == ENODEV)
++			       ? LOG_DEBUG : LOG_WARNING, "finalize_sendto(): socket=%d sendto: %m", elt->sockfd);
+ 			}
+ 			/* remove from the list */
+ 			LIST_REMOVE(elt, entries);
+diff --git a/miniupnpd/configure b/miniupnpd/configure
+index f2c820c..a959d0a 100755
+--- a/miniupnpd/configure
++++ b/miniupnpd/configure
+@@ -881,7 +881,7 @@ echo "" >> ${CONFIGFILE}
+ 
+ echo "/* Uncomment the following line to allow miniupnpd to be" >> ${CONFIGFILE}
+ echo " * controlled by miniupnpdctl */" >> ${CONFIGFILE}
+-echo "/*#define USE_MINIUPNPDCTL*/" >> ${CONFIGFILE}
++echo "#define USE_MINIUPNPDCTL" >> ${CONFIGFILE}
+ echo "" >> ${CONFIGFILE}
+ 
+ echo "/* Comment the following line to disable NAT-PMP operations */" >> ${CONFIGFILE}
+diff --git a/miniupnpd/getifaddr.c b/miniupnpd/getifaddr.c
+index bc38da4..2df162e 100644
+--- a/miniupnpd/getifaddr.c
++++ b/miniupnpd/getifaddr.c
+@@ -118,7 +118,7 @@ getifaddr(const char * ifname, char * buf, int len,
+ 		/* skip other interfaces if one was specified */
+ 		if(ifname && (0 != strcmp(ifname, ife->ifa_name)))
+ 			continue;
+-		if(ife->ifa_addr == NULL)
++		if(ife->ifa_addr == NULL || !(ife->ifa_flags & IFF_UP))
+ 			continue;
+ 		switch(ife->ifa_addr->sa_family)
+ 		{
+@@ -149,7 +149,7 @@ getifaddr(const char * ifname, char * buf, int len,
+ 		if(addr) *addr = ((struct sockaddr_in *)candidate->ifa_addr)->sin_addr;
+ 		if(mask) *mask = ((struct sockaddr_in *)candidate->ifa_netmask)->sin_addr;
+ 	} else {
+-		syslog(LOG_WARNING, "no AF_INET address found for %s", ifname);
++		syslog(LOG_DEBUG, "no AF_INET address found for %s", ifname);
+ 		freeifaddrs(ifap);
+ 		return GETIFADDR_NO_ADDRESS;
+ 	}
+@@ -182,7 +182,7 @@ int getifaddr_in6(const char * ifname, int af, struct in6_addr * addr)
+ 		/* skip other interfaces if one was specified */
+ 		if(ifname && (0 != strcmp(ifname, ife->ifa_name)))
+ 			continue;
+-		if(ife->ifa_addr == NULL)
++		if(ife->ifa_addr == NULL || !(ife->ifa_flags & IFF_UP))
+ 			continue;
+ 		if (ife->ifa_addr->sa_family != af)
+ 			continue;
+@@ -201,9 +201,12 @@ int getifaddr_in6(const char * ifname, int af, struct in6_addr * addr)
+ 
+ #ifdef ENABLE_IPV6
+ 		case AF_INET6:
++			/* An unnumbered WAN may route LAN ULA/GUA through a link-local gateway. */
+ 			tmpaddr = (const struct sockaddr_in6 *)ife->ifa_addr;
+ 			if(!IN6_IS_ADDR_LOOPBACK(&tmpaddr->sin6_addr)
+-			   && !IN6_IS_ADDR_LINKLOCAL(&tmpaddr->sin6_addr))
++			   && !IN6_IS_ADDR_UNSPECIFIED(&tmpaddr->sin6_addr)
++			   && !IN6_IS_ADDR_MULTICAST(&tmpaddr->sin6_addr)
++			   && !IN6_IS_ADDR_V4MAPPED(&tmpaddr->sin6_addr))
+ 			{
+ 				memcpy(addr->s6_addr,
+ 				       &tmpaddr->sin6_addr,
+diff --git a/miniupnpd/linux/ifacewatcher.c b/miniupnpd/linux/ifacewatcher.c
+index be16b19..01f3eeb 100644
+--- a/miniupnpd/linux/ifacewatcher.c
++++ b/miniupnpd/linux/ifacewatcher.c
+@@ -77,7 +77,7 @@ OpenAndConfInterfaceWatchSocket(void)
+ 
+ 	memset(&addr, 0, sizeof(addr));
+ 	addr.nl_family = AF_NETLINK;
+-	addr.nl_groups = RTMGRP_LINK | RTMGRP_IPV4_IFADDR;
++	addr.nl_groups = RTMGRP_LINK | RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR;
+ 	/*addr.nl_groups = RTMGRP_LINK | RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR;*/
+ 
+ 	if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+@@ -289,6 +289,11 @@ ProcessInterfaceWatchNotify(int s)
+ 			is_del = 1;
+ 			FALL_THROUGH;
+ 		case RTM_NEWLINK:
++			{
++				struct ifinfomsg *info = NLMSG_DATA(nlhdr);
++				if (info->ifi_index == (int)ext_if_name_index)
++					should_send_public_address_change_notif = 1;
++			}
+ #if 0
+ /* disabled at the moment */
+ 			ifi = (struct ifinfomsg *) NLMSG_DATA(nlhdr);
+@@ -344,7 +349,8 @@ ProcessInterfaceWatchNotify(int s)
+ 				       ifa->ifa_index, tmp,
+ 				       rth->rta_type);
+ 			}
+-			if(ifa->ifa_index == ext_if_name_index) {
++			if(ifa->ifa_index == ext_if_name_index ||
++			   (ext_if_name6 && ifa->ifa_index == if_nametoindex(ext_if_name6))) {
+ 				should_send_public_address_change_notif = 1;
+ 			}
+ 			break;
+diff --git a/miniupnpd/minissdp.c b/miniupnpd/minissdp.c
+index d825bf6..24092b3 100644
+--- a/miniupnpd/minissdp.c
++++ b/miniupnpd/minissdp.c
+@@ -1456,7 +1456,8 @@ SendSSDPbyebye(int s, const struct sockaddr * dest, socklen_t destlen,
+ 	n = sendto_or_schedule(s, bufr, l, 0, dest, destlen);
+ 	if(n < 0)
+ 	{
+-		syslog(LOG_ERR, "sendto(udp_shutdown=%d) to %s: %m", s, dest_str);
++		syslog((errno == EADDRNOTAVAIL || errno == ENETUNREACH || errno == ENETDOWN || errno == ENODEV)
++		       ? LOG_DEBUG : LOG_ERR, "sendto(udp_shutdown=%d) to %s: %m", s, dest_str);
+ 		return -1;
+ 	}
+ 	else if(n != l)
+diff --git a/miniupnpd/miniupnpd.c b/miniupnpd/miniupnpd.c
+index 37477ba..1bf409f 100644
+--- a/miniupnpd/miniupnpd.c
++++ b/miniupnpd/miniupnpd.c
+@@ -7,6 +7,9 @@
+  * in the LICENCE file provided within the distribution */
+ 
+ #include "config.h"
++#ifdef USE_NFTABLES
++void nft_invalidate_cache(void);
++#endif
+ 
+ /* Experimental support for NFQUEUE interfaces */
+ #ifdef ENABLE_NFQUEUE
+@@ -38,6 +41,7 @@
+ #include <signal.h>
+ #include <errno.h>
+ #include <sys/param.h>
++#include <sys/stat.h>
+ #if defined(sun)
+ #include <kstat.h>
+ #elif !defined(__linux__)
+@@ -701,6 +705,8 @@ OpenAndConfCtlUnixSocket(const char * path)
+ {
+ 	struct sockaddr_un localun;
+ 	int s;
++	/* Root-only administrative socket, including recovery after a crash. */
++	if (unlink(path) < 0 && errno != ENOENT) return -1;
+ 	s = socket(AF_UNIX, SOCK_STREAM, 0);
+ 	localun.sun_family = AF_UNIX;
+ 	strncpy(localun.sun_path, path,
+@@ -712,7 +718,7 @@ OpenAndConfCtlUnixSocket(const char * path)
+ 		close(s);
+ 		s = -1;
+ 	}
+-	else if(listen(s, 5) < 0)
++	else if(chmod(path, 0600) < 0 || listen(s, 5) < 0)
+ 	{
+ 		syslog(LOG_ERR, "listen(sctl): %m");
+ 		close(s);
+@@ -810,6 +816,14 @@ sigterm(int sig)
+ 	/*errno = save_errno;*/
+ }
+ 
++static volatile sig_atomic_t should_restore_leases;
++
++static void restore_leases_signal(int sig)
++{
++	UNUSED(sig);
++	should_restore_leases = 1;
++}
++
+ /* Handler for the SIGUSR1 signal indicating public IP address change. */
+ static void
+ sigusr1(int sig)
+@@ -1171,45 +1185,39 @@ int update_ext_ip_addr_from_stun(int init)
+  */
+ static void update_disable_port_forwarding(void)
+ {
++	static int previous_state = -1000;
++	static in_addr_t previous_addr;
+ 	char if_addr[INET_ADDRSTRLEN];
+ 	struct in_addr addr;
+-	int r = getifaddr(ext_if_name, if_addr, INET_ADDRSTRLEN, &addr, NULL);
+-	if (r < 0) {
+-		switch(r) {
+-		case GETIFADDR_DEVICE_NOT_CONFIGURED:
+-			syslog(LOG_WARNING, "ext interface %s is not configured / no such device", ext_if_name);
+-			break;
+-		case GETIFADDR_IF_DOWN:
+-			syslog(LOG_WARNING, "ext interface %s is down", ext_if_name);
+-			break;
+-		case GETIFADDR_NO_ADDRESS:
+-			syslog(LOG_WARNING, "ext interface %s has no IPv4 address. Network is down", ext_if_name);
+-			break;
+-		default:
+-			syslog(LOG_ERR, "Error getting IPv4 address for ext interface %s. Network is down", ext_if_name);
+-		}
+-		disable_port_forwarding = 1;
+-	} else {
+-		int reserved = addr_is_reserved(&addr);
+-		if (!disable_port_forwarding && reserved) {
+-			if (GETFLAG(ALLOWPRIVATEIPV4MASK)) {
+-				syslog(LOG_WARNING, "IGNORED : Reserved / private IP address %s on ext interface %s", if_addr, ext_if_name);
+-			} else {
+-				syslog(LOG_WARNING, "Reserved / private IP address %s on ext interface %s: Port forwarding is impossible", if_addr, ext_if_name);
+-				syslog(LOG_INFO, "You are probably behind NAT, enable option ext_perform_stun=yes to detect public IP address");
+-				syslog(LOG_INFO, "Or use ext_ip= / -o option to declare public IP address");
+-				syslog(LOG_INFO, "In case that miniupnpd is thinking that it's behind symmetric NAT while it actually is full-cone");
+-				syslog(LOG_INFO, "You can set option ext_allow_private_ipv4=yes to enable port forwarding");
+-				syslog(LOG_INFO, "But you may still need to configure stun server or ext_ip to make it work correctly");
+-				syslog(LOG_INFO, "Public IP address is required by UPnP/PCP/PMP protocols and clients do not work without it");
+-				disable_port_forwarding = 1;
+-			}
+-		} else if (disable_port_forwarding &&
+-		           (!reserved || GETFLAG(ALLOWPRIVATEIPV4MASK))) {
+-			syslog(LOG_INFO, "%s IP address %s on ext interface %s: Port forwarding is enabled",
+-			       reserved ? "Reserved / private" : "Public", if_addr, ext_if_name);
+-			disable_port_forwarding = 0;
+-		}
++	int state, reserved = 0;
++	int was_disabled = disable_port_forwarding;
++	int r = getifaddr(ext_if_name, if_addr, sizeof(if_addr), &addr, NULL);
++	state = r;
++	if (r >= 0) {
++		uint32_t ip = ntohl(addr.s_addr);
++		/* A valid local unicast address need not be globally reachable. */
++		if ((ip >> 24) == 0 || (ip >> 24) == 127 || ip >= 0xe0000000U)
++			state = -100;
++		else {
++			reserved = addr_is_reserved(&addr);
++			state = reserved && !GETFLAG(ALLOWPRIVATEIPV4MASK) ? 1 : 0;
++		}
++	}
++	disable_port_forwarding = state != 0;
++	if (was_disabled && !disable_port_forwarding) should_restore_leases = 1;
++	if (state != previous_state || (r >= 0 && addr.s_addr != previous_addr)) {
++		if (state == 0)
++			syslog(LOG_INFO, "IPv4 local port forwarding enabled on %s (%s)", ext_if_name, if_addr);
++		else if (state == 1)
++			syslog(LOG_WARNING, "IPv4 port forwarding disabled by private-address policy on %s", ext_if_name);
++		else if (state == -100)
++			syslog(LOG_WARNING, "Invalid unicast IPv4 address on %s", ext_if_name);
++		else if (state == GETIFADDR_DEVICE_NOT_CONFIGURED || state == GETIFADDR_IF_DOWN || state == GETIFADDR_NO_ADDRESS)
++			syslog(LOG_NOTICE, "IPv4 unavailable on %s; IPv6 service remains active", ext_if_name);
++		else
++			syslog(LOG_ERR, "Error getting IPv4 address for %s", ext_if_name);
++		previous_state = state;
++		if (r >= 0) previous_addr = addr.s_addr;
+ 	}
+ }
+ 
+@@ -2206,6 +2214,12 @@ init(int argc, char * * argv, struct runtime_vars * v)
+ 	}
+ #endif /* !TOMATO && ENABLE_LEASEFILE && LEASEFILE_USE_REMAINING_TIME */
+ 
++	sa.sa_handler = restore_leases_signal;
++	if (sigaction(SIGUSR2, &sa, NULL) < 0) {
++		syslog(LOG_ERR, "Failed to set lease restore handler: %m");
++		return 1;
++	}
++
+ 	/* initialize random number generator */
+ 	srandom((unsigned int)time(NULL));
+ #ifdef RANDOMIZE_URLS
+@@ -2242,7 +2256,8 @@ init(int argc, char * * argv, struct runtime_vars * v)
+ #ifdef ENABLE_LEASEFILE
+ 	/*remove(lease_file);*/
+ 	syslog(LOG_INFO, "Reloading rules from lease file");
+-	reload_from_lease_file();
++	if (!use_ext_ip_addr && !GETFLAG(PERFORMSTUNMASK)) update_disable_port_forwarding();
++	if (!disable_port_forwarding) reload_from_lease_file();
+ #ifdef ENABLE_UPNPPINHOLE
+ 	reload_from_lease_file6();
+ #endif
+@@ -2765,6 +2780,16 @@ main(int argc, char * * argv)
+ 			should_rewrite_leasefile = 0;
+ 		}
+ #endif /* !TOMATO && ENABLE_LEASEFILE && LEASEFILE_USE_REMAINING_TIME */
++		if (should_restore_leases) {
++			should_restore_leases = 0;
++#ifdef USE_NFTABLES
++			nft_invalidate_cache();
++#endif
++			if (!disable_port_forwarding) reload_from_lease_file();
++#ifdef ENABLE_UPNPPINHOLE
++			reload_from_lease_file6();
++#endif
++		}
+ 		/* send public address change notifications if needed */
+ 		if(should_send_public_address_change_notif)
+ 		{
+@@ -3049,7 +3074,7 @@ main(int argc, char * * argv)
+ 		}
+ 		i = try_sendto(&writeset);
+ 		if(i < 0) {
+-			syslog(LOG_ERR, "try_sendto failed to send %d packets", -i);
++			syslog(LOG_DEBUG, "try_sendto failed to send %d packets", -i);
+ 		}
+ #ifdef USE_MINIUPNPDCTL
+ 		for(ectl = ctllisthead.lh_first; ectl;)
+@@ -3059,10 +3084,26 @@ main(int argc, char * * argv)
+ 			{
+ 				char buf[256];
+ 				int l;
+-				l = read(ectl->socket, buf, sizeof(buf));
++				l = read(ectl->socket, buf, sizeof(buf) - 1);
+ 				if(l > 0)
+ 				{
+-					/*write(ectl->socket, buf, l);*/
++					unsigned int port;
++					char protocol[8], trailing;
++					int result = -1;
++					buf[l] = '\0';
++					if (sscanf(buf, "delete4 %7s %u %c", protocol, &port, &trailing) == 2 &&
++					    port > 0 && port <= 65535 &&
++					    (strcmp(protocol, "TCP") == 0 || strcmp(protocol, "UDP") == 0)) {
++						result = upnp_delete_redirection(port, protocol);
++					} else if (sscanf(buf, "delete6 %u %c", &port, &trailing) == 1 &&
++					           port > 0 && port <= 65534) {
++						result = upnp_delete_inboundpinhole(port);
++					}
++					if (strncmp(buf, "delete", 6) == 0) {
++						const char * response = result >= 0 ? "OK\n" : "ERROR\n";
++						if (write(ectl->socket, response, strlen(response)) < 0)
++							syslog(LOG_ERR, "admin response: %m");
++					} else {
+ 					write_command_line(ectl->socket, argc, argv);
+ #ifndef DISABLE_CONFIG_FILE
+ 					write_option_list(ectl->socket);
+@@ -3074,6 +3115,7 @@ main(int argc, char * * argv)
+ #ifdef ENABLE_EVENTS
+ 					write_events_details(ectl->socket);
+ #endif
++					}
+ 					/* close the socket */
+ 					close(ectl->socket);
+ 					ectl->socket = -1;
+diff --git a/miniupnpd/miniupnpdctl.c b/miniupnpd/miniupnpdctl.c
+index 5758e0b..620be1d 100644
+--- a/miniupnpd/miniupnpdctl.c
++++ b/miniupnpd/miniupnpdctl.c
+@@ -27,13 +27,19 @@ int
+ main(int argc, char * * argv)
+ {
+ 	/*char test[] = "test!";*/
+-	static const char command[] = "show all\n";
++	char command[128] = "show all\n";
+ 	char buf[256];
+ 	int l;
+ 	int s;
+ 	struct sockaddr_un addr;
+-	UNUSED(argc);
+-	UNUSED(argv);
++	if (argc == 4 && strcmp(argv[1], "delete4") == 0)
++		snprintf(command, sizeof(command), "delete4 %s %s\n", argv[2], argv[3]);
++	else if (argc == 3 && strcmp(argv[1], "delete6") == 0)
++		snprintf(command, sizeof(command), "delete6 %s\n", argv[2]);
++	else if (argc != 1) {
++		fprintf(stderr, "usage: miniupnpdctl [delete4 TCP|UDP port | delete6 uid]\n");
++		return 1;
++	}
+ 
+ 	/*signal(SIGINT, sighandler);*/
+ 	s = socket(AF_UNIX, SOCK_STREAM, 0);
+@@ -52,8 +58,8 @@ main(int argc, char * * argv)
+ 		return 1;
+ 	}
+ 
+-	printf("Connected.\n");
+-	if(write(s, command, sizeof(command)) < 0)
++
++	if(write(s, command, strlen(command)) < 0)
+ 	{
+ 		perror("write");
+ 		close(s);
+diff --git a/miniupnpd/natpmp.c b/miniupnpd/natpmp.c
+index f3f8f45..0eafed7 100644
+--- a/miniupnpd/natpmp.c
++++ b/miniupnpd/natpmp.c
+@@ -80,6 +80,10 @@ int OpenAndConfNATPMPSockets(int * sockets)
+ 		sockets[i] = OpenAndConfNATPMPSocket(lan_addr->addr.s_addr);
+ 		if(sockets[i] < 0)
+ 			goto error;
++		/* Keep PCP/NAT-PMP IPv4 multicast on this LAN, including WAN outage. */
++		if (setsockopt(sockets[i], IPPROTO_IP, IP_MULTICAST_IF,
++		               &lan_addr->addr, sizeof(lan_addr->addr)) < 0)
++			syslog(LOG_ERR, "NAT-PMP/PCP multicast interface: %m");
+ 		i++;
+ 	}
+ 	return 0;
+@@ -106,7 +110,7 @@ static void FillPublicAddressResponse(unsigned char * resp, in_addr_t senderaddr
+ 			resp[3] = 3;	/* Network Failure (e.g. NAT box itself
+ 			                 * has not obtained a DHCP lease) */
+ 		} else if(getifaddr(ext_if_name, tmp, INET_ADDRSTRLEN, &addr, NULL) < 0) {
+-			syslog(LOG_ERR, "Failed to get IP for interface %s", ext_if_name);
++			syslog(LOG_DEBUG, "IPv4 unavailable on interface %s", ext_if_name);
+ 			resp[3] = 3;	/* Network Failure (e.g. NAT box itself
+ 			                 * has not obtained a DHCP lease) */
+ 		} else if (!GETFLAG(ALLOWPRIVATEIPV4MASK) && addr_is_reserved(&addr)) {
+@@ -394,7 +398,7 @@ void ProcessIncomingNATPMPPacket(int s, unsigned char *msg_buff, int len,
+ 					if(upnp_redirect_internal(NULL, eport, senderaddrstr,
+ 					                          iport, proto, desc,
+ 					                          timestamp) < 0) {
+-						syslog(LOG_ERR, "Failed to add NAT-PMP %hu %s->%s:%hu '%s'",
++						syslog(disable_port_forwarding ? LOG_INFO : LOG_ERR, "Failed to add NAT-PMP %hu %s->%s:%hu '%s'",
+ 						       eport, proto_itoa(proto), senderaddrstr, iport, desc);
+ 						resp[3] = 3;  /* Failure */
+ 					}
+@@ -443,7 +447,7 @@ void SendNATPMPPublicAddressChangeNotification(int * sockets, int n_sockets)
+ 	FillPublicAddressResponse(notif, 0);
+ 	if(notif[3])
+ 	{
+-		syslog(LOG_WARNING, "%s: cannot get public IP address, stopping",
++		syslog(LOG_DEBUG, "%s: IPv4 unavailable, skipping notification",
+ 		       "SendNATPMPPublicAddressChangeNotification");
+ 		return;
+ 	}
+diff --git a/miniupnpd/pcpserver.c b/miniupnpd/pcpserver.c
+index dc0c4a2..9ca4fd8 100644
+--- a/miniupnpd/pcpserver.c
++++ b/miniupnpd/pcpserver.c
+@@ -914,10 +914,12 @@ static int CreatePCPMap_NAT(pcp_info_t *pcp_msg_info)
+ {
+ 	int r = 0;
+ 	char iaddr_old[INET6_ADDRSTRLEN];
++	char previous_description[64];
+ 	uint16_t iport_old, eport_first = 0;
+ 	int any_eport_allowed = 0;
+ 	unsigned int timestamp = upnp_time() + pcp_msg_info->lifetime;
+ 
++	if (disable_port_forwarding) return PCP_ERR_NETWORK_FAILURE;
+ 	if (pcp_msg_info->ext_port == 0) {
+ 		pcp_msg_info->ext_port = pcp_msg_info->int_port;
+ 	}
+@@ -969,7 +971,7 @@ static int CreatePCPMap_NAT(pcp_info_t *pcp_msg_info)
+ 				      pcp_msg_info->ext_port,
+ 				      pcp_msg_info->protocol,
+ 				      iaddr_old, sizeof(iaddr_old),
+-				      &iport_old, 0, 0, 0, 0,
++				      &iport_old, previous_description, sizeof(previous_description), 0, 0,
+ 				      NULL/*&timestamp*/, 0, 0);
+ 
+ 		if(r==0) {
+@@ -980,6 +982,9 @@ static int CreatePCPMap_NAT(pcp_info_t *pcp_msg_info)
+ 					return PCP_ERR_CANNOT_PROVIDE_EXTERNAL;
+ 				}
+ 			} else {
++				if (strncmp(previous_description, "PCP MAP ", 8) == 0 &&
++				    strcmp(previous_description, pcp_msg_info->desc) != 0)
++					return PCP_ERR_NOT_AUTHORIZED;
+ 				syslog(LOG_INFO, "port %hu %s already redirected to %s:%hu, replacing",
+ 				       pcp_msg_info->ext_port, proto_itoa(pcp_msg_info->protocol),
+ 				       iaddr_old, iport_old);
+@@ -1094,7 +1099,7 @@ static void CreatePCPMap(pcp_info_t *pcp_msg_info)
+ 	else
+ 		r = CreatePCPMap_NAT(pcp_msg_info);
+ 	pcp_msg_info->result_code = r;
+-	syslog(r == PCP_SUCCESS ? LOG_INFO : LOG_ERR,
++	syslog(r == PCP_SUCCESS || r == PCP_ERR_NETWORK_FAILURE ? LOG_INFO : LOG_ERR,
+ 	      "PCP MAP: %s mapping %s %hu->%s:%hu '%s'",
+ 	       r == PCP_SUCCESS ? "added" : "failed to add",
+ 	       proto_itoa(pcp_msg_info->protocol),
+@@ -1399,7 +1404,8 @@ static int processPCPRequest(void * req, int req_size, pcp_info_t *pcp_msg_info)
+ 					CreatePCPMap(pcp_msg_info);
+ 				}
+ 			} else {
+-				syslog(LOG_ERR, "PCP: Invalid PCP v2 MAP message.");
++				syslog(pcp_msg_info->result_code == PCP_ERR_NETWORK_FAILURE ? LOG_DEBUG : LOG_ERR,
++				       "PCP: Invalid PCP v2 MAP message.");
+ 				return pcp_msg_info->result_code;
+ 			}
+ 
+@@ -1739,9 +1745,16 @@ void PCPSendUnsolicitedAnnounce(int * sockets, int n_sockets)
+ 		addr6.sin6_family = AF_INET6;
+ 		inet_pton(AF_INET6, "FF02::1", &(addr6.sin6_addr));
+ 		addr6.sin6_port = htons(5350);
+-		len = sendto_or_schedule(socket6, buff, PCP_MIN_LEN, 0, (struct sockaddr *)&addr6, sizeof(struct sockaddr_in6));
+-		if( len < 0 ) {
+-			syslog(LOG_ERR, "PCPSendUnsolicitedAnnounce() IPv6 sendto(): %m");
++		{
++			struct lan_addr_s *lan;
++			for (lan = lan_addrs.lh_first; lan; lan = lan->list.le_next) {
++				addr6.sin6_scope_id = lan->index;
++				len = sendto_or_schedule(socket6, buff, PCP_MIN_LEN, 0,
++				                        (struct sockaddr *)&addr6, sizeof(addr6));
++				if (len < 0)
++					syslog((errno == ENETUNREACH || errno == ENODEV || errno == EADDRNOTAVAIL)
++					       ? LOG_DEBUG : LOG_ERR, "PCP IPv6 announcement on %s: %m", lan->ifname);
++			}
+ 		}
+ 	}
+ #endif /* ENABLE_IPV6 */
+diff --git a/miniupnpd/testifacewatcher.c b/miniupnpd/testifacewatcher.c
+index e25c832..56ab713 100644
+--- a/miniupnpd/testifacewatcher.c
++++ b/miniupnpd/testifacewatcher.c
+@@ -10,6 +10,7 @@ int runtime_flags = 0;
+ time_t startup_time = 0;
+ struct lan_addr_list lan_addrs;
+ const char * ext_if_name;
++const char * ext_if_name6;
+ volatile sig_atomic_t should_send_public_address_change_notif = 0;
+ 
+ int main(int argc, char * * argv)
+diff --git a/miniupnpd/upnputils.c b/miniupnpd/upnputils.c
+index 8a4f302..c4610a6 100644
+--- a/miniupnpd/upnputils.c
++++ b/miniupnpd/upnputils.c
+@@ -126,6 +126,7 @@ get_lan_for_peer(const struct sockaddr * peer)
+ 			    lan_addr != NULL;
+ 			    lan_addr = lan_addr->list.le_next)
+ 			{
++				if (lan_addr->addr.s_addr == INADDR_ANY || lan_addr->mask.s_addr == 0) continue;
+ 				if( (peer_addr.s_addr & lan_addr->mask.s_addr)
+ 				   == (lan_addr->addr.s_addr & lan_addr->mask.s_addr))
+ 					break;
+@@ -165,6 +166,7 @@ get_lan_for_peer(const struct sockaddr * peer)
+ 		    lan_addr != NULL;
+ 		    lan_addr = lan_addr->list.le_next)
+ 		{
++			if (lan_addr->addr.s_addr == INADDR_ANY || lan_addr->mask.s_addr == 0) continue;
+ 			if( (((const struct sockaddr_in *)peer)->sin_addr.s_addr & lan_addr->mask.s_addr)
+ 			   == (lan_addr->addr.s_addr & lan_addr->mask.s_addr))
+ 				break;

@@ -1,0 +1,15 @@
+[I] Section @zone[1] (wan) IPv4 fullcone enabled for zone 'wan'
+[!] Section passwall option 'reload' is not supported by fw4
+[!] Section passwall specifies unreachable path '/var/etc/passwall.include', ignoring section
+[!] Automatically including '/usr/share/nftables.d/table-post/20-miniupnpd.nft'
+[!] Automatically including '/usr/share/nftables.d/chain-pre/forward/20-miniupnpd.nft'
+[!] Automatically including '/usr/share/nftables.d/chain-post/dstnat/20-miniupnpd.nft'
+table inet fw4 {
+	chain upnp_prerouting {
+	}
+}
+table inet fw4 {
+	chain upnp_forward {
+	}
+}
+fd42:254::2 from :: dev upnp-boot proto kernel src fd07:a401:7468:0:be24:11ff:fec6:b615 metric 256 pref medium

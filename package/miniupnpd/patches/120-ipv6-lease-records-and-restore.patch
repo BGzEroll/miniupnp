@@ -1,0 +1,354 @@
+diff --git a/miniupnpd/upnppinhole.c b/miniupnpd/upnppinhole.c
+index 89aca80..296ec24 100644
+--- a/miniupnpd/upnppinhole.c
++++ b/miniupnpd/upnppinhole.c
+@@ -16,6 +16,7 @@
+ #include <arpa/inet.h>
+ 
+ #include <stdio.h>
++#include <errno.h>
+ #include <ctype.h>
+ #include <unistd.h>
+ 
+@@ -25,6 +26,7 @@
+ #include "upnpglobalvars.h"
+ #include "upnpevents.h"
+ #include "upnputils.h"
++#include "getifaddr.h"
+ #include "upnppinhole.h"
+ #ifdef __APPLE__
+ /* XXX - Apple version of PF API seems to differ from what
+@@ -34,8 +36,12 @@
+ #endif /* USE_PF */
+ #endif /* __APPLE__ */
+ #if defined(USE_NETFILTER)
++#ifdef USE_NFTABLES
++#include "netfilter_nft/nftpinhole.h"
++#else
+ #include "netfilter/iptpinhole.h"
+ #endif
++#endif
+ #if defined(USE_PF)
+ #include "pf/pfpinhole.h"
+ #endif
+@@ -160,7 +166,7 @@ lease_file6_update(int uid, unsigned int leaseduration)
+ 	char * rem_client;
+ 	unsigned int timestamp_rule;
+ 	unsigned int timestamp;
+-	char line[128];
++	char line[768];
+ 	char tmpfilename[128];
+ 	int uid_rule;
+ 	int tmp;
+@@ -186,7 +192,7 @@ lease_file6_update(int uid, unsigned int leaseduration)
+ 		return -1;
+ 	}
+ 
+-	fchmod(tmp, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
++	fchmod(tmp, S_IRUSR | S_IWUSR);
+ 	fdt = fdopen(tmp, "a");
+ 
+ 	timestamp = (leaseduration > 0) ? time(NULL) + leaseduration : 0;
+@@ -253,9 +259,10 @@ lease_file6_update(int uid, unsigned int leaseduration)
+ 			timestamp_rule = timestamp;
+ 		}
+ 
++		desc[strcspn(desc, "\r\n")] = '\0';
+ 		fprintf(fdt, "%s;%s;%hu;%s;%hu;%u;%u;%s\n",
+ 	        proto, int_client, int_port, rem_client, rem_port,
+-	        uid, timestamp_rule, desc);
++	        uid_rule, timestamp_rule, desc);
+ 	}
+ 
+ 	fclose(fdt);
+@@ -274,8 +281,8 @@ lease_file6_remove(const char * int_client, unsigned short int_port, int proto,
+ {
+ 	FILE* fd, *fdt;
+ 	int tmp, uid_tmp;
+-	char buf[512], buf2[512];
+-	char str[32];
++	char buf[768], buf2[768];
++	char str[128];
+ 	char tmpfilename[128];
+ 	char *p, *p2;
+ 	int str_size, buf_size;
+@@ -295,7 +302,7 @@ lease_file6_remove(const char * int_client, unsigned short int_port, int proto,
+ 		return 0;
+ 	}
+ 
+-	snprintf( str, sizeof(str), "%s;%s;%u", proto_itoa(proto), int_client, int_port);
++	snprintf( str, sizeof(str), "%s;%s;%u;", proto_itoa(proto), int_client, int_port);
+ 	str_size = strlen(str);
+ 
+ 	tmp = mkstemp(tmpfilename);
+@@ -304,7 +311,7 @@ lease_file6_remove(const char * int_client, unsigned short int_port, int proto,
+ 		syslog(LOG_ERR, "could not open temporary lease file");
+ 		return -1;
+ 	}
+-	fchmod(tmp, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
++	fchmod(tmp, S_IRUSR | S_IWUSR);
+ 	fdt = fdopen(tmp, "a");
+ 
+ 	buf[sizeof(buf)-1] = 0;
+@@ -312,23 +319,29 @@ lease_file6_remove(const char * int_client, unsigned short int_port, int proto,
+ 		buf_size = strlen(buf);
+ 
+ 		if (uid > 0) {
+-			strncpy(buf2, buf, buf_size);
++			memcpy(buf2, buf, buf_size + 1);
+ 			// Internal Host
+ 			p = strchr(buf2, ';');
++			if (!p) { syslog(LOG_WARNING, "Ignoring malformed IPv6 lease"); continue; }
+ 			*(p++) = '\0';
+ 			// Internal Port
+ 			p = strchr(p, ';');
++			if (!p) { syslog(LOG_WARNING, "Ignoring malformed IPv6 lease"); continue; }
+ 			*(p++) = '\0';
+ 			// External Host
+ 			p = strchr(p, ';');
++			if (!p) { syslog(LOG_WARNING, "Ignoring malformed IPv6 lease"); continue; }
+ 			*(p++) = '\0';
+ 			// External Port
+ 			p = strchr(p, ';');
++			if (!p) { syslog(LOG_WARNING, "Ignoring malformed IPv6 lease"); continue; }
+ 			*(p++) = '\0';
+ 			// uid
+ 			p = strchr(p, ';');
++			if (!p) { syslog(LOG_WARNING, "Ignoring malformed IPv6 lease"); continue; }
+ 			*(p++) = '\0';
+ 			p2 = strchr(p, ';');
++			if (!p2) { syslog(LOG_WARNING, "Ignoring malformed IPv6 lease"); continue; }
+ 			*(p2++) = '\0';
+ 			uid_tmp = atoi(p);
+ 			if (uid != uid_tmp) {
+@@ -357,8 +370,8 @@ int lease_file6_expire(void)
+ 	FILE* fd, *fdt;
+ 	char * p, * p2;
+ 	int tmp;
+-	char buf[512];
+-	char line[512];
++	char buf[768];
++	char line[768];
+ 	char tmpfilename[128];
+ 	char * desc;
+ 	int buf_size;
+@@ -387,7 +400,7 @@ int lease_file6_expire(void)
+ 		syslog(LOG_ERR, "could not open temporary lease file");
+ 		return -1;
+ 	}
+-	fchmod(tmp, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
++	fchmod(tmp, S_IRUSR | S_IWUSR);
+ 	fdt = fdopen(tmp, "a");
+ 
+ 	buf[sizeof(buf)-1] = 0;
+@@ -483,12 +496,14 @@ int reload_from_lease_file6(void)
+ 	unsigned int timestamp;
+ 	time_t current_time;
+ 	time_t current_unix_time;
+-	char line[128];
++	char line[768];
+ 	int r, uid;
+ 
++	if (GETFLAG(IPV6DISABLEDMASK)) return 0;
+ 	if(!lease_file6) return -1;
+ 	fd = fopen( lease_file6, "r");
+ 	if (fd==NULL) {
++		if (errno == ENOENT) return 0;
+ 		syslog(LOG_ERR, "could not open lease file: %s", lease_file6);
+ 		return -1;
+ 	}
+@@ -555,10 +570,10 @@ int reload_from_lease_file6(void)
+ 		while(isspace(*desc))
+ 			desc++;
+ 		p = desc;
+-		while(*(p+1))
++		while(*p)
+ 			p++;
+-		while(isspace(*p) && (p > desc))
+-			*(p--) = '\0';
++		while(p > desc && isspace((unsigned char)p[-1]))
++			*(--p) = '\0';
+ 
+ 		/* Ensure port is non-privileged and RemoteHost is valid */
+ 		if (int_port < 1024) {
+@@ -585,8 +600,41 @@ int reload_from_lease_file6(void)
+ 			leaseduration = 0;	/* default value */
+ 		}
+ 
++#ifdef USE_NFTABLES
++		{
++			struct in6_addr internal;
++			int protocol = proto_atoi(proto);
++			if (uid < 1 || uid > 65534 || timestamp == 0 ||
++			    (protocol != IPPROTO_TCP && protocol != IPPROTO_UDP) ||
++			    inet_pton(AF_INET6, int_client, &internal) != 1 ||
++			    IN6_IS_ADDR_UNSPECIFIED(&internal) || IN6_IS_ADDR_LOOPBACK(&internal) ||
++			    IN6_IS_ADDR_MULTICAST(&internal) || IN6_IS_ADDR_LINKLOCAL(&internal)) {
++				syslog(LOG_WARNING, "Ignoring invalid IPv6 lease");
++				continue;
++			}
++			{
++				struct sockaddr_in6 peer;
++				memset(&peer, 0, sizeof(peer));
++				peer.sin6_family = AF_INET6;
++				peer.sin6_addr = internal;
++				if (!get_lan_for_peer((struct sockaddr *)&peer)) continue;
++			}
++			r = find_pinhole(NULL, rem_client, rem_port, int_client, int_port,
++			                 protocol, NULL, 0, NULL);
++			if (r >= 0) {
++				uid = r;
++				r = update_pinhole(uid, timestamp);
++			} else {
++				r = restore_pinhole(ext_if_name6, rem_client, rem_port, int_client,
++				                    int_port, protocol, desc, timestamp, uid);
++			}
++			if (r >= 0) lease_file6_add(rem_client, rem_port, int_client, int_port,
++			                          protocol, uid, desc, timestamp);
++		}
++#else
+ 		r = upnp_add_inboundpinhole(rem_client, rem_port, int_client, int_port, proto_atoi(proto),
+-                        		desc, leaseduration, &uid);
++		                          desc, leaseduration, &uid);
++#endif
+ 		if(r == -1) {
+ 			syslog(LOG_ERR, "Failed to add %s:%hu -> %s:%hu protocol %s",
+ 			       rem_client, rem_port, int_client, int_port, proto);
+@@ -597,6 +645,8 @@ int reload_from_lease_file6(void)
+ 		}
+ 	}
+ 	fclose(fd);
++	fd = fopen(lease_file6, "a");
++	if (fd) fclose(fd);
+ 
+ 	return 0;
+ }
+@@ -639,13 +689,23 @@ upnp_add_inboundpinhole(const char * raddr,
+ 	time_t current;
+ 	unsigned int timestamp;
+ 	struct in6_addr address;
++	struct sockaddr_in6 peer;
++	struct in6_addr wan;
+ 
++	if (iport < 1024 || (proto != IPPROTO_TCP && proto != IPPROTO_UDP)) return -4;
++	if (getifaddr_in6(ext_if_name6, AF_INET6, &wan) < 0) return -1;
+ 	r = inet_pton(AF_INET6, iaddr, &address);
+ 	if(r <= 0) {
+ 		syslog(LOG_ERR, "inet_pton(%d, %s, %p) FAILED",
+ 		       AF_INET6, iaddr, &address);
+ 		return -4;
+ 	}
++	if (IN6_IS_ADDR_UNSPECIFIED(&address) || IN6_IS_ADDR_LOOPBACK(&address) ||
++	    IN6_IS_ADDR_MULTICAST(&address) || IN6_IS_ADDR_LINKLOCAL(&address)) return -4;
++	memset(&peer, 0, sizeof(peer));
++	peer.sin6_family = AF_INET6;
++	peer.sin6_addr = address;
++	if (!get_lan_for_peer((const struct sockaddr *)&peer)) return -4;
+ 	current = upnp_time();
+ 	timestamp = current + leasetime;
+ 	r = 0;
+@@ -656,7 +716,7 @@ upnp_add_inboundpinhole(const char * raddr,
+ 		r = upnp_update_inboundpinhole(*uid, leasetime);
+ #ifdef ENABLE_LEASEFILE
+ 		if (r >= 0) {
+-			lease_file6_remove(iaddr, iport, proto, -1);
++			lease_file6_remove(iaddr, iport, proto, *uid);
+ 			lease_file6_add(raddr, rport, iaddr, iport, proto, *uid, desc, timestamp);
+ 		}
+ #endif /* ENABLE_LEASEFILE */
+@@ -667,7 +727,7 @@ upnp_add_inboundpinhole(const char * raddr,
+ 	                    iaddr, iport, proto, desc, timestamp);
+ #ifdef ENABLE_LEASEFILE
+ 	if (*uid >= 0) {
+-		lease_file6_remove(iaddr, iport, proto, -1);
++		lease_file6_remove(iaddr, iport, proto, *uid);
+ 		lease_file6_add(raddr, rport, iaddr, iport, proto, *uid, desc, timestamp);
+ 	}
+ #endif /* ENABLE_LEASEFILE */
+@@ -1080,7 +1140,7 @@ upnp_clean_expired_pinholes(unsigned int * next_timestamp)
+ 	UNUSED(next_timestamp);
+ #endif
+ #ifdef ENABLE_LEASEFILE
+-	lease_file6_expire();
++	if (ret > 0) lease_file6_expire();
+ #endif
+ 
+ 	return ret;
+diff --git a/miniupnpd/upnpredirect.c b/miniupnpd/upnpredirect.c
+index 1644a19..bce1fe5 100644
+--- a/miniupnpd/upnpredirect.c
++++ b/miniupnpd/upnpredirect.c
+@@ -16,6 +16,7 @@
+ #include <arpa/inet.h>
+ 
+ #include <stdio.h>
++#include <errno.h>
+ #include <ctype.h>
+ #include <unistd.h>
+ 
+@@ -40,6 +41,7 @@
+ #endif
+ #ifdef USE_MINIUPNPDCTL
+ #include <stdio.h>
++#include <errno.h>
+ #include <unistd.h>
+ #endif
+ #ifdef ENABLE_LEASEFILE
+@@ -138,7 +140,7 @@ lease_file_remove(unsigned short eport, int proto)
+ 	}
+ 
+ 	str_size = snprintf(str, sizeof(str), "%s:%u:", proto_itoa(proto), eport);
+-	if (str_size >= sizeof(str)) {
++	if ((size_t)str_size >= sizeof(str)) {
+ 		str_size = sizeof(str) - 1;
+ 		syslog(LOG_WARNING, "%s:%u: truncated to %s", proto_itoa(proto), eport, str);
+ 	}
+@@ -149,7 +151,7 @@ lease_file_remove(unsigned short eport, int proto)
+ 		syslog(LOG_ERR, "could not open temporary lease file");
+ 		return -1;
+ 	}
+-	fchmod(tmp, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
++	fchmod(tmp, S_IRUSR | S_IWUSR);
+ 	fdt = fdopen(tmp, "a");
+ 
+ 	buf[sizeof(buf)-1] = 0;
+@@ -196,6 +198,7 @@ int reload_from_lease_file(void)
+ 	if(!lease_file) return -1;
+ 	fd = fopen( lease_file, "r");
+ 	if (fd==NULL) {
++		if (errno == ENOENT) return 0;
+ 		syslog(LOG_ERR, "could not open lease file: %s", lease_file);
+ 		return -1;
+ 	}
+@@ -288,6 +291,8 @@ int reload_from_lease_file(void)
+ 		}
+ 	}
+ 	fclose(fd);
++	fd = fopen(lease_file, "a");
++	if (fd) fclose(fd);
+ 
+ 	return 0;
+ }
+@@ -346,6 +351,22 @@ upnp_redirect(const char * rhost, unsigned short eport,
+ 		return -1;
+ 	}
+ 
++	{
++		struct sockaddr_in peer;
++		uint32_t ip = ntohl(address.s_addr);
++		if ((ip >> 24) == 0 || (ip >> 24) == 127 || ip >= 0xe0000000U) return -3;
++		memset(&peer, 0, sizeof(peer));
++		peer.sin_family = AF_INET;
++		peer.sin_addr = address;
++		{
++			struct lan_addr_s *lan = get_lan_for_peer((struct sockaddr *)&peer);
++			if (!lan) return -3;
++			if (ntohl(~lan->mask.s_addr) > 1 &&
++			    (address.s_addr == (lan->addr.s_addr & lan->mask.s_addr) ||
++			     address.s_addr == (lan->addr.s_addr | ~lan->mask.s_addr))) return -3;
++		}
++	}
++
+ 	if(!check_upnp_rule_against_permissions(upnppermlist, num_upnpperm,
+ 	                                        eport, address, iport, desc)) {
+ 		syslog(LOG_INFO, "redirection permission check failed for "

@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: Apache-2.0
+// Keep the OpenWrt 23.05 RPC interface. Report actual nft rules, including IPv6.
+'use strict';
+import { open, popen } from 'fs';
+
+function chain_rules(chain) {
+	const fd = popen(`nft -j list chain inet fw4 ${chain} 2>/dev/null`);
+	if (!fd) return [];
+	const data = fd.read('all');
+	fd.close();
+	let parsed;
+	try { parsed = json(data); } catch (e) { return []; }
+	return filter(parsed?.nftables || [], entry => entry.rule);
+}
+
+function describe(entry, family) {
+	const raw = entry.rule;
+	const rule = { family, proto: '', intaddr: '', intport: 0, extport: 0, descr: raw.comment || '' };
+	for (let expr in raw.expr) {
+		const m = expr.match;
+		if (m?.left?.payload?.field == 'dport') rule.extport = +m.right;
+		if (m?.left?.payload?.field == 'daddr') rule.intaddr = m.right;
+		if (m?.left?.meta?.key == 'l4proto' || m?.left?.payload?.field == 'protocol' ||
+		    m?.left?.payload?.field == 'nexthdr') {
+			rule.proto = (m.right == 'tcp' || m.right == 6) ? 'TCP' :
+			             (m.right == 'udp' || m.right == 17) ? 'UDP' : '';
+		}
+		// Some nft versions print the IPv4 protocol match as raw payload.
+		if (m?.left?.payload?.base == 'network header' && m.left.payload.offset == 9)
+			rule.proto = (m.right == 6 || m.right == '0x6') ? 'TCP' : (m.right == 17 || m.right == '0x11') ? 'UDP' : '';
+		if (expr.dnat) {
+			rule.intaddr = expr.dnat.addr;
+			rule.intport = +expr.dnat.port;
+		}
+	}
+	if (family == 6) {
+		const pin = match(raw.comment || '', /^pinhole-([0-9]+) ts-([0-9]+): (.*)$/);
+		if (!pin) return null;
+		rule.intport = rule.extport;
+		rule.descr = pin[3];
+		rule.num = `6:${pin[1]}`;
+	}
+	else rule.num = `4:${rule.proto}:${rule.extport}`;
+	rule.descr = replace(rule.descr, /^PCP MAP [0-9a-fA-F]{24}$/, 'PCP MAP');
+	return rule.proto && rule.intaddr && rule.intport ? rule : null;
+}
+
+return { 'luci.upnp': {
+	get_status: {
+		call: function() {
+			const rules = [];
+			for (let entry in chain_rules('upnp_prerouting')) {
+				const rule = describe(entry, 4);
+				if (rule) push(rules, rule);
+			}
+			for (let entry in chain_rules('upnp_forward')) {
+				const rule = describe(entry, 6);
+				if (rule) push(rules, rule);
+			}
+			return { rules };
+		}
+	},
+	delete_rule: {
+		args: { token: 'token' },
+		call: function(req) {
+			const token = req.args?.token || '';
+			const v4 = match(token, /^4:(TCP|UDP):([0-9]+)$/);
+			const v6 = match(token, /^6:([0-9]+)$/);
+			let command;
+			if (v4 && +v4[2] > 0 && +v4[2] <= 65535)
+				command = `miniupnpdctl delete4 ${v4[1]} ${+v4[2]}`;
+			else if (v6 && +v6[1] > 0 && +v6[1] <= 65534)
+				command = `miniupnpdctl delete6 ${+v6[1]}`;
+			else return { result: 'Bad request' };
+			const fd = popen(command);
+			if (!fd) return { result: 'Failed' };
+			const response = trim(fd.read('all'));
+			fd.close();
+			return { result: response == 'OK' ? 'OK' : 'Failed' };
+		}
+	}
+} };

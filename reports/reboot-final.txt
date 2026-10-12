@@ -1,0 +1,47 @@
+{
+	"rules": [
+		{
+			"family": 4,
+			"proto": "TCP",
+			"intaddr": "198.18.254.2",
+			"intport": 51901,
+			"extport": 51900,
+			"descr": "boot-smoke",
+			"num": "4:TCP:51900"
+		},
+		{
+			"family": 6,
+			"proto": "TCP",
+			"intaddr": "fd42:254::2",
+			"intport": 51902,
+			"extport": 51902,
+			"descr": "boot-smoke",
+			"num": "6:1234"
+		}
+	]
+}
+{
+	"miniupnpd": {
+		"instances": {
+			"instance1": {
+				"running": true,
+				"pid": 4071,
+				"command": [
+					"/usr/sbin/miniupnpd",
+					"-f",
+					"/var/etc/miniupnpd.conf"
+				],
+				"term_timeout": 5,
+				"respawn": {
+					"threshold": 3600,
+					"timeout": 5,
+					"retry": 5
+				}
+			}
+		}
+	}
+}
+a8910592-94a0-4957-bb1b-c43b05375d24
+miniupnpd 2.3.11 f8c4f4c3320820e615b281147b3043f66c195f17-iwrt23.05 Sep 27 2024
+using netfilter(nftables) backend
+build options: miniupnpdctl ipv6 NAT-PMP PCP leasefile check_portinuse igdv2

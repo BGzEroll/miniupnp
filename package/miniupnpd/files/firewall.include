@@ -1,0 +1,4 @@
+#!/bin/sh
+# fw4 executes compatible script includes after installing the ruleset.
+# SIGUSR2 restores leases and invalidates nft caches without restarting daemon.
+ubus call service signal '{"name":"miniupnpd","signal":12}' >/dev/null 2>&1 || :

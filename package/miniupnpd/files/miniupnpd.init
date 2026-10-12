@@ -1,0 +1,178 @@
+#!/bin/sh /etc/rc.common
+# SPDX-License-Identifier: GPL-2.0-only
+# Copyright (C) 2006-2014 OpenWrt.org
+# Retain OpenWrt 23.05 UCI names; fw4/nftables only.
+START=94
+STOP=15
+USE_PROCD=1
+PROG=/usr/sbin/miniupnpd
+
+conf_rule_add() {
+	local cfg="$1" action ext_ports int_addr int_ports comment
+	config_get action "$cfg" action deny
+	config_get ext_ports "$cfg" ext_ports 0-65535
+	config_get int_addr "$cfg" int_addr 0.0.0.0/0
+	config_get int_ports "$cfg" int_ports 0-65535
+	config_get comment "$cfg" comment ACL
+	[ "${int_addr%/*}" = "$int_addr" ] && int_addr="$int_addr/32"
+	printf '%s %s %s %s #%s\n' "$action" "$(echo "$ext_ports" | tr : -)" "$int_addr" "$(echo "$int_ports" | tr : -)" "$comment"
+}
+
+write_bool() {
+	local value
+	config_get_bool value config "$1" "$2"
+	[ "$value" = 1 ] && value=yes || value=no
+	printf '%s=%s\n' "${3:-$1}" "$value"
+}
+
+get_device() {
+	local interface="$1" device
+	network_get_device device "$interface" || device=$(uci -q get "network.$interface.device")
+	[ -n "$device" ] || device=$(uci -q get "network.$interface.ifname")
+	[ -n "$device" ] && printf '%s\n' "$device"
+}
+
+generate_config() {
+	UPNPD_ENABLED=0
+	UPNPD_CONFIG_CHANGED=0
+	mkdir -p /var/etc
+	. /lib/functions/network.sh
+	config_load upnpd
+	local enabled external_iface external_iface6 external_zone internal_iface ifname ifname6
+	local conf config_file port log_output lease4 lease6 uuid iface device key value address4 address6
+	config_get_bool enabled config enabled 0
+	[ "$enabled" = 1 ] || return 0
+	config_get config_file config config_file
+	config_get_bool log_output config log_output 0
+	if [ -n "$config_file" ]; then
+		conf="$config_file"
+	else
+		config_get external_iface config external_iface wan
+		config_get external_iface6 config external_iface6 wan6
+		config_get external_zone config external_zone
+		config_get internal_iface config internal_iface lan
+		# At boot, netifd may publish the device before its LAN addresses/routes.
+		# Keep leases untouched until configured LANs finish protocol setup.
+		local lan_proto
+		for iface in $internal_iface; do
+			lan_proto=$(uci -q get "network.$iface.proto")
+			[ -z "$lan_proto" ] || network_is_up "$iface" || return 2
+		done
+		ifname=$(get_device "$external_iface")
+		ifname6=$(get_device "$external_iface6")
+		[ -z "$external_zone" ] || ifname=$(fw4 -q zone "$external_zone" 2>/dev/null | head -1)
+		[ -n "$ifname" ] || ifname="$ifname6"
+		[ -n "$ifname6" ] || ifname6="$ifname"
+		# A physical device may be down or lack either address family.
+		[ -n "$ifname" ] || return 0
+		config_get port config port 5000
+		config_get lease4 config upnp_lease_file /var/lib/miniupnpd/leases
+		config_get lease6 config upnp_lease_file6 /var/lib/miniupnpd/leases6
+		config_get uuid config uuid
+		if [ -z "$uuid" ]; then
+			uuid=$(cat /proc/sys/kernel/random/uuid)
+			uci set upnpd.config.uuid="$uuid"
+			uci commit upnpd
+		fi
+		umask 077
+		mkdir -p /var/etc "${lease4%/*}" "${lease6%/*}"
+		touch "$lease4" "$lease6" || return 1
+		conf=/var/etc/miniupnpd.conf
+		{
+			printf 'ext_ifname=%s\next_ifname6=%s\nport=%s\n' "$ifname" "$ifname6" "$port"
+			for iface in $internal_iface; do
+				device=$(get_device "$iface")
+				[ -z "$device" ] || printf 'listening_ip=%s\n' "$device"
+				address4=; address6=
+				network_get_ipaddrs address4 "$iface"
+				network_get_ipaddrs6 address6 "$iface"
+				printf '# LAN %s IPv4=%s IPv6=%s\n' "$iface" "$address4" "$address6"
+			 done
+			write_bool enable_natpmp 1
+			write_bool enable_upnp 1
+			write_bool secure_mode 1
+			write_bool system_uptime 1
+			write_bool igdv1 0 force_igd_desc_v1
+			write_bool ipv6_disable 0
+			write_bool ext_allow_private_ipv4 1
+			printf 'ext_perform_stun=no\npcp_allow_thirdparty=no\n'
+			printf 'lease_file=%s\nlease_file6=%s\nuuid=%s\n' "$lease4" "$lease6" "$uuid"
+			for key in notify_interval presentation_url serial_number model_number; do
+				config_get value config "$key"
+				[ -z "$value" ] || {
+					[ "$key" = serial_number ] && key=serial
+					printf '%s=%s\n' "$key" "$value"
+				}
+			done
+			local upload download
+			config_get upload config upload
+			config_get download config download
+			[ -z "$upload" ] || printf 'bitrate_up=%s\n' "$((upload * 8192))"
+			[ -z "$download" ] || printf 'bitrate_down=%s\n' "$((download * 8192))"
+			config_foreach conf_rule_add perm_rule
+			printf 'upnp_table_name=fw4\nupnp_nat_table_name=fw4\nupnp_forward_chain=upnp_forward\nupnp_nat_chain=upnp_prerouting\n'
+		} > "$conf.new"
+		if cmp -s "$conf.new" "$conf"; then
+			rm "$conf.new"
+		else
+			mv "$conf.new" "$conf"
+		fi
+	fi
+	UPNPD_CONF="$conf"
+	UPNPD_LOG_OUTPUT="$log_output"
+	UPNPD_ENABLED=1
+	local signature
+	signature="$(sha256sum "$conf") log_output=$log_output"
+	if [ "$signature" != "$(cat /var/etc/miniupnpd.signature 2>/dev/null)" ]; then
+		UPNPD_CONFIG_CHANGED=1
+		printf '%s\n' "$signature" > /var/etc/miniupnpd.signature
+	fi
+}
+
+start_service() {
+	generate_config
+	local status="$?"
+	[ "$status" = 2 ] && return 0
+	[ "$status" = 0 ] || return 1
+	[ "$UPNPD_ENABLED" = 1 ] || return 0
+	nft list chain inet fw4 upnp_forward >/dev/null 2>&1 || fw4 reload || return 1
+	procd_open_instance
+	procd_set_param command "$PROG" -f "$UPNPD_CONF"
+	[ "$UPNPD_LOG_OUTPUT" = 0 ] || procd_append_param command -v
+	procd_set_param file "$UPNPD_CONF"
+	procd_set_param respawn 3600 5 5
+	procd_close_instance
+}
+
+reload_service() {
+	generate_config
+	local status="$?"
+	[ "$status" = 2 ] && return 0
+	[ "$status" = 0 ] || return 1
+	if [ "$UPNPD_ENABLED" != 1 ]; then
+		# Keep an empty procd service with UCI triggers while disabled, so
+		# LuCI enabling it later starts it without a manual reload.
+		if running >/dev/null 2>&1; then
+			restart
+		else
+			stop_service
+			start
+		fi
+	elif ! running >/dev/null 2>&1; then
+		start
+	elif [ "$UPNPD_CONFIG_CHANGED" = 1 ]; then
+		# Native restart resets procd's failure budget for an intentional change.
+		restart
+	else
+		ubus call service signal '{"name":"miniupnpd","signal":10}' >/dev/null 2>&1
+	fi
+}
+
+stop_service() {
+	nft flush chain inet fw4 upnp_forward 2>/dev/null
+	nft flush chain inet fw4 upnp_prerouting 2>/dev/null
+}
+
+service_triggers() {
+	procd_add_reload_trigger upnpd
+}

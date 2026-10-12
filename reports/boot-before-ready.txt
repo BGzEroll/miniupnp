@@ -1,0 +1,64 @@
+{
+	"miniupnpd": {
+		"instances": {
+			"instance1": {
+				"running": true,
+				"pid": 7410,
+				"command": [
+					"/usr/sbin/miniupnpd",
+					"-f",
+					"/var/etc/miniupnpd.conf"
+				],
+				"term_timeout": 5,
+				"respawn": {
+					"threshold": 3600,
+					"timeout": 5,
+					"retry": 5
+				}
+			}
+		}
+	}
+}
+table inet fw4 {
+	chain upnp_prerouting {
+	}
+}
+table inet fw4 {
+	chain upnp_forward {
+	}
+}
+TCP:51900::198.18.254.2:51901:1791818304:boot-smoke
+TCP;fd42:254::2;51902;;0;1234;1791818304;boot-smoke
+Mon Oct 12 23:08:23 2026 daemon.err miniupnpd[7410]: try_sendto(sock=9, len=415, dest=[ff02::c]:1900): sendto: Address not available
+Mon Oct 12 23:08:23 2026 daemon.err miniupnpd[7410]: try_sendto(sock=9, len=454, dest=[ff02::c]:1900): sendto: Address not available
+Mon Oct 12 23:08:23 2026 daemon.err miniupnpd[7410]: try_sendto(sock=9, len=415, dest=[ff02::c]:1900): sendto: Address not available
+Mon Oct 12 23:08:23 2026 daemon.err miniupnpd[7410]: try_sendto(sock=9, len=474, dest=[ff02::c]:1900): sendto: Address not available
+Mon Oct 12 23:08:23 2026 daemon.err miniupnpd[7410]: try_sendto(sock=9, len=415, dest=[ff02::c]:1900): sendto: Address not available
+Mon Oct 12 23:08:23 2026 daemon.err miniupnpd[7410]: try_sendto(sock=9, len=478, dest=[ff02::c]:1900): sendto: Address not available
+Mon Oct 12 23:08:23 2026 daemon.err miniupnpd[7410]: try_sendto(sock=9, len=406, dest=[ff02::c]:1900): sendto: Address not available
+Mon Oct 12 23:08:23 2026 daemon.err miniupnpd[7410]: try_sendto failed to send 33 packets
+ext_ifname=eth0
+ext_ifname6=eth0
+port=5000
+listening_ip=br-lan
+# LAN lan IPv4=192.168.100.1 IPv6=fd0f:d4dc:d046::1
+listening_ip=upnp-boot
+# LAN upnpboot IPv4=198.18.254.1 IPv6=fd42:254::1
+enable_natpmp=yes
+enable_upnp=yes
+secure_mode=yes
+system_uptime=yes
+force_igd_desc_v1=no
+ipv6_disable=no
+ext_allow_private_ipv4=yes
+ext_perform_stun=no
+pcp_allow_thirdparty=no
+lease_file=/etc/miniupnpd/leases
+lease_file6=/etc/miniupnpd/leases6
+uuid=be3565f8-919d-4ba8-b9de-86f161ca55c0
+allow 1024-65535 0.0.0.0/0 1024-65535 #Allow high ports; secure_mode still enforced
+deny 0-65535 0.0.0.0/0 0-65535 #Default deny
+upnp_table_name=fw4
+upnp_nat_table_name=fw4
+upnp_forward_chain=upnp_forward
+upnp_nat_chain=upnp_prerouting

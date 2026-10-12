@@ -1,0 +1,24 @@
+PASS IGDv2 description and IPv6 service 
+PASS IGDv1 client compatibility 
+PASS SSDP IGDv1 search on IGDv2 
+PASS SSDP IGDv2 search 
+PASS UPnP TCP DNAT and real forwarding 
+PASS NAT-PMP TCP forwarding renewal deletion 
+PASS PCP IPv4 TCP forwarding renewal deletion 
+FAIL IPv6 SOAP TCP pinhole real FORWARD and counters {'status': 404, 'body': '<HTML><HEAD><TITLE>404 Not Found</TITLE></HEAD><BODY><H1>Not Found</H1>The requested URL was not found on this server.</BODY></HTML>\r\n', 'values': {'TITLE': '404 Not Found', 'H1': 'Not Found'}, 'error': 0}
+FAIL PCP IPv6 TCP forwarding nonce renewal deletion {'version': 2, 'opcode': 129, 'error': 8, 'lifetime': 30, 'nonce': '0102030405060708090a0b0c', 'proto': 6, 'iport': 42000, 'eport': 42000, 'address': 'fd42:100::2'}
+PASS UPnP UDP DNAT and real forwarding 
+PASS NAT-PMP UDP forwarding renewal deletion 
+PASS PCP IPv4 UDP forwarding renewal deletion 
+FAIL IPv6 SOAP UDP pinhole real FORWARD and counters {'status': 404, 'body': '<HTML><HEAD><TITLE>404 Not Found</TITLE></HEAD><BODY><H1>Not Found</H1>The requested URL was not found on this server.</BODY></HTML>\r\n', 'values': {'TITLE': '404 Not Found', 'H1': 'Not Found'}, 'error': 0}
+FAIL PCP IPv6 UDP forwarding nonce renewal deletion {'version': 2, 'opcode': 129, 'error': 8, 'lifetime': 30, 'nonce': '0102030405060708090a0b0c', 'proto': 17, 'iport': 42000, 'eport': 42000, 'address': 'fd42:100::2'}
+FAIL Secure mode ACL invalid SOAP PCP parameters 
+PASS WAN management HTTP blocked 
+FAIL Port conflicts and NAT-PMP alternative allocation 
+FAIL IPv4 and IPv6 lease expiration closes new connections {'status': 404, 'body': '<HTML><HEAD><TITLE>404 Not Found</TITLE></HEAD><BODY><H1>Not Found</H1>The requested URL was not found on this server.</BODY></HTML>\r\n', 'values': {'TITLE': '404 Not Found', 'H1': 'Not Found'}, 'error': 0}
+FAIL fw4 reload restart stop/start lease and ID recovery {'status': 404, 'body': '<HTML><HEAD><TITLE>404 Not Found</TITLE></HEAD><BODY><H1>Not Found</H1>The requested URL was not found on this server.</BODY></HTML>\r\n', 'values': {'TITLE': '404 Not Found', 'H1': 'Not Found'}, 'error': 0}
+FAIL WAN address categories change and dual-stack independence (43000, 6, 4, {'forwarded': False}, True)
+FAIL WAN short and longer link loss automatic recovery {'status': 404, 'body': '<HTML><HEAD><TITLE>404 Not Found</TITLE></HEAD><BODY><H1>Not Found</H1>The requested URL was not found on this server.</BODY></HTML>\r\n', 'values': {'TITLE': '404 Not Found', 'H1': 'Not Found'}, 'error': 0}
+PASS Repeated reload and hotplug events preserve PID 
+FAIL Bounded mixed TCP/UDP stress and resource sample 
+FAIL Short idle no repeated daemon logs 

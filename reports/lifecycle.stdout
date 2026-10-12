@@ -1,0 +1,8 @@
+PASS Same WAN name new ifindex preserves IPv4 IPv6 forwarding 
+PASS IPv6 routed WAN with only link-local address 
+PASS UCI enable off clears rules on restores leases 
+PASS UCI IPv6 off has no pinholes on preserves valid ID 
+PASS UCI UPnP off keeps PCP IPv4 IPv6 operational 
+PASS UCI PCP NAT-PMP off keeps SOAP dual stack operational 
+PASS Illegal non-LAN network broadcast targets denied even without secure mode 
+PASS Removed LAN IPv6 prefix lease not restored 

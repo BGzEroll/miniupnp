@@ -1,0 +1,99 @@
+diff --git a/miniupnpd/upnpsoap.c b/miniupnpd/upnpsoap.c
+index 6975d32..4985d9f 100644
+--- a/miniupnpd/upnpsoap.c
++++ b/miniupnpd/upnpsoap.c
+@@ -592,7 +592,7 @@ AddPortMapping(struct upnphttp * h, const char * action, const char * ns)
+ 		return;
+ 	}
+ 
+-	leaseduration = leaseduration_str ? atoi(leaseduration_str) : 0;
++	leaseduration = leaseduration_str ? strtoul(leaseduration_str, NULL, 10) : 0;
+ #ifdef IGD_V2
+ 	/* PortMappingLeaseDuration can be either a value between 1 and
+ 	 * 604800 seconds or the zero value (for infinite lease time).
+@@ -702,7 +702,7 @@ AddAnyPortMapping(struct upnphttp * h, const char * action, const char * ns)
+ 	desc = GetValueFromNameValueList(&data, "NewPortMappingDescription");
+ 	leaseduration_str = GetValueFromNameValueList(&data, "NewLeaseDuration");
+ 
+-	leaseduration = leaseduration_str ? atoi(leaseduration_str) : 0;
++	leaseduration = leaseduration_str ? strtoul(leaseduration_str, NULL, 10) : 0;
+ 	if(leaseduration == 0)
+ 		leaseduration = 604800;
+ 
+@@ -2395,12 +2395,10 @@ GetPinholePackets(struct upnphttp * h, const char * action, const char * ns)
+ 		if(PinholeVerification(h, iaddr, iport, NULL) <= 0)
+ 			return;
+ 	}
+-#if 0
+-	else if(r == -4 || r == -1)
+-	{
+-		SoapError(h, 704, "NoSuchEntry");
++	else {
++		SoapError(h, n == -2 ? 704 : 501, n == -2 ? "NoSuchEntry" : "Action Failed");
++		return;
+ 	}
+-#endif
+ 
+ 	bodylen = snprintf(body, sizeof(body), resp,
+ 			action, ns/*"urn:schemas-upnp-org:service:WANIPv6FirewallControl:1"*/,
+@@ -2598,6 +2596,41 @@ soapMethods[] =
+ 	{ 0, 0 }
+ };
+ 
++/* Validate numeric wire arguments before the existing action handlers narrow
++ * them to 16-bit ports or signed ints. Missing arguments retain action-specific
++ * handling, including IGDv1 optional values and AddAnyPortMapping wildcard. */
++static int
++validate_numeric_arguments(struct upnphttp *h)
++{
++	static const char * const ports[] = { "NewExternalPort", "NewInternalPort",
++		"NewStartPort", "NewEndPort", "RemotePort", "InternalPort", "UniqueID", "Protocol" };
++	static const char * const leases[] = { "NewLeaseDuration", "LeaseTime", "NewLeaseTime" };
++	struct NameValueParserData data;
++	unsigned int i;
++	int valid = 1;
++	ParseNameValue(h->req_buf + h->req_contentoff, h->req_contentlen, &data);
++	for (i = 0; i < sizeof(ports)/sizeof(ports[0]) + sizeof(leases)/sizeof(leases[0]); i++) {
++		const char *name = i < sizeof(ports)/sizeof(ports[0]) ? ports[i] : leases[i - sizeof(ports)/sizeof(ports[0])];
++		const char *value = GetValueFromNameValueList(&data, name);
++		unsigned long limit = i < sizeof(ports)/sizeof(ports[0]) ? 65535UL :
++		                      strcmp(name, "NewLeaseDuration") == 0 ? 4294967295UL : 2147483647UL;
++		unsigned long number = 0;
++		if (!value) continue;
++		if (strcmp(name, "NewExternalPort") == 0 && strcmp(value, "*") == 0) continue;
++		if (!*value) { valid = 0; break; }
++		for (; *value; value++) {
++			if (*value < '0' || *value > '9' || number > (limit - (*value - '0')) / 10) {
++				valid = 0;
++				break;
++			}
++			number = number * 10 + (*value - '0');
++		}
++		if (!valid) break;
++	}
++	ClearNameValueList(&data);
++	return valid;
++}
++
+ void
+ ExecuteSoapAction(struct upnphttp * h, const char * action, int n)
+ {
+@@ -2614,6 +2647,7 @@ ExecuteSoapAction(struct upnphttp * h, const char * action, int n)
+ 		namespace[i] = '\0';
+ 		p++;
+ 		methodlen = n - (int)(p - action);
++		if (methodlen <= 0) { SoapError(h, 401, "Invalid Action"); return; }
+ 		if(p[methodlen-1] == '"') {
+ 			methodlen--;	/* remove the ending " */
+ 		}
+@@ -2626,6 +2660,10 @@ ExecuteSoapAction(struct upnphttp * h, const char * action, int n)
+ 				syslog(LOG_DEBUG, "Remote Call of SoapMethod '%s' %s",
+ 				       soapMethods[i].methodName, namespace);
+ #endif /* DEBUG */
++				if (!validate_numeric_arguments(h)) {
++					SoapError(h, 402, "Invalid Args");
++					return;
++				}
+ 				soapMethods[i].methodImpl(h, soapMethods[i].methodName, namespace);
+ 				return;
+ 			}

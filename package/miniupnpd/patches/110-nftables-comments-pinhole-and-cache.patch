@@ -1,0 +1,420 @@
+diff --git a/miniupnpd/netfilter_nft/nftnlrdr.c b/miniupnpd/netfilter_nft/nftnlrdr.c
+index 06396e8..7e41b00 100644
+--- a/miniupnpd/netfilter_nft/nftnlrdr.c
++++ b/miniupnpd/netfilter_nft/nftnlrdr.c
+@@ -169,6 +169,12 @@ static void
+ add_timestamp_entry(unsigned short eport, int proto, unsigned timestamp)
+ {
+ 	struct timestamp_entry * tmp;
++	for (tmp = timestamp_list; tmp; tmp = tmp->next) {
++		if (tmp->eport == eport && tmp->protocol == proto) {
++			tmp->timestamp = timestamp;
++			return;
++		}
++	}
+ 	tmp = malloc(sizeof(struct timestamp_entry));
+ 	if(tmp)
+ 	{
+diff --git a/miniupnpd/netfilter_nft/nftnlrdr_misc.c b/miniupnpd/netfilter_nft/nftnlrdr_misc.c
+index f6a8a2f..807deac 100644
+--- a/miniupnpd/netfilter_nft/nftnlrdr_misc.c
++++ b/miniupnpd/netfilter_nft/nftnlrdr_misc.c
+@@ -37,6 +37,7 @@
+ #include <libnftnl/chain.h>
+ #include <libnftnl/rule.h>
+ #include <libnftnl/expr.h>
++#include <libnftnl/udata.h>
+ 
+ #include "../commonrdr.h"
+ #include "nftnlrdr_misc.h"
+@@ -249,7 +250,7 @@ parse_rule_immediate(struct nftnl_expr *e, rule_t *r)
+ static void
+ parse_rule_counter(struct nftnl_expr *e, rule_t *r)
+ {
+-	r->type = RULE_COUNTER;
++	/* Counter is an attribute of the filter/NAT rule. */
+ 	r->bytes = nftnl_expr_get_u64(e, NFTNL_EXPR_CTR_BYTES);
+ 	r->packets = nftnl_expr_get_u64(e, NFTNL_EXPR_CTR_PACKETS);
+ }
+@@ -262,6 +263,12 @@ parse_rule_meta(struct nftnl_expr *e, rule_t *r)
+ 
+ 	/* ToDo: body of both cases are identical - bug? */
+ 	switch (key) {
++	case NFT_META_L4PROTO:
++		set_reg(r, dreg, RULE_REG_IP6_PROTO, 0);
++		break;
++	case NFT_META_IIFNAME:
++		set_reg(r, dreg, RULE_REG_IIFNAME, 0);
++		break;
+ 	case NFT_META_IIF:
+ 		set_reg(r, dreg, RULE_REG_IIF, 0);
+ 		break;
+@@ -353,7 +360,7 @@ parse_rule_payload(struct nftnl_expr *e, rule_t *r)
+ 			*regptr = RULE_REG_IP_PROTO;
+ 		} else if (offset == offsetof(struct ipv6hdr, nexthdr) &&
+ 			   len == sizeof(uint8_t)) {
+-			*regptr = RULE_REG_IP6_PROTO;
++			set_reg(r, dreg, RULE_REG_IP6_PROTO, 0);
+ 		} else if (offset == offsetof(struct ipv6hdr, daddr) &&
+ 		    len == sizeof(struct in6_addr)) {
+ 			*regptr = RULE_REG_IP6_DEST_ADDR;
+@@ -428,6 +435,10 @@ parse_rule_cmp(struct nftnl_expr *e, rule_t *r)
+ 	}
+ 
+ 	switch (r->reg1_type) {
++	case RULE_REG_IIFNAME:
++		if (data_len > 0 && data_len <= IFNAMSIZ && ((const char *)data_val)[data_len - 1] == '\0')
++			r->ingress_ifidx = if_nametoindex(data_val);
++		break;
+ 	case RULE_REG_IIF:
+ 		if (data_len == sizeof(uint32_t)) {
+ 			r->ingress_ifidx = *(const uint32_t *)data_val;
+@@ -541,6 +552,20 @@ struct table_cb_data {
+  *   MNL_CB_STOP : top callback runqueue.
+  *   MNL_CB_OK : no problems has occurred.
+  */
++static int
++read_rule_comment(const struct nftnl_udata *attribute, void *data)
++{
++	rule_t *rule = data;
++	uint8_t length = nftnl_udata_len(attribute);
++	const char *comment = nftnl_udata_get(attribute);
++	if (nftnl_udata_type(attribute) != NFTNL_UDATA_RULE_COMMENT) return 0;
++	if (!length || comment[length - 1] != '\0' || rule->desc) return -1;
++	rule->desc = strndup(comment, length - 1);
++	if (!rule->desc) return -1;
++	rule->desc_len = length - 1;
++	return 0;
++}
++
+ static int
+ table_cb(const struct nlmsghdr *nlh, void *data)
+ {
+@@ -580,7 +605,7 @@ table_cb(const struct nlmsghdr *nlh, void *data)
+ 					const char *descr;
+ 					descr = (const char *) nftnl_rule_get_data(rule, NFTNL_RULE_USERDATA,
+ 															 &r->desc_len);
+-					if (r->desc_len > 0) {
++					if (r->desc_len > 0 && nftnl_udata_parse(descr, r->desc_len, read_rule_comment, r) < 0 && !r->desc) {
+ 						r->desc = malloc(r->desc_len + 1);
+ 						if (r->desc != NULL) {
+ 							memcpy(r->desc, descr, r->desc_len);
+@@ -645,6 +670,14 @@ table_cb(const struct nlmsghdr *nlh, void *data)
+ }
+ #undef CB_DATA
+ 
++void
++nft_invalidate_cache(void)
++{
++	rule_list_filter_validate = RULE_CACHE_INVALID;
++	rule_list_redirect_validate = RULE_CACHE_INVALID;
++	rule_list_peer_validate = RULE_CACHE_INVALID;
++}
++
+ int
+ refresh_nft_cache_filter(void)
+ {
+@@ -930,6 +963,26 @@ expr_add_nat(struct nftnl_rule *r, uint32_t t, uint32_t family,
+ 	nftnl_rule_add_expr(r, e);
+ }
+ 
++static int
++set_rule_comment(struct nftnl_rule *rule, const char *description)
++{
++	struct nftnl_udata_buf *data;
++	char comment[NFTNL_UDATA_COMMENT_MAXLEN];
++	int result;
++	if (!description || !*description) return 0;
++	snprintf(comment, sizeof(comment), "%s", description);
++	data = nftnl_udata_buf_alloc(NFTNL_RULE_USERDATA_MAX_LEN);
++	if (!data) return -1;
++	if (!nftnl_udata_put_strz(data, NFTNL_UDATA_RULE_COMMENT, comment)) {
++		nftnl_udata_buf_free(data);
++		return -1;
++	}
++	result = nftnl_rule_set_data(rule, NFTNL_RULE_USERDATA,
++	                            nftnl_udata_buf_data(data), nftnl_udata_buf_len(data));
++	nftnl_udata_buf_free(data);
++	return result;
++}
++
+ struct nftnl_rule *
+ rule_set_snat(uint8_t family, uint8_t proto,
+ 	      in_addr_t rhost, unsigned short rport,
+@@ -952,10 +1005,9 @@ rule_set_snat(uint8_t family, uint8_t proto,
+ 	nftnl_rule_set_str(r, NFTNL_RULE_TABLE, nft_nat_table);
+ 	nftnl_rule_set_str(r, NFTNL_RULE_CHAIN, nft_postrouting_chain);
+ 
+-	if (descr != NULL && *descr != '\0') {
+-		uint32_t len = strlen(descr);
+-		nftnl_rule_set_data(r, NFTNL_RULE_USERDATA,
+-							descr, MIN(len, NFTNL_RULE_USERDATA_MAX_LEN));
++	if (set_rule_comment(r, descr) < 0) {
++		nftnl_rule_free(r);
++		return NULL;
+ 	}
+ 
+ 	/* Family: these IPv4 offsets must not be evaluated against IPv6 packets
+@@ -1032,10 +1084,9 @@ rule_set_dnat(uint8_t family, const char * ifname, uint8_t proto,
+ 	nftnl_rule_set_str(r, NFTNL_RULE_TABLE, nft_nat_table);
+ 	nftnl_rule_set_str(r, NFTNL_RULE_CHAIN, nft_prerouting_chain);
+ 
+-	if (descr != NULL && *descr != '\0') {
+-		uint32_t len = strlen(descr);
+-		nftnl_rule_set_data(r, NFTNL_RULE_USERDATA,
+-							descr, MIN(len, NFTNL_RULE_USERDATA_MAX_LEN));
++	if (set_rule_comment(r, descr) < 0) {
++		nftnl_rule_free(r);
++		return NULL;
+ 	}
+ 
+ 	if (handle != NULL) {
+@@ -1045,11 +1096,8 @@ rule_set_dnat(uint8_t family, const char * ifname, uint8_t proto,
+ 
+ #ifdef USE_IFNAME_IN_RULES
+ 	if (ifname != NULL) {
+-		uint32_t if_idx;
+-		if_idx = (uint32_t)if_nametoindex(ifname);
+-		expr_add_meta(r, NFT_META_IIF, NFT_REG_1);
+-		expr_add_cmp(r, NFT_REG_1, NFT_CMP_EQ, &if_idx,
+-			     sizeof(uint32_t));
++		expr_add_meta(r, NFT_META_IIFNAME, NFT_REG_1);
++		expr_add_cmp(r, NFT_REG_1, NFT_CMP_EQ, ifname, strlen(ifname) + 1);
+ 	}
+ #endif
+ 
+@@ -1178,10 +1226,10 @@ rule_set_filter6(uint8_t family, const char * ifname, uint8_t proto,
+ 	}
+ 
+ 	/* Protocol */
+-	expr_add_payload(r, NFT_PAYLOAD_NETWORK_HEADER, NFT_REG_1,
+-	                 offsetof(struct ipv6hdr, nexthdr), sizeof(uint8_t));
++	expr_add_meta(r, NFT_META_L4PROTO, NFT_REG_1);
+ 	expr_add_cmp(r, NFT_REG_1, NFT_CMP_EQ, &proto, sizeof(uint8_t));
+ 
++	expr_add_counter(r);
+ 	expr_set_reg_verdict(r, NF_ACCEPT);
+ 
+ 	debug_rule(r);
+@@ -1208,10 +1256,9 @@ rule_set_filter_common(struct nftnl_rule *r, uint8_t family, const char * ifname
+ 	nftnl_rule_set_str(r, NFTNL_RULE_TABLE, nft_table);
+ 	nftnl_rule_set_str(r, NFTNL_RULE_CHAIN, nft_forward_chain);
+ 
+-	if (descr != NULL && *descr != '\0') {
+-		uint32_t len = strlen(descr);
+-		nftnl_rule_set_data(r, NFTNL_RULE_USERDATA,
+-							descr, MIN(len, NFTNL_RULE_USERDATA_MAX_LEN));
++	if (set_rule_comment(r, descr) < 0) {
++		nftnl_rule_free(r);
++		return NULL;
+ 	}
+ 
+ 	if (handle != NULL) {
+@@ -1221,11 +1268,8 @@ rule_set_filter_common(struct nftnl_rule *r, uint8_t family, const char * ifname
+ 
+ #ifdef USE_IFNAME_IN_RULES
+ 	if (ifname != NULL) {
+-		uint32_t if_idx;
+-		if_idx = (uint32_t)if_nametoindex(ifname);
+-		expr_add_meta(r, NFT_META_IIF, NFT_REG_1);
+-		expr_add_cmp(r, NFT_REG_1, NFT_CMP_EQ, &if_idx,
+-			     sizeof(uint32_t));
++		expr_add_meta(r, NFT_META_IIFNAME, NFT_REG_1);
++		expr_add_cmp(r, NFT_REG_1, NFT_CMP_EQ, ifname, strlen(ifname) + 1);
+ 	}
+ #endif
+ 
+diff --git a/miniupnpd/netfilter_nft/nftnlrdr_misc.h b/miniupnpd/netfilter_nft/nftnlrdr_misc.h
+index ffe8452..4d970ca 100644
+--- a/miniupnpd/netfilter_nft/nftnlrdr_misc.h
++++ b/miniupnpd/netfilter_nft/nftnlrdr_misc.h
+@@ -25,6 +25,7 @@ enum rule_reg_type {
+ 	RULE_REG_NONE,
+ 	RULE_REG_PROTO,
+ 	RULE_REG_IIF,
++	RULE_REG_IIFNAME,
+ 	RULE_REG_OIF,
+ 	RULE_REG_IP_SRC_ADDR,
+ 	RULE_REG_IP_DEST_ADDR,
+@@ -141,6 +142,7 @@ rule_set_filter_common(struct nftnl_rule *r, uint8_t family, const char * ifname
+ 		uint8_t proto, unsigned short eport, unsigned short iport, 
+ 		unsigned short rport, const char *descr, const char *handle);
+ struct nftnl_rule *rule_del_handle(rule_t *r);
++void nft_invalidate_cache(void);
+ int refresh_nft_cache_filter(void);
+ int refresh_nft_cache_redirect(void);
+ int refresh_nft_cache_peer(void);
+diff --git a/miniupnpd/netfilter_nft/nftpinhole.c b/miniupnpd/netfilter_nft/nftpinhole.c
+index b30c55c..fea7956 100644
+--- a/miniupnpd/netfilter_nft/nftpinhole.c
++++ b/miniupnpd/netfilter_nft/nftpinhole.c
+@@ -21,7 +21,7 @@
+ #include <limits.h>
+ 
+ #include "../upnputils.h"
+-#include "nftpinhole.h"
++
+ 
+ #include <linux/version.h>
+ 
+@@ -36,6 +36,7 @@
+ #include "tiny_nf_nat.h"
+ 
+ #include "config.h"
++#include "nftpinhole.h"
+ #include "../macros.h"
+ #include "nftnlrdr.h"
+ #include "../upnpglobalvars.h"
+@@ -68,10 +69,10 @@ void shutdown_iptpinhole(void)
+ /*
+ ip saddr <rem_host> ip daddr <int_client> tcp sport <rem_port>  tcp dport <int_port>
+ */
+-int add_pinhole(const char * ifname,
++static int add_pinhole_uid(const char * ifname,
+                 const char * rem_host, unsigned short rem_port,
+                 const char * int_client, unsigned short int_port,
+-                int proto, const char * desc, unsigned int timestamp)
++                int proto, const char * desc, unsigned int timestamp, int wanted_uid)
+ {
+ 	int uid, res;
+ 	char comment[NFT_DESCR_SIZE];
+@@ -80,7 +81,14 @@ int add_pinhole(const char * ifname,
+ 	struct in6_addr rhost_addr, ihost_addr;
+ 	struct in6_addr *rhost_addr_p;
+ 
+-	uid = next_uid;
++	uid = wanted_uid > 0 ? wanted_uid : next_uid;
++	if (uid < 1 || uid > 65534) return -1;
++	while (get_pinhole_info(uid, NULL, 0, NULL, NULL, 0, NULL,
++	                        NULL, NULL, 0, NULL, NULL, NULL) >= 0) {
++		if (wanted_uid > 0) return -1;
++		uid = uid == 65534 ? 1 : uid + 1;
++		if (uid == next_uid) return -1;
++	}
+ 
+ 	d_printf(("add_pinhole(%s, %s, %hu, %s, %hu, %d, %s, %u)\n",
+ 	          ifname, rem_host, rem_port, int_client, int_port, proto, desc, timestamp));
+@@ -91,11 +99,13 @@ int add_pinhole(const char * ifname,
+ 			rhost_addr_p = &rhost_addr;
+ 		} else {
+ 			syslog(LOG_WARNING, "Failed to parse INET6 address \"%s\"", rem_host);
++			return -1;
+ 		}
+ 	}
+ 
+ 	if (inet_pton(AF_INET6, int_client, &ihost_addr) != 1) {
+ 		syslog(LOG_WARNING, "Failed to parse INET6 address \"%s\"", int_client);
++		return -1;
+ 	}
+ 
+ 	snprintf(comment, NFT_DESCR_SIZE,
+@@ -110,13 +120,29 @@ int add_pinhole(const char * ifname,
+ 	if (res < 0)
+ 		return -1;
+ 
+-	if (++next_uid >= 65535) {
+-		next_uid = 1;
+-	}
++	if (wanted_uid == 0) next_uid = uid == 65534 ? 1 : uid + 1;
+ 
+ 	return uid;
+ }
+ 
++int add_pinhole(const char * ifname,
++                const char * rem_host, unsigned short rem_port,
++                const char * int_client, unsigned short int_port,
++                int proto, const char *desc, unsigned int timestamp)
++{
++	return add_pinhole_uid(ifname, rem_host, rem_port, int_client, int_port,
++	                      proto, desc, timestamp, 0);
++}
++
++int restore_pinhole(const char * ifname,
++                    const char * rem_host, unsigned short rem_port,
++                    const char * int_client, unsigned short int_port,
++                    int proto, const char *desc, unsigned int timestamp, int uid)
++{
++	return add_pinhole_uid(ifname, rem_host, rem_port, int_client, int_port,
++	                      proto, desc, timestamp, uid);
++}
++
+ int
+ find_pinhole(const char * ifname,
+              const char * rem_host, unsigned short rem_port,
+@@ -234,7 +260,6 @@ update_pinhole(unsigned short uid, unsigned int timestamp)
+ 	char desc[NFT_DESCR_SIZE];
+ 	char ifname[IFNAMSIZ];
+ 	char comment[NFT_DESCR_SIZE];
+-	uint32_t ext_if_indx;
+ 	int proto, res;
+ 	unsigned short iport, rport;
+ 	rule_t *p;
+@@ -290,8 +315,7 @@ update_pinhole(unsigned short uid, unsigned int timestamp)
+ 
+ 			proto = p->proto;
+ 
+-			ext_if_indx = p->ingress_ifidx;
+-			if_indextoname(ext_if_indx, ifname);
++			snprintf(ifname, sizeof(ifname), "%s", ext_if_name6);
+ 
+ 			pd = strchr(p->desc, ':');
+ 			if (pd) {
+@@ -354,7 +378,8 @@ get_pinhole_info(unsigned short uid,
+ 	         "pinhole-%hu", uid);
+ 
+ 	d_printf(("get_pinhole_info()\n"));
+-	refresh_nft_cache_filter();
++	if (packets || bytes) nft_invalidate_cache();
++	if (refresh_nft_cache_filter() < 0) return -1;
+ 
+ 	LIST_FOREACH(p, &head_filter, entry) {
+ 		// Only forward entries
+@@ -423,19 +448,28 @@ get_pinhole_info(unsigned short uid,
+ 					*bytes = p->bytes;
+ 			}
+ 
+-			break;
++			return 0;
+ 		}
+ 	}
+ 
+ 	d_printf(("end_pinhole_info()\n"));
+ 
+-	return 0;
++	return -2;
+ }
+ 
+ int get_pinhole_uid_by_index(int index)
+ {
+-	UNUSED(index);
+-	return -42;
++	rule_t *p;
++	int uid;
++	unsigned int timestamp;
++	if (index < 0 || refresh_nft_cache_filter() < 0) return -1;
++	LIST_FOREACH(p, &head_filter, entry) {
++		if (p->type != RULE_FILTER || !p->desc ||
++		    sscanf(p->desc, PINEHOLE_LABEL_FORMAT_SKIPDESC, &uid, &timestamp) != 2)
++			continue;
++		if (index-- == 0) return uid;
++	}
++	return -2;
+ }
+ 
+ int
+diff --git a/miniupnpd/netfilter_nft/nftpinhole.h b/miniupnpd/netfilter_nft/nftpinhole.h
+index d536a27..fa77fd9 100644
+--- a/miniupnpd/netfilter_nft/nftpinhole.h
++++ b/miniupnpd/netfilter_nft/nftpinhole.h
+@@ -21,6 +21,11 @@ int add_pinhole(const char * ifname,
+                 const char * int_client, unsigned short int_port,
+                 int proto, const char *desc, unsigned int timestamp);
+ 
++int restore_pinhole(const char * ifname,
++                    const char * rem_host, unsigned short rem_port,
++                    const char * int_client, unsigned short int_port,
++                    int proto, const char *desc, unsigned int timestamp, int uid);
++
+ int update_pinhole(unsigned short uid, unsigned int timestamp);
+ 
+ int delete_pinhole(unsigned short uid);

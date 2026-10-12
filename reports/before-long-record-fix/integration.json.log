@@ -1,0 +1,43 @@
+Mon Oct 12 23:25:58 2026 user.notice ucitrack: Setting up /etc/config/miniupnpd reload dependency on /etc/config/firewall
+Mon Oct 12 23:25:59 2026 daemon.notice miniupnpd[2766]: IPv4 unavailable on eth0; IPv6 service remains active
+Mon Oct 12 23:25:59 2026 daemon.notice miniupnpd[2766]: HTTP listening on port 5000
+Mon Oct 12 23:25:59 2026 daemon.notice miniupnpd[2766]: HTTP IPv6 address given to control points : [fd42:254::1]
+Mon Oct 12 23:25:59 2026 daemon.notice miniupnpd[2766]: Listening for NAT-PMP/PCP traffic on port 5351
+Mon Oct 12 23:26:12 2026 daemon.notice miniupnpd[2766]: shutting down MiniUPnPd
+Mon Oct 12 23:26:12 2026 daemon.err miniupnpd[2766]: Failed to broadcast good-bye notifications
+Mon Oct 12 23:26:12 2026 daemon.notice miniupnpd[4150]: HTTP listening on port 5000
+Mon Oct 12 23:26:12 2026 daemon.notice miniupnpd[4150]: HTTP IPv6 address given to control points : [fd42:254::1]
+Mon Oct 12 23:26:12 2026 daemon.notice miniupnpd[4150]: Listening for NAT-PMP/PCP traffic on port 5351
+Mon Oct 12 23:29:06 2026 daemon.notice miniupnpd[4150]: shutting down MiniUPnPd
+Mon Oct 12 23:29:06 2026 daemon.err miniupnpd[4150]: Failed to broadcast good-bye notifications
+Mon Oct 12 23:29:08 2026 daemon.notice miniupnpd[5230]: HTTP listening on port 5000
+Mon Oct 12 23:29:08 2026 daemon.notice miniupnpd[5230]: HTTP IPv6 address given to control points : [fd0f:d4dc:d046::1]
+Mon Oct 12 23:29:08 2026 daemon.notice miniupnpd[5230]: Listening for NAT-PMP/PCP traffic on port 5351
+Mon Oct 12 23:29:19 2026 daemon.notice miniupnpd[5230]: shutting down MiniUPnPd
+Mon Oct 12 23:29:20 2026 daemon.notice miniupnpd[5525]: HTTP listening on port 5000
+Mon Oct 12 23:29:20 2026 daemon.notice miniupnpd[5525]: HTTP IPv6 address given to control points : [fd42:100::1]
+Mon Oct 12 23:29:20 2026 daemon.notice miniupnpd[5525]: Listening for NAT-PMP/PCP traffic on port 5351
+Mon Oct 12 23:29:25 2026 daemon.warn miniupnpd[5525]: AddPinhole: LeaseTime=0 not supported, (ip=fd42:100::2)
+Mon Oct 12 23:29:25 2026 daemon.err miniupnpd[5525]: PCP: Invalid PCP v2 MAP message.
+Mon Oct 12 23:29:25 2026 daemon.err miniupnpd[5525]: Unauthorized to remove PCP mapping internal port 42001, protocol TCP
+Mon Oct 12 23:29:25 2026 daemon.err miniupnpd[5525]: PCP MAP: failed to add mapping TCP 43001->198.18.0.2:42001 'PCP MAP ffffffffffffffffffffffff'
+Mon Oct 12 23:29:26 2026 daemon.err miniupnpd[5525]: Unauthorized to remove PCP mapping internal port 42001, protocol TCP
+Mon Oct 12 23:29:26 2026 daemon.err miniupnpd[5525]: Unauthorized to update pinhole : "PCP MAP 04030201080706050c0b0a09" != "PCP MAP ffffffffffffffffffffffff"
+Mon Oct 12 23:29:26 2026 daemon.err miniupnpd[5525]: PCP MAP: failed to add mapping TCP 42001->fd42:100::2:42001 'PCP MAP ffffffffffffffffffffffff'
+Mon Oct 12 23:29:26 2026 daemon.err miniupnpd[5525]: PCP MAP: failed to add mapping TCP 80->fd42:100::2:80 'PCP MAP 04030201080706050c0b0a09'
+Mon Oct 12 23:29:30 2026 daemon.notice miniupnpd[5525]: remove port mapping 43000 TCP because it has expired
+Mon Oct 12 23:29:33 2026 daemon.notice miniupnpd[5525]: shutting down MiniUPnPd
+Mon Oct 12 23:29:33 2026 daemon.notice miniupnpd[5820]: HTTP listening on port 5000
+Mon Oct 12 23:29:33 2026 daemon.notice miniupnpd[5820]: HTTP IPv6 address given to control points : [fd42:100::1]
+Mon Oct 12 23:29:33 2026 daemon.notice miniupnpd[5820]: Listening for NAT-PMP/PCP traffic on port 5351
+Mon Oct 12 23:29:34 2026 daemon.notice miniupnpd[5820]: shutting down MiniUPnPd
+Mon Oct 12 23:29:34 2026 daemon.notice miniupnpd[5904]: HTTP listening on port 5000
+Mon Oct 12 23:29:34 2026 daemon.notice miniupnpd[5904]: HTTP IPv6 address given to control points : [fd42:100::1]
+Mon Oct 12 23:29:34 2026 daemon.notice miniupnpd[5904]: Listening for NAT-PMP/PCP traffic on port 5351
+Mon Oct 12 23:29:35 2026 daemon.notice miniupnpd[5904]: IPv4 unavailable on upnp-w; IPv6 service remains active
+Mon Oct 12 23:29:36 2026 daemon.notice miniupnpd[5904]: IPv4 unavailable on upnp-w; IPv6 service remains active
+Mon Oct 12 23:29:36 2026 daemon.notice miniupnpd[5904]: IPv4 unavailable on upnp-w; IPv6 service remains active
+Mon Oct 12 23:29:37 2026 daemon.notice miniupnpd[5904]: IPv4 unavailable on upnp-w; IPv6 service remains active
+Mon Oct 12 23:29:37 2026 daemon.notice miniupnpd[5904]: IPv4 unavailable on upnp-w; IPv6 service remains active
+Mon Oct 12 23:29:39 2026 daemon.notice miniupnpd[5904]: IPv4 unavailable on upnp-w; IPv6 service remains active
+Mon Oct 12 23:29:43 2026 daemon.notice miniupnpd[5904]: IPv4 unavailable on upnp-w; IPv6 service remains active

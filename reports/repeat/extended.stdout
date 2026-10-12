@@ -1,0 +1,9 @@
+PASS PCP nonce preservation after fw4 reload and daemon restart 
+PASS IPv6 WAN ULA prefix change actual forwarding 
+PASS IPv6 remote host restriction 
+PASS Renew one IPv6 lease preserves other IDs and records 
+PASS Long IPv6 lease record restore renewal deletion 
+PASS Concurrent clients mixed TCP/UDP bounded workload 
+PASS NAT-PMP granted lease expiry 
+PASS PCP IPv4 IPv6 minimum granted lifetime and actual expiry 
+PASS No IPv4 address repeated requests do not log flood 

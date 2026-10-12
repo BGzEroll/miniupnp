@@ -1,0 +1,727 @@
+{
+  "seconds": 300,
+  "cycles": 320,
+  "failures": [],
+  "samples": [
+    {
+      "elapsed": 0.0,
+      "phase": "start",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 10,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 0.01,
+      "phase": "concurrent_load",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 10,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 2.01,
+      "phase": "concurrent_load",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 12,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 4.02,
+      "phase": "concurrent_load",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 13,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 6.02,
+      "phase": "concurrent_load",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 15,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 8.03,
+      "phase": "concurrent_load",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 17,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 10.04,
+      "phase": "concurrent_load",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 18,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 12.04,
+      "phase": "concurrent_load",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 20,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 14.06,
+      "phase": "concurrent_load",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 22,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 16.09,
+      "phase": "concurrent_load",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 18.09,
+      "phase": "load_finished",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 18.6,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 23.61,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 28.61,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 33.62,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 38.62,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 43.63,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 48.64,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 53.64,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 58.65,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 63.65,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 68.66,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 73.66,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 78.67,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 83.67,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 88.68,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 93.69,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 98.69,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 103.7,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 108.7,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 113.71,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 118.71,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 123.72,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 128.72,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 133.73,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 138.74,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 143.74,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 148.75,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 153.75,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 158.76,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 163.76,
+      "phase": "ipv6_only_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 23,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 169.28,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 174.29,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 179.29,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 184.3,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 189.3,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 194.31,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 199.32,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 204.32,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 209.33,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 214.33,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 219.34,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 224.35,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 229.35,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 234.36,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 239.36,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 244.37,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 249.37,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 254.38,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 259.39,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 264.39,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 269.4,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 274.4,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 279.41,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 284.42,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 289.42,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 294.43,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 299.43,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 304.44,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 309.45,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 314.45,
+      "phase": "dual_stack_idle",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    },
+    {
+      "elapsed": 319.46,
+      "phase": "done",
+      "pid": "31063",
+      "rss_kb": 1044,
+      "fds": 14,
+      "cpu_ticks": 24,
+      "nat_rules": 0,
+      "pinholes": 0
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+testupnppermissions tests OK
+testgetifaddr test OK
+testssdppktgen: OS_VERSION : 5.15.164
+testssdppktgen: NOTIFY * HTTP/1.1
+HOST: 123.456.789.123:1900
+CACHE-CONTROL: max-age=1234567890
+LOCATION: http://222.222.222.222:12345/rootDesc.xml
+SERVER: OpenWrt/5.15.164 UPnP/1.1 MiniUPnPd/2.3.11
+NT: urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1
+USN: uuid:12345678-0000-0000-0000-000000abcd01urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1
+NTS: ssdp:alive
+OPT: "http://schemas.upnp.org/upnp/1/0/"; ns=01
+01-NLS: 1791813430
+BOOTID.UPNP.ORG: 1791813430
+CONFIGID.UPNP.ORG: 1234567890
+
+testssdppktgen: NOTIFY * HTTP/1.1
+HOST: [1234:5678:abcd:ef00:1234:5678:abcd:ef00]:1900
+CACHE-CONTROL: max-age=1234567890
+LOCATION: http://[1000:2000:3000:4000:5000:6000:7000:8000]:12345/rootDesc.xml
+SERVER: OpenWrt/5.15.164 UPnP/1.1 MiniUPnPd/2.3.11
+NT: urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1
+USN: uuid:12345678-0000-0000-0000-000000abcd01urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1
+NTS: ssdp:alive
+OPT: "http://schemas.upnp.org/upnp/1/0/"; ns=01
+01-NLS: 1791813430
+BOOTID.UPNP.ORG: 1791813430
+CONFIGID.UPNP.ORG: 1234567890
+
+ash: timeout: not found
+testupnphttp: NAME ImmortalWrt
+testupnphttp: VERSION 23.05-SNAPSHOT
+testupnphttp: ID immortalwrt
+testupnphttp: ID_LIKE lede openwrt
+testupnphttp: PRETTY_NAME ImmortalWrt 23.05-SNAPSHOT
+testupnphttp: VERSION_ID 23.05-snapshot
+-rw-r--r--    1 root     root            24 Oct 12 21:58 /tmp/upnphttpXXXXDKBcbJ/httpserverout
+Listening on port 45721
+port=45721 pid=26402
+rootDesctestupnphttp: HTTP connection from 127.0.0.1:58764
+> GET /rootDesc.xml HTTP/1.1
+> Host: 127.0.0.1:45721
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+testupnphttp: HTTP REQUEST from 127.0.0.1:58764 : GET /rootDesc.xml (HTTP/1.1)
+testupnphttp: Host: 127.0.0.1:45721
+< HTTP/1.1 200 OK
+< Content-Type: text/xml; charset="utf-8"
+< Connection: close
+< Content-Length: 8
+< Server: OpenWrt/23.05-snapshot UPnP/1.1 MiniUPnPd/2.3.11
+< Ext:
+< 
+{ [8 bytes data]
+
+GET ok
+1024+0 records in
+1024+0 records out
+testupnphttp: HTTP connection from 127.0.0.1:58778
+> POST /soap HTTP/1.1
+> Host: 127.0.0.1:45721
+> User-Agent: curl/8.7.1
+> Accept: */*
+> SoapAction: "Action#Test"
+> Content-Length: 1048576
+> Content-Type: application/x-www-form-urlencoded
+> 
+} [65352 bytes data]
+testupnphttp: HTTP REQUEST from 127.0.0.1:58778 : POST /soap (HTTP/1.1)
+testupnphttp: Host: 127.0.0.1:45721
+testupnphttp: SOAPAction: Action#Test
+< HTTP/1.1 200 OK
+< Content-Type: text/xml; charset="utf-8"
+< Connection: close
+< Content-Length: 11
+< Server: OpenWrt/23.05-snapshot UPnP/1.1 MiniUPnPd/2.3.11
+< Ext:
+< 
+{ [11 bytes data]
+Action#Test
+POST ok
+60+0 records in
+60+0 records out
+testupnphttp: HTTP connection from 127.0.0.1:58788
+http_code=400
+
+POST headers over limit => rejected
+Terminated

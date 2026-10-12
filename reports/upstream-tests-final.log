@@ -1,0 +1,173 @@
+patching file miniupnpd/asyncsendto.c
+patching file miniupnpd/configure
+patching file miniupnpd/getifaddr.c
+patching file miniupnpd/linux/ifacewatcher.c
+patching file miniupnpd/minissdp.c
+patching file miniupnpd/miniupnpd.c
+patching file miniupnpd/miniupnpdctl.c
+patching file miniupnpd/natpmp.c
+patching file miniupnpd/pcpserver.c
+patching file miniupnpd/testifacewatcher.c
+patching file miniupnpd/upnputils.c
+patching file miniupnpd/netfilter_nft/nftnlrdr.c
+patching file miniupnpd/netfilter_nft/nftnlrdr_misc.c
+patching file miniupnpd/netfilter_nft/nftnlrdr_misc.h
+patching file miniupnpd/netfilter_nft/nftpinhole.c
+patching file miniupnpd/netfilter_nft/nftpinhole.h
+patching file miniupnpd/upnppinhole.c
+patching file miniupnpd/upnpredirect.c
+patching file miniupnpd/upnpsoap.c
+found libnftnl version 1.2.6
+found libmnl version 1.0.5
+./Makefile.linux_nft -> Makefile
+found libcap-ng version 0.8.3
+uuid not found
+Warning: uuid pkg-config not found
+Configuring compilation for [OpenWrt] [23.05.4] [x86_64] with [nftables] firewall software.
+Please edit config.h for more compilation options.
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/miniupnpd.d -MT miniupnpd.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. miniupnpd.c -o miniupnpd.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnphttp.d -MT upnphttp.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnphttp.c -o upnphttp.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnpdescgen.d -MT upnpdescgen.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnpdescgen.c -o upnpdescgen.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnpsoap.d -MT upnpsoap.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnpsoap.c -o upnpsoap.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnpreplyparse.d -MT upnpreplyparse.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnpreplyparse.c -o upnpreplyparse.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/minixml.d -MT minixml.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. minixml.c -o minixml.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/portinuse.d -MT portinuse.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. portinuse.c -o portinuse.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnpredirect.d -MT upnpredirect.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnpredirect.c -o upnpredirect.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/getifaddr.d -MT getifaddr.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. getifaddr.c -o getifaddr.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/daemonize.d -MT daemonize.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. daemonize.c -o daemonize.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/options.d -MT options.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. options.c -o options.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnppermissions.d -MT upnppermissions.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnppermissions.c -o upnppermissions.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/minissdp.d -MT minissdp.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. minissdp.c -o minissdp.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/natpmp.d -MT natpmp.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. natpmp.c -o natpmp.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/pcpserver.d -MT pcpserver.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. pcpserver.c -o pcpserver.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnpglobalvars.d -MT upnpglobalvars.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnpglobalvars.c -o upnpglobalvars.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnpevents.d -MT upnpevents.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnpevents.c -o upnpevents.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnputils.d -MT upnputils.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnputils.c -o upnputils.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/getconnstatus.d -MT getconnstatus.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. getconnstatus.c -o getconnstatus.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnpstun.d -MT upnpstun.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnpstun.c -o upnpstun.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/upnppinhole.d -MT upnppinhole.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. upnppinhole.c -o upnppinhole.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/pcplearndscp.d -MT pcplearndscp.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. pcplearndscp.c -o pcplearndscp.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/asyncsendto.d -MT asyncsendto.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. asyncsendto.c -o asyncsendto.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/getosversion.d -MT getosversion.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. getosversion.c -o getosversion.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/getifstats.d -MT getifstats.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. linux/getifstats.c -o getifstats.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/ifacewatcher.d -MT ifacewatcher.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. linux/ifacewatcher.c -o ifacewatcher.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/getroute.d -MT getroute.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. linux/getroute.c -o getroute.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/nftnlrdr.d -MT nftnlrdr.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. netfilter_nft/nftnlrdr.c -o nftnlrdr.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/nftpinhole.d -MT nftpinhole.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. netfilter_nft/nftpinhole.c -o nftpinhole.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/nfct_get.d -MT nfct_get.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. netfilter_nft/nfct_get.c -o nfct_get.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/nftnlrdr_misc.d -MT nftnlrdr_misc.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. netfilter_nft/nftnlrdr_misc.c -o nftnlrdr_misc.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/miniupnpdctl.d -MT miniupnpdctl.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. miniupnpdctl.c -o miniupnpdctl.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testupnpdescgen.d -MT testupnpdescgen.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testupnpdescgen.c -o testupnpdescgen.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testgetifstats.d -MT testgetifstats.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testgetifstats.c -o testgetifstats.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testupnppermissions.d -MT testupnppermissions.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testupnppermissions.c -o testupnppermissions.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testgetifaddr.d -MT testgetifaddr.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testgetifaddr.c -o testgetifaddr.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testgetroute.d -MT testgetroute.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testgetroute.c -o testgetroute.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testasyncsendto.d -MT testasyncsendto.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testasyncsendto.c -o testasyncsendto.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testportinuse.d -MT testportinuse.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testportinuse.c -o testportinuse.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testssdppktgen.d -MT testssdppktgen.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testssdppktgen.c -o testssdppktgen.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testminissdp.d -MT testminissdp.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testminissdp.c -o testminissdp.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testifacewatcher.d -MT testifacewatcher.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testifacewatcher.c -o testifacewatcher.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/teststun.d -MT teststun.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. teststun.c -o teststun.o
+x86_64-openwrt-linux-musl-gcc -c -MMD -MP -MF .depend/testupnphttp.d -MT testupnphttp.o -Os -I/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/include -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -I. testupnphttp.c -o testupnphttp.o
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  miniupnpdctl.o  -lnftnl -lmnl -lcap-ng -o miniupnpdctl
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testupnpdescgen.o upnpdescgen.o  -lnftnl -lmnl -lcap-ng -o testupnpdescgen
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testgetifstats.o getifstats.o  -lnftnl -lmnl -lcap-ng -o testgetifstats
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testupnppermissions.o upnppermissions.o  -lnftnl -lmnl -lcap-ng -o testupnppermissions
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testgetifaddr.o getifaddr.o getconnstatus.o  -lnftnl -lmnl -lcap-ng -o testgetifaddr
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testgetroute.o getroute.o upnputils.o  -lnftnl -lmnl -lcap-ng -o testgetroute
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testasyncsendto.o asyncsendto.o upnputils.o getroute.o  -lnftnl -lmnl -lcap-ng -o testasyncsendto
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testportinuse.o portinuse.o getifaddr.o upnputils.o getroute.o nftnlrdr.o nftnlrdr_misc.o  -lnftnl -lmnl -lcap-ng -o testportinuse
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testssdppktgen.o  -lnftnl -lmnl -lcap-ng -o testssdppktgen
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testminissdp.o minissdp.o upnputils.o upnpglobalvars.o asyncsendto.o getroute.o  -lnftnl -lmnl -lcap-ng -o testminissdp
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testifacewatcher.o ifacewatcher.o  -lnftnl -lmnl -lcap-ng -o testifacewatcher
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  teststun.o upnpstun.o upnputils.o getroute.o nftnlrdr.o nftnlrdr_misc.o  -lnftnl -lmnl -lcap-ng -o teststun
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  testupnphttp.o upnphttp.o upnputils.o getroute.o getosversion.o  -lnftnl -lmnl -lcap-ng -o testupnphttp
+x86_64-openwrt-linux-musl-gcc -L/home/bgzerol/openwrt/upnp/.work/sdk/staging_dir/target-x86_64_musl/usr/lib  miniupnpd.o upnphttp.o upnpdescgen.o upnpsoap.o upnpreplyparse.o minixml.o portinuse.o upnpredirect.o getifaddr.o daemonize.o options.o upnppermissions.o minissdp.o natpmp.o pcpserver.o upnpglobalvars.o upnpevents.o upnputils.o getconnstatus.o upnpstun.o upnppinhole.o pcplearndscp.o asyncsendto.o getosversion.o getifstats.o ifacewatcher.o getroute.o nftnlrdr.o nftpinhole.o nfct_get.o nftnlrdr_misc.o  -lnftnl -lmnl -lcap-ng -o miniupnpd
+testupnppermissions tests OK
+testgetifaddr test OK
+testssdppktgen: OS_VERSION : 5.15.164
+testssdppktgen: NOTIFY * HTTP/1.1
+HOST: 123.456.789.123:1900
+CACHE-CONTROL: max-age=1234567890
+LOCATION: http://222.222.222.222:12345/rootDesc.xml
+SERVER: OpenWrt/5.15.164 UPnP/1.1 MiniUPnPd/2.3.11
+NT: urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1
+USN: uuid:12345678-0000-0000-0000-000000abcd01urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1
+NTS: ssdp:alive
+OPT: "http://schemas.upnp.org/upnp/1/0/"; ns=01
+01-NLS: 1791819360
+BOOTID.UPNP.ORG: 1791819360
+CONFIGID.UPNP.ORG: 1234567890
+
+testssdppktgen: NOTIFY * HTTP/1.1
+HOST: [1234:5678:abcd:ef00:1234:5678:abcd:ef00]:1900
+CACHE-CONTROL: max-age=1234567890
+LOCATION: http://[1000:2000:3000:4000:5000:6000:7000:8000]:12345/rootDesc.xml
+SERVER: OpenWrt/5.15.164 UPnP/1.1 MiniUPnPd/2.3.11
+NT: urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1
+USN: uuid:12345678-0000-0000-0000-000000abcd01urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1
+NTS: ssdp:alive
+OPT: "http://schemas.upnp.org/upnp/1/0/"; ns=01
+01-NLS: 1791819360
+BOOTID.UPNP.ORG: 1791819360
+CONFIGID.UPNP.ORG: 1234567890
+
+testupnphttp: NAME ImmortalWrt
+testupnphttp: VERSION 23.05-SNAPSHOT
+testupnphttp: ID immortalwrt
+testupnphttp: ID_LIKE lede openwrt
+testupnphttp: PRETTY_NAME ImmortalWrt 23.05-SNAPSHOT
+testupnphttp: VERSION_ID 23.05-snapshot
+-rw-r--r--    1 root     root            24 Oct 12 23:36 /tmp/upnphttpXXXXJFPPEC/httpserverout
+Listening on port 33431
+port=33431 pid=9407
+rootDesc> GET /rootDesc.xml HTTP/1.1
+> Host: 127.0.0.1:33431
+> User-Agent: curl/8.7.1
+> Accept: */*
+> 
+testupnphttp: HTTP connection from 127.0.0.1:59974
+testupnphttp: HTTP REQUEST from 127.0.0.1:59974 : GET /rootDesc.xml (HTTP/1.1)
+testupnphttp: Host: 127.0.0.1:33431
+< HTTP/1.1 200 OK
+< Content-Type: text/xml; charset="utf-8"
+< Connection: close
+< Content-Length: 8
+< Server: OpenWrt/23.05-snapshot UPnP/1.1 MiniUPnPd/2.3.11
+< Ext:
+< 
+{ [8 bytes data]
+
+GET ok
+1024+0 records in
+1024+0 records out
+testupnphttp: HTTP connection from 127.0.0.1:59984
+> POST /soap HTTP/1.1
+> Host: 127.0.0.1:33431
+> User-Agent: curl/8.7.1
+> Accept: */*
+> SoapAction: "Action#Test"
+> Content-Length: 1048576
+> Content-Type: application/x-www-form-urlencoded
+testupnphttp: HTTP REQUEST from 127.0.0.1:59984 : POST /soap (HTTP/1.1)
+> 
+} [65352 bytes data]
+testupnphttp: Host: 127.0.0.1:33431
+testupnphttp: SOAPAction: Action#Test
+< HTTP/1.1 200 OK
+< Content-Type: text/xml; charset="utf-8"
+< Connection: close
+< Content-Length: 11
+< Server: OpenWrt/23.05-snapshot UPnP/1.1 MiniUPnPd/2.3.11
+< Ext:
+< 
+{ [11 bytes data]
+Action#Test
+POST ok
+60+0 records in
+60+0 records out
+testupnphttp: HTTP connection from 127.0.0.1:59996
+http_code=400
+
+POST headers over limit => rejected
+Terminated

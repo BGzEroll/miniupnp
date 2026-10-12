@@ -1,0 +1,48 @@
+{
+  "miniupnp": {
+    "commit": "f8c4f4c3320820e615b281147b3043f66c195f17",
+    "release_base": "2.3.11",
+    "release_commit": "b91c025446d3ec3d9161cd56c91e200484af7906",
+    "sha256": "341e76bce32f93660fa9cf022b07dc10bea3dbcaff9953097c2329d05fa408fc"
+  },
+  "openwrt_packages_reference": "9f24e4f3d4a13617cd141c43fa8811b18be32808",
+  "openwrt_luci_reference": "d12d55376188343d790fa40377c084245a4d2b86",
+  "immortalwrt_core_package_recipes": "bae54687c709f20f0dc18cef033e0bad0159ea23",
+  "sdk": {
+    "version": "23.05.4",
+    "architecture": "x86_64",
+    "gcc": "12.3.0",
+    "sha256": "937dcb18126d75068e0a2f7f0f48ed95f9a1cedfa39d9ad47f505d595df1074c"
+  },
+  "feeds": {
+    "packages": "9d567f8ed5f99833e4bffe734e047d0a01b57ce5",
+    "luci": "d4189db0d76c02e24087298327ec40a59fcfb2aa"
+  },
+  "patches": [
+    "100-native-lifecycle-wan-and-admin.patch",
+    "110-nftables-comments-pinhole-and-cache.patch",
+    "120-ipv6-lease-records-and-restore.patch",
+    "130-soap-numeric-bounds-and-missing-pinhole.patch"
+  ],
+  "unmerged_prs": {
+    "28765": {
+      "merged": false,
+      "state": "open",
+      "head": "312cf40a2ee98c9bf893c2ef40c7fdaf64b95a48",
+      "usage": "review only, no wholesale import"
+    },
+    "8415": {
+      "merged": false,
+      "state": "open",
+      "head": "ec863ba66270c14dfc4943eb0b5ba7fa2c8d6f9e",
+      "usage": "review only, no wholesale import"
+    }
+  },
+  "luci_23_05_view_base": "3d39e8c38cfa276d5cdfad7105dbf47933eaed4f",
+  "local_patch_sha256": {
+    "patches/100-native-lifecycle-wan-and-admin.patch": "3e839162fe1509c183cc4f93c5ce3fc834c73a37e88e2e4f0779ca1ad601be5c",
+    "patches/110-nftables-comments-pinhole-and-cache.patch": "57e8e33439d14db75ebcc58606c71c513d08fbee380b7256930c074fc044b0a9",
+    "patches/120-ipv6-lease-records-and-restore.patch": "0ef83fc8aff72dc7e148668e61ba29a49e0dd0ff3586d526f99d19875f5249d1",
+    "patches/130-soap-numeric-bounds-and-missing-pinhole.patch": "5ecb4ed71dee7ae956c3aafb971bd956a990e92285fca48db414db4c2303fcfd"
+  }
+}
