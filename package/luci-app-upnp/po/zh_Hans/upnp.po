@@ -252,8 +252,5 @@ msgstr "IPv6 租约文件"
 msgid "Log normal mapping requests"
 msgstr "记录正常的端口映射请求"
 
-msgid "UPnP IGD & PCP"
-msgstr "UPnP IGD 与 PCP"
-
 msgid "Grant access to UPnP IGD & PCP/NAT-PMP"
 msgstr "授予访问 UPnP IGD 和 PCP/NAT-PMP 的权限"

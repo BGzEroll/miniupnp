@@ -8,7 +8,7 @@
   },
   "artifacts": {
     "libcap-ng_0.8.3-2_x86_64.ipk": "05b4f4539918de4160736654ed8aa4556d014afd198e7cc9349d479b3960e59d",
-    "luci-app-upnp_23.05-custom-3_all.ipk": "5dd9635212cad68408d746fa5a0eff65580022233b11afda77f80b55146aa8d9",
+    "luci-app-upnp_23.05-custom-4_all.ipk": "c4b489faf0c71da0c48e25ec8fdc7e871edfbf1d8ffb48f3b9ef3f1a81e3aac2",
     "miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk": "b6d1184d9d337a8a5466516498118e93bf5a8545588703949eb08f179b927390"
   },
   "installed_file_sha256": {

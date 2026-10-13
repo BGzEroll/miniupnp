@@ -103,3 +103,11 @@ IDLE_SECONDS=3600 ./scripts/run-vm-tests.sh root@192.168.114.210
 测试前原始配置和运行信息已保存在 VM `/root/upnp-baseline/`，用户另有 PVE 快照。实验网络结束时自动恢复保存的 network/firewall/upnpd 配置。要回到最初完全未安装 UPnP 的状态，可先停止并禁用服务、卸载两个 UPnP 包，移除 `firewall.miniupnpd` include，再恢复 `/root/upnp-baseline/config.tgz` 中对应的配置；或使用用户已经创建的 VM 快照。不要把实验配置备份覆盖到其他设备。
 
 360T7/aarch64 构建、CI 集成、真实 Windows/Apple/Xbox 客户端和多天运行证明均属于后续验证范围；本次没有访问或修改生产主路由、PVE 宿主机。
+
+## 菜单与附加功能
+
+菜单名称为 UPnP，软件包名称仍为 luci-app-upnp。正常新安装、标准 wan/wan6/lan 接口下，勾选启用并保存应用即可启动；客户端须主动申请映射。默认协议为 IGDv2、NAT-PMP/PCP 和 IPv6，secure_mode 与高端口 ACL 保持启用。
+
+所参考的 OpenWrt 包默认 use_stun=0，本版普通 UCI 配置固定 ext_perform_stun=no 并移除设置入口。它只关闭 MiniUPnPd 自身的外部地址探测，不影响客户端软件自身的 STUN。PCP PEER 是控制到指定远端的出站映射和寿命的可选操作；上游 OpenWrt 构建参数也未启用 --pcp-peer，本版保留常用 PCP MAP 和 ANNOUNCE。
+
+PassWall 与 UPnP 同时启用的组合尚未验证，测试时 PassWall enabled=0，不能宣称完全兼容。透明代理模式和流量排除策略可能影响同一数据路径，须另行做实际组合测试。

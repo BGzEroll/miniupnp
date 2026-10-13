@@ -55,7 +55,7 @@ with sync_playwright() as p:
     if SUFFIX:
         for label in ('通用即插即用（UPnP）', '外部端口', '客户端地址', '客户端端口',
                       'MiniUPnP 设置', '启用 NAT-PMP 和 PCP 功能', '禁用 IPv6 防火墙端口放行',
-                      'UPnP IGD 与 PCP'):
+                      'UPnP'):
             assert page.get_by_text(label, exact=True).count(), label
         assert 'External Port' not in table.inner_text()
         page.get_by_text('高级设置', exact=True).click()

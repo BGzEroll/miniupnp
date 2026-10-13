@@ -53,8 +53,8 @@ EOT
 # Its existing runtime dependencies are not rebuilt or upgraded on the VM.
 (cd "$TASK_ROOT/package/luci-app-upnp" && make TOPDIR="$TASK_SDK" compile V=s)
 cp "$TASK_SDK"/bin/packages/x86_64/base/miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk "$TASK_ROOT/artifacts/"
-cp "$TASK_SDK"/bin/packages/x86_64/base/luci-app-upnp_23.05-custom-3_all.ipk "$TASK_ROOT/artifacts/"
-for old in miniupnpd-nftables_2.3.11-git20261009-2_x86_64.ipk miniupnpd-nftables_2.3.11-git20261009-1_x86_64.ipk luci-app-upnp_23.05-custom-1_all.ipk luci-app-upnp_23.05-custom-2_all.ipk; do
+cp "$TASK_SDK"/bin/packages/x86_64/base/luci-app-upnp_23.05-custom-4_all.ipk "$TASK_ROOT/artifacts/"
+for old in luci-app-upnp_23.05-custom-3_all.ipk miniupnpd-nftables_2.3.11-git20261009-2_x86_64.ipk miniupnpd-nftables_2.3.11-git20261009-1_x86_64.ipk luci-app-upnp_23.05-custom-1_all.ipk luci-app-upnp_23.05-custom-2_all.ipk; do
 	[ ! -f "$TASK_ROOT/artifacts/$old" ] || mv "$TASK_ROOT/artifacts/$old" "$TASK_WORK/"
 done
 cp "$TASK_SDK"/bin/packages/x86_64/packages/libcap-ng_*.ipk "$TASK_ROOT/artifacts/"

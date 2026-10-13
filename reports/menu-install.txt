@@ -1,0 +1,19 @@
+Upgrading luci-app-upnp on root from 23.05-custom-3 to 23.05-custom-4...
+Configuring luci-app-upnp.
+{
+	"admin/services/upnp": {
+		"title": "UPnP",
+		"action": {
+			"type": "view",
+			"path": "upnp/upnp"
+		},
+		"depends": {
+			"acl": [
+				"luci-app-upnp"
+			],
+			"uci": {
+				"upnpd": true
+			}
+		}
+	}
+}

@@ -79,3 +79,7 @@ IPv6 Pinhole 没有 IPv4 NAT 外部端口概念，LuCI 显示为横线；主机�
 ## 2026-10-13 恢复上游 ACL 备注
 
 默认第一条 ACL 备注恢复为 Allow high ports，第二条保持 Default deny。新的 miniupnpd-nftables release 3 已构建，直接解包确认没有追加 secure_mode 说明；测试机升级后备注也为上游原文。仅默认配置备注变化，daemon、控制工具和 init 的校验值均未变化，权限规则保持原样。
+
+## 2026-10-13 恢复菜单名称
+
+按用户要求，菜单恢复为 UPnP，仅变更显示名，软件包名称保持 luci-app-upnp。release 4 实际构建、升级 VM 和 zh-CN 浏览器菜单验证通过，见 menu-install.txt、menu-browser.json。PassWall 当前 enabled=0，同时启用兼容性未测试。
