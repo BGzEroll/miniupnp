@@ -5,6 +5,7 @@ TASK_ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 TASK_WORK="$TASK_ROOT/.work"
 TASK_SDK="$TASK_WORK/sdk"
 TASK_CORE="$TASK_WORK/core"
+TASK_FEED="$TASK_WORK/custom-upnp-feed"
 TASK_CORE_COMMIT=bae54687c709f20f0dc18cef033e0bad0159ea23
 TASK_SDK_FILE=immortalwrt-sdk-23.05.4-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz
 TASK_SDK_HASH=937dcb18126d75068e0a2f7f0f48ed95f9a1cedfa39d9ad47f505d595df1074c
@@ -22,14 +23,20 @@ fi
 [ "$(git -C "$TASK_CORE" rev-parse HEAD)" = "$TASK_CORE_COMMIT" ] || { echo 'Unexpected core recipe revision' >&2; exit 1; }
 mkdir -p "$TASK_SDK/package/libs"
 cp -a "$TASK_CORE/package/libs/libmnl" "$TASK_CORE/package/libs/libnftnl" "$TASK_SDK/package/libs/"
-printf 'src-link --force custom_upnp %s\n' "$TASK_ROOT" > "$TASK_SDK/feeds.conf.default"
+# Expose only the two recipes; the project root also contains the SDK cache.
+mkdir -p "$TASK_FEED"
+for recipe in miniupnpd luci-app-upnp; do
+	ln -sfn "$TASK_ROOT/$recipe" "$TASK_FEED/$recipe"
+done
+printf 'src-link --force custom_upnp %s\n' "$TASK_FEED" > "$TASK_SDK/feeds.conf.default"
 cat >> "$TASK_SDK/feeds.conf.default" <<'EOT'
 src-git packages https://github.com/immortalwrt/packages.git^9d567f8ed5f99833e4bffe734e047d0a01b57ce5
 src-git luci https://github.com/immortalwrt/luci.git^d4189db0d76c02e24087298327ec40a59fcfb2aa
 EOT
-(cd "$TASK_SDK" && ./scripts/feeds update packages luci && ./scripts/feeds install libcap-ng luci-base)
+(cd "$TASK_SDK" && ./scripts/feeds update custom_upnp packages luci && ./scripts/feeds install -p custom_upnp miniupnpd luci-app-upnp && ./scripts/feeds install libcap-ng luci-base)
 # Build LuCI's standard PO compiler on the host; do not install/upgrade luci-base on the VM.
 (cd "$TASK_SDK/feeds/luci/modules/luci-base" && make TOPDIR="$TASK_SDK" HOST_BUILD_PREFIX="$TASK_SDK/staging_dir/hostpkg" host-compile host-install V=s)
+# Write selections after feed indexing, which can refresh an existing .config.
 cat > "$TASK_SDK/.config" <<'EOT'
 CONFIG_ALL=n
 CONFIG_ALL_KMODS=n
@@ -42,14 +49,22 @@ CONFIG_PACKAGE_libcap-ng=y
 CONFIG_PACKAGE_libmnl=y
 CONFIG_PACKAGE_libnftnl=y
 EOT
-(cd "$TASK_SDK" && ./scripts/feeds update custom_upnp && ./scripts/feeds install -p custom_upnp miniupnpd luci-app-upnp)
-(cd "$TASK_SDK" && make defconfig && make package/feeds/custom_upnp/miniupnpd/clean && make package/feeds/custom_upnp/miniupnpd/compile -j"${JOBS:-4}" V=s)
+(cd "$TASK_SDK" && make defconfig)
+for package in miniupnpd-nftables luci-app-upnp; do
+	grep -Eq "^CONFIG_PACKAGE_$package=[ym]$" "$TASK_SDK/.config" || {
+		echo "Package not selected after defconfig: $package" >&2
+		exit 1
+	}
+done
+(cd "$TASK_SDK" && make package/feeds/custom_upnp/miniupnpd/clean && make package/feeds/custom_upnp/miniupnpd/compile -j"${JOBS:-4}" V=s)
 # LuCI consists of data files and is built through the SDK package recipe.
 # Its existing runtime dependencies are not rebuilt or upgraded on the VM.
 (cd "$TASK_SDK/package/feeds/custom_upnp/luci-app-upnp" && make TOPDIR="$TASK_SDK" compile V=s)
-find "$TASK_SDK/bin/packages/x86_64" -type f \
-    \( -name 'miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk' -o -name 'luci-app-upnp_23.05-custom-4_all.ipk' \) \
-    -exec cp -t "$TASK_ROOT/artifacts" {} +
+for package in miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk luci-app-upnp_23.05-custom-4_all.ipk; do
+	TASK_IPK=$(find "$TASK_SDK/bin/packages/x86_64" -type f -name "$package" -print -quit)
+	[ -n "$TASK_IPK" ] || { echo "Missing build artifact: $package" >&2; exit 1; }
+	cp "$TASK_IPK" "$TASK_ROOT/artifacts/"
+done
 for old in luci-app-upnp_23.05-custom-3_all.ipk miniupnpd-nftables_2.3.11-git20261009-2_x86_64.ipk miniupnpd-nftables_2.3.11-git20261009-1_x86_64.ipk luci-app-upnp_23.05-custom-1_all.ipk luci-app-upnp_23.05-custom-2_all.ipk; do
 	[ ! -f "$TASK_ROOT/artifacts/$old" ] || mv "$TASK_ROOT/artifacts/$old" "$TASK_WORK/"
 done

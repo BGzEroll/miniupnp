@@ -44,7 +44,7 @@ CONFIG_PACKAGE_luci-app-upnp=y
 
 随后执行 make defconfig，再按正常流程下载和编译。中文翻译包含在 luci-app-upnp 内。BGzErol-OpenWRT-CI 的 23.05 x86 和 360 T7 已按此方式配置。
 
-本地开发可将第一行替换为 src-link --force custom_upnp /home/bgzerol/openwrt/upnp，再使用相同的 feeds 流程；其余包源保持原值。
+本地使用 src-link 时，链接目录应只包含两个包，避免扫描到 SDK 缓存。scripts/build.sh 会自动在 .work/custom-upnp-feed/ 生成这样的临时包源，其余包源保持固定版本。
 
 ## 可选的本地 SDK 构建
 

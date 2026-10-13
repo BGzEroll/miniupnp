@@ -38,3 +38,11 @@ LuCI 浏览器检查使用 tests/run-luci-test.sh，主机需要 Playwright/Chro
 包目录改为根目录的 miniupnpd/ 和 luci-app-upnp/，包定义、补丁及运行文件内容保留，翻译文件只更新路径注释。旧安装器与对应测试移除，CI 使用正常 feeds 流程。
 
 本轮标准 feed 安装、两个 23.05 目标 defconfig 及 x86 SDK 包编译通过，未重新进行 VM 协议测试。编译产物和临时 SDK 已清理。
+
+## 当前布局复核
+
+保持根目录 miniupnpd/ 和 luci-app-upnp/ 的结构。路径、文档链接、Python/JSON/Shell 语法、47 个中文词条以及补丁 SHA256 检查通过；包运行文件与迁移前一致，PO 文件仅改变路径注释。
+
+实际 x86_64 SDK 构建发现并修正本地 build.sh 的两处问题：整个项目作为 src-link 时会扫入 .work 下的 SDK；在 feed 更新前写入配置会导致更新时丢失包选择。现在仅暴露两个包目录，在 feeds 准备好之后写配置，并检查包选择及预期 IPK 是否存在。修正后两个包实际编译、打包通过，没有循环扫描；daemon、控制工具和 init 的 SHA256 与之前 VM 验证版本相同。
+
+本轮未重跑 VM 协议回归或完整固件 CI。原始构建日志、验证结果与 IPK 在开发机项目外归档，临时 SDK 已清理。
