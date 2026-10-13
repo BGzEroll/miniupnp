@@ -9,7 +9,7 @@
   "artifacts": {
     "libcap-ng_0.8.3-2_x86_64.ipk": "05b4f4539918de4160736654ed8aa4556d014afd198e7cc9349d479b3960e59d",
     "luci-app-upnp_23.05-custom-4_all.ipk": "c4b489faf0c71da0c48e25ec8fdc7e871edfbf1d8ffb48f3b9ef3f1a81e3aac2",
-    "miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk": "b6d1184d9d337a8a5466516498118e93bf5a8545588703949eb08f179b927390"
+    "miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk": "9504f4597c20ba4dd531f4012af94045254c0996741f377e2fb5c0ebf007b2d3"
   },
   "installed_file_sha256": {
     "usr/sbin/miniupnpd": "14493c7f17121a5bc8f5da8dcc7316cce87ccdd00b2acf524996873bfce7c821",

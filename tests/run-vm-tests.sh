@@ -8,7 +8,7 @@ TASK_IDLE_SECONDS=${IDLE_SECONDS:-300}
 if [ -d "$TASK_ROOT/reports/repeat" ]; then
 	mv "$TASK_ROOT/reports/repeat" "$TASK_ROOT/reports/repeat-$(date +%s)"
 fi
-scp -O "$TASK_ROOT/scripts/lab.sh" "$TASK_ROOT/scripts/integration.py" "$TASK_ROOT/scripts/extended.py" "$TASK_ROOT/scripts/lifecycle.py" "$TASK_ROOT/scripts/soak.py" "$TASK_VM:/tmp/"
+scp -O "$TASK_ROOT/tests/lab.sh" "$TASK_ROOT/tests/integration.py" "$TASK_ROOT/tests/extended.py" "$TASK_ROOT/tests/lifecycle.py" "$TASK_ROOT/tests/soak.py" "$TASK_VM:/tmp/"
 ssh "$TASK_VM" 'if [ -d /root/upnp-test-results ]; then mv /root/upnp-test-results "/root/upnp-test-results-$(date +%s)"; fi; mkdir /root/upnp-test-results; /tmp/lab.sh setup'
 restore_lab() {
 	TASK_STATUS=$?

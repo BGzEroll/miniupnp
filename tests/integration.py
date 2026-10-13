@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real protocol and TCP/UDP forwarding regression on scripts/lab.sh topology.
+"""Real protocol and TCP/UDP forwarding regression on tests/lab.sh topology.
 Run on the authorized VM. Python is a test dependency, never a daemon dependency.
 """
 import json

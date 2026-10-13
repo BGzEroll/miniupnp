@@ -1,10 +1,12 @@
 # ImmortalWrt 23.05 MiniUPnPd 定制包
 
-面向 Linux、fw4/nftables，默认 IGDv2、IPv6、NAT-PMP/PCP 同时工作，私有 IPv4 和 CGNAT 不作为本级映射的拒绝条件。保留 23.05 的 `upnpd.config`、`perm_rule` 和 LuCI 页面交互。当前交付 x86_64；aarch64、360T7 和固件 CI 未实施。
+面向 Linux、fw4/nftables，默认 IGDv2、IPv6、NAT-PMP/PCP 同时工作，私有 IPv4 和 CGNAT 不作为本级映射的拒绝条件。保留 23.05 的 `upnpd.config`、`perm_rule` 和 LuCI 页面交互。当前交付 x86_64；已提供 CI 包替换入口；aarch64/360T7 完整固件构建未执行。
 
-- `package/miniupnpd/`：固定上游源码、OpenWrt 包、procd/hotplug/fw4 集成及四组补丁。
-- `package/luci-app-upnp/`：23.05 页面，内置标准简体中文 LMO 翻译，读取真实 nft JSON、展示 IPv6 Pinhole，通过 root 专用控制接口删除实际映射。
-- `scripts/`：构建、隔离拓扑、协议与数据转发测试、扩展测试及资源监测。
+- `net/miniupnpd/`：固定上游源码、OpenWrt 包、procd/hotplug/fw4 集成及四组补丁。
+- `applications/luci-app-upnp/`：23.05 页面，内置标准简体中文 LMO 翻译，读取真实 nft JSON、展示 IPv6 Pinhole，通过 root 专用控制接口删除实际映射。
+- `scripts/`：SDK 构建与 CI 包替换入口。
+- `tests/`：隔离拓扑、协议转发、PassWall 规则共存、浏览器与资源测试。
+- `ci/`：360T7 工作流替换补丁和接入说明。
 - `sources.json`、`reports/upstream.md`：源码锁定及选用理由。
 - `reports/`：实际通过/失败记录、日志、规则和浏览器证据。
 - [测试报告](reports/TEST-REPORT.md)：最终结果、修复过程及尚未验证的范围。
@@ -85,24 +87,24 @@ fw4 在装载新规则和租约恢复之间有短暂窗口。删除/过期测试
 
 ```sh
 # 已安装本次两个 IPK、Python 3 后，在本机执行：
-./scripts/run-vm-tests.sh root@192.168.114.210
+./tests/run-vm-tests.sh root@192.168.114.210
 # 延长空闲监测，例如一小时：
-IDLE_SECONDS=3600 ./scripts/run-vm-tests.sh root@192.168.114.210
+IDLE_SECONDS=3600 ./tests/run-vm-tests.sh root@192.168.114.210
 ```
 
 默认包括快速主回归、UCI 开关及同名 WAN 重建测试、需要等待真实 120 秒 PCP 租约的扩展测试，以及并发负载后的 300 秒空闲监测。测试在 VM `/root/upnp-test-results/` 留下原始证据，主机收集到 `reports/repeat/`。中断后可执行 `ssh root@192.168.114.210 /tmp/lab.sh cleanup`。拓扑配置备份在 VM `/root/upnp-lab-backup-*`。再次运行会先归档旧结果到 `reports/repeat-时间戳` 和 VM `/root/upnp-test-results-时间戳`，失败时不会混入上次后续测试的 PASS 文件。
 
 首次获取 Python 等测试依赖应使用与系统 ABI 兼容的 23.05 软件源，核对下载 SHA256；测试机原来的 vsean SNAPSHOT 镜像已不可访问，不要为此升级整个系统或强装不同内核的 kmod。
 
-`scripts/upstream-tests.sh` 使用相同 SDK 和补丁构建并运行上游权限、接口地址、SSDP 和 HTTP 测试。`scripts/boot-smoke.sh` 需复制到 VM 的 `/root/`，依次执行 `setup`、重启 VM、`check`、`cleanup`，在不接物理端口的虚拟 LAN 上检查系统重启后服务自动启动且临时租约不恢复。必须先确认 `check` 成功再执行清理。
+`tests/upstream-tests.sh` 使用相同 SDK 和补丁构建并运行上游权限、接口地址、SSDP 和 HTTP 测试。`tests/boot-smoke.sh` 需复制到 VM 的 `/root/`，依次执行 `setup`、重启 VM、`check`、`cleanup`，在不接物理端口的虚拟 LAN 上检查系统重启后服务自动启动且临时租约不恢复。必须先确认 `check` 成功再执行清理。
 
-`scripts/run-luci-test.sh` 自动建立隔离实验和浏览器测试映射，再调用 `scripts/luci-browser.py`。主机需安装 Playwright/Chromium，可通过 `BROWSER_PYTHON` 指定已安装 Playwright 的 Python。检查双栈列表、删除和“保存并应用”的启用/关闭操作，结果写入 `reports/luci-browser.json`；结束自动恢复实验配置。设置 `BROWSER_LOCALE=zh-CN` 可验证简体中文词条及菜单；主机需有中文字体才能生成正常的中文截图。`python3 scripts/check-translations.py` 检查页面与菜单的完整翻译覆盖。
+`tests/run-luci-test.sh` 自动建立隔离实验和浏览器测试映射，再调用 `tests/luci-browser.py`。主机需安装 Playwright/Chromium，可通过 `BROWSER_PYTHON` 指定已安装 Playwright 的 Python。检查双栈列表、删除和“保存并应用”的启用/关闭操作，结果写入 `reports/luci-browser.json`；结束自动恢复实验配置。设置 `BROWSER_LOCALE=zh-CN` 可验证简体中文词条及菜单；主机需有中文字体才能生成正常的中文截图。`python3 tests/check-translations.py` 检查页面与菜单的完整翻译覆盖。
 
 ## 回滚
 
 测试前原始配置和运行信息已保存在 VM `/root/upnp-baseline/`，用户另有 PVE 快照。实验网络结束时自动恢复保存的 network/firewall/upnpd 配置。要回到最初完全未安装 UPnP 的状态，可先停止并禁用服务、卸载两个 UPnP 包，移除 `firewall.miniupnpd` include，再恢复 `/root/upnp-baseline/config.tgz` 中对应的配置；或使用用户已经创建的 VM 快照。不要把实验配置备份覆盖到其他设备。
 
-360T7/aarch64 构建、CI 集成、真实 Windows/Apple/Xbox 客户端和多天运行证明均属于后续验证范围；本次没有访问或修改生产主路由、PVE 宿主机。
+360T7/aarch64 完整固件构建、真实 Windows/Apple/Xbox 客户端和多天运行证明均属于后续验证范围；本次没有访问或修改生产主路由、PVE 宿主机。
 
 ## 菜单与附加功能
 
@@ -110,4 +112,8 @@ IDLE_SECONDS=3600 ./scripts/run-vm-tests.sh root@192.168.114.210
 
 所参考的 OpenWrt 包默认 use_stun=0，本版普通 UCI 配置固定 ext_perform_stun=no 并移除设置入口。它只关闭 MiniUPnPd 自身的外部地址探测，不影响客户端软件自身的 STUN。PCP PEER 是控制到指定远端的出站映射和寿命的可选操作；上游 OpenWrt 构建参数也未启用 --pcp-peer，本版保留常用 PCP MAP 和 ANNOUNCE。
 
-PassWall 与 UPnP 同时启用的组合尚未验证，测试时 PassWall enabled=0，不能宣称完全兼容。透明代理模式和流量排除策略可能影响同一数据路径，须另行做实际组合测试。
+测试机 PassWall 4.78-1 的实际 nft 生成器已与 UPnP 完成 6 项隔离共存检查：双栈 TCP/UDP 转发、公开地址 WAN 入站、连续 fw4 reload、PassWall 规则停启、代理链计数命中和映射删除均通过。双方规则结构没有互相修改，测试后恢复 PassWall 原来的关闭状态。测试仅对隔离接口加载代理规则，未启动外部代理节点；不代表所有 PassWall 节点和配置都已验证。详见 reports/upnp-passwall-result.json。
+
+## 接入自己的 CI
+
+[360T7 CI 接入说明](ci/README.md)提供针对现有工作流的补丁。将 `artifacts/upnp-ci-overlay.tar.gz` 解压到 CI 仓库根目录，再应用其中的工作流补丁。替换入口为 `scripts/install-to-openwrt.sh OPENWRT_ROOT`，在 feeds 安装、自定义配置加载之后执行；SDK 构建也使用同一入口。源码替换会选择 miniupnpd-nftables、luci-app-upnp 和 IPv6，移除旧包链接并保留其他软件包配置。

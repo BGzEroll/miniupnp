@@ -1,4 +1,4 @@
 # Patch context and captured evidence preserve upstream/raw whitespace.
-package/miniupnpd/patches/*.patch -whitespace
+net/miniupnpd/patches/*.patch -whitespace
 reports/** -whitespace
 licenses/*.txt -whitespace

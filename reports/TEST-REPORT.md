@@ -83,3 +83,13 @@ IPv6 Pinhole 没有 IPv4 NAT 外部端口概念，LuCI 显示为横线；主机�
 ## 2026-10-13 恢复菜单名称
 
 按用户要求，菜单恢复为 UPnP，仅变更显示名，软件包名称保持 luci-app-upnp。release 4 实际构建、升级 VM 和 zh-CN 浏览器菜单验证通过，见 menu-install.txt、menu-browser.json。PassWall 当前 enabled=0，同时启用兼容性未测试。
+
+## 2026-10-13 PassWall 规则共存与 CI 目录整理
+
+PassWall 4.78-1 的实际 app.sh/nftables.sh 在隔离拓扑中生成规则，6/6 通过，原始结果见 upnp-passwall-result.json、stdout 和 nft。检查 IPv4/IPv6 TCP/UDP 实际转发、隔离公开地址 WAN 入站、3 次 fw4 reload、2 次 PassWall 规则停启、代理 TPROXY 链计数命中及映射删除；双方规则结构没有被对方修改，MiniUPnPd PID 保持不变。公开地址仅存在于不连接物理口的 namespace，没有发送外部测试流量。
+
+原 PassWall 没有配置可用节点，因此测试用未提交的本地 SOCKS 节点参数生成代理规则，并将入口限制到实验接口。没有启动 Xray 核心或验证外部代理节点，只证明本版本生成的 nft 规则与 UPnP 共存。首次准备失败来自 VM 没有 bridge-nf sysctl、Python light 缺少 pathlib 依赖；早期功能脚本额外比较未验证的出站返回路由导致失败，已改为直接检查代理链计数增长，保留失败记录。缺失的 bridge-nf 键仍由原生成器输出提示，未为此安装内核模块。
+
+结束后 PassWall 配置恢复、enabled=0，无待提交配置、实验节点、实验 namespace、PassWall nft 表或策略路由残留；MiniUPnPd 继续运行，见 passwall-cleanup.txt。daemon、控制工具和 init SHA256 与此前回归版本一致。
+
+源码改为 net/miniupnpd、applications/luci-app-upnp，测试放 tests，构建与 CI 替换工具放 scripts。替换脚本重复执行检查通过，保留 PassWall 包及无关配置、移除旧 UPnP 包链接，见 ci-install-test.txt。用同一替换入口实际完成 x86_64 SDK 构建，见 ci-sdk-build.log；SDK 仅扫描两个自维护包的 Source-Makefile。工作流补丁对 CI 仓库 7bc8e0bae90a88845fb318cf57e568068fd0ce6d 的 360T7 工作流执行 git apply --check 通过。没有推送远程 CI，也没有运行完整 aarch64 固件构建。

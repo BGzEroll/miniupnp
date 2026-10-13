@@ -1,0 +1,9 @@
+14493c7f17121a5bc8f5da8dcc7316cce87ccdd00b2acf524996873bfce7c821  /usr/sbin/miniupnpd
+dbf5c549110450b715b87d65ac1a75d92deed84c96dcb661b5485b2a11efc691  /usr/sbin/miniupnpdctl
+4620cf33fff960a5d33d31d16b2258de602b8aa6ec3d7044678ea7854c0a6100  /etc/init.d/miniupnpd
+7a26b7d384825c0093e4a1c535d2e218f8e2c25b9888d32dd8ce69c18dc9f907  /usr/share/passwall/app.sh
+594b904a1127770ba9ff4729e64aa724416f10752e0832ba7afedca56e33eeaf  /usr/share/passwall/nftables.sh
+CLEANUP_AND_CONFIG_RESTORE_PASS
+0:	from all lookup local
+32766:	from all lookup main
+32767:	from all lookup default

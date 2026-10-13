@@ -1,0 +1,2 @@
+Source-Makefile: package/custom-upnp/luci-app-upnp/Makefile
+Source-Makefile: package/custom-upnp/miniupnpd/Makefile

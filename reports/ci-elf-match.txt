@@ -1,0 +1,6 @@
+PASS：目录重排后的 SDK IPK 内 daemon、控制工具、init 与 VM 已测试文件的 SHA256 一致。
+{
+  "usr/sbin/miniupnpd": "14493c7f17121a5bc8f5da8dcc7316cce87ccdd00b2acf524996873bfce7c821",
+  "usr/sbin/miniupnpdctl": "dbf5c549110450b715b87d65ac1a75d92deed84c96dcb661b5485b2a11efc691",
+  "etc/init.d/miniupnpd": "4620cf33fff960a5d33d31d16b2258de602b8aa6ec3d7044678ea7854c0a6100"
+}

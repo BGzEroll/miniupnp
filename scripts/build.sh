@@ -29,13 +29,6 @@ EOT
 (cd "$TASK_SDK" && ./scripts/feeds update packages luci && ./scripts/feeds install libcap-ng luci-base)
 # Build LuCI's standard PO compiler on the host; do not install/upgrade luci-base on the VM.
 (cd "$TASK_SDK/feeds/luci/modules/luci-base" && make TOPDIR="$TASK_SDK" HOST_BUILD_PREFIX="$TASK_SDK/staging_dir/hostpkg" host-compile host-install V=s)
-for package in miniupnpd luci-app-upnp; do
-	if [ -e "$TASK_SDK/package/$package" ] || [ -L "$TASK_SDK/package/$package" ]; then
-		[ "$(readlink "$TASK_SDK/package/$package")" = "$TASK_ROOT/package/$package" ] || { echo "Package path already occupied: $package" >&2; exit 1; }
-	else
-		ln -s "$TASK_ROOT/package/$package" "$TASK_SDK/package/$package"
-	fi
-done
 cat > "$TASK_SDK/.config" <<'EOT'
 CONFIG_ALL=n
 CONFIG_ALL_KMODS=n
@@ -48,10 +41,11 @@ CONFIG_PACKAGE_libcap-ng=y
 CONFIG_PACKAGE_libmnl=y
 CONFIG_PACKAGE_libnftnl=y
 EOT
-(cd "$TASK_SDK" && make defconfig && make package/miniupnpd/clean && make package/miniupnpd/compile -j"${JOBS:-4}" V=s)
+"$TASK_ROOT/scripts/install-to-openwrt.sh" "$TASK_SDK"
+(cd "$TASK_SDK" && make defconfig && make package/custom-upnp/miniupnpd/clean && make package/custom-upnp/miniupnpd/compile -j"${JOBS:-4}" V=s)
 # LuCI consists of data files and is built through the SDK package recipe.
 # Its existing runtime dependencies are not rebuilt or upgraded on the VM.
-(cd "$TASK_ROOT/package/luci-app-upnp" && make TOPDIR="$TASK_SDK" compile V=s)
+(cd "$TASK_SDK/package/custom-upnp/luci-app-upnp" && make TOPDIR="$TASK_SDK" compile V=s)
 cp "$TASK_SDK"/bin/packages/x86_64/base/miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk "$TASK_ROOT/artifacts/"
 cp "$TASK_SDK"/bin/packages/x86_64/base/luci-app-upnp_23.05-custom-4_all.ipk "$TASK_ROOT/artifacts/"
 for old in luci-app-upnp_23.05-custom-3_all.ipk miniupnpd-nftables_2.3.11-git20261009-2_x86_64.ipk miniupnpd-nftables_2.3.11-git20261009-1_x86_64.ipk luci-app-upnp_23.05-custom-1_all.ipk luci-app-upnp_23.05-custom-2_all.ipk; do
