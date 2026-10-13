@@ -9,7 +9,6 @@
 | net/miniupnpd | 包定义、服务集成、默认配置和源码补丁 |
 | applications/luci-app-upnp | LuCI 页面、RPC 与中文翻译 |
 | scripts | SDK 构建与源码替换工具 |
-| ci | CI 拉取片段与接入说明 |
 | tests | 可复用的协议、生命周期、浏览器及共存测试工具 |
 | docs | 上游对照与测试说明 |
 | licenses | 上游许可证 |
@@ -47,7 +46,3 @@ IPv4/IPv6 租约文件分别为 /var/run/miniupnpd.leases 和 /var/run/miniupnpd
 - LuCI 展示真实双栈规则，通过权限为 0600 的本地控制 socket 删除映射。
 
 详见 [上游与补丁说明](docs/upstream.md)、[nft 命名对照](docs/nft-format.md)和[测试结果与复现](docs/testing.md)。fw4 reload 与租约恢复之间存在短暂规则空窗；已建立连接遵循正常 conntrack 行为。
-
-## CI
-
-通过 Load_custom_feeds.sh 拉取和安装源码的操作见 [ci/README.md](ci/README.md)。目前已验证 x86_64 SDK 构建和 feeds 集成，未完成 360T7/aarch64 全固件构建。
