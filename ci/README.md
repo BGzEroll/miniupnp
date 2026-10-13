@@ -1,17 +1,21 @@
-# 接入 360T7 CI
+# 从 Load_custom_feeds.sh 接入 CI
 
-源码目录按 OpenWrt feed 结构分为 `net/miniupnpd` 和 `applications/luci-app-upnp`；`tests/` 和 `reports/` 不参与固件包编译。
+将本项目推送到自己的 GitHub 仓库后，把 [Load_custom_feeds-upnp.sh](Load_custom_feeds-upnp.sh) 中的片段追加到 CI 的 `script/Load_custom_feeds.sh`。将 UPNP_REPO 改为真实仓库 URL，UPNP_BRANCH 改为推送的分支；本项目当前分支为 master。
 
-针对 BGzEroll/BGzErol-OpenWRT-CI 的 `immortalwrt-23_05-360t7.yml`：
+脚本执行时位于 OpenWrt 源码根目录：先克隆本项目到 `tmp/custom-upnp-source`，再运行 `scripts/install-to-openwrt.sh --packages-only "$PWD"`，将两个包安装到 `package/custom-upnp/`。这些包作为构建树内包存在，后续标准 `scripts/feeds update -a` 和 `install -a` 会保留它们，不再安装同名原包。无需修改工作流步骤，也无需把本项目源码复制进 CI 仓库。
 
-1. 将交付的 `upnp-ci-overlay.tar.gz` 解压到 CI 仓库根目录。包源码和替换脚本会位于 `custom/upnp/`。
-2. 执行 `git apply custom/upnp/ci/immortalwrt-23_05-360t7.patch`。
-3. 提交这些文件后运行原工作流。
+在 CI 的 `config/immortalwrt23_05-360t7.config` 中选择：
 
-新增步骤在 feeds 安装和自定义配置加载之后、`make defconfig` 之前。它移除构建树中旧 MiniUPnPd/LuCI 包链接、安装自维护包并选择 nftables/IPv6，不改其他目标的工作流，也不改 PassWall 包。再次执行脚本会更新同一受管理目录；已有实体旧包目录备份到构建树 `tmp/upnp-package-backup-*`。
+```text
+CONFIG_IPV6=y
+CONFIG_PACKAGE_miniupnpd-nftables=y
+CONFIG_PACKAGE_luci-app-upnp=y
+# CONFIG_PACKAGE_miniupnpd-iptables is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-zh-cn is not set
+```
 
-中文词典直接包含在 `luci-app-upnp` 中，因此不要同时选择原 feed 的 `luci-i18n-upnp-zh-cn`。菜单名称为 UPnP，软件包名仍为 miniupnpd-nftables 和 luci-app-upnp。
+删除这些选项的旧重复行。中文词典已包含在 luci-app-upnp 中，菜单名为 UPnP。`--packages-only` 不创建或修改 `.config`，因为工作流稍后才加载你的固件配置。
 
-本目录也可以单独发布为 Git 仓库，之后在 CI 中检出固定 commit 到 `custom/upnp/`，继续使用同一替换步骤。当前没有假定尚未提供的 UPnP 仓库 URL。
+之前提供的工作流“替换为自维护 UPnP 软件包”步骤不再需要；如果已经添加，将其删除。重复手动执行时请先处理 `tmp/custom-upnp-source` 中的旧检出；普通 CI 每次从新构建树开始。
 
-已验证替换脚本和 x86_64 SDK 构建；本次没有运行完整 360T7/aarch64 固件构建或推送远程 CI。
+默认不带 `--packages-only` 的安装模式仍保留，供本项目 SDK 构建或已加载 `.config` 的构建树使用。已验证 SDK 的实际 feeds 安装和配置扫描；尚未运行完整 360T7/aarch64 固件 CI。

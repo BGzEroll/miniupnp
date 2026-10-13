@@ -4,11 +4,16 @@ import pathlib,subprocess,tempfile
 root=pathlib.Path(__file__).resolve().parent.parent
 with tempfile.TemporaryDirectory() as temp:
     target=pathlib.Path(temp);(target/'scripts').mkdir();(target/'rules.mk').touch();(target/'scripts/feeds').touch()
+    subprocess.run(['sh',str(root/'scripts/install-to-openwrt.sh'),'--packages-only',str(target)],check=True)
+    assert not (target/'.config').exists()
     (target/'.config').write_text('CONFIG_KEEP_ME=y\nCONFIG_PACKAGE_miniupnpd-iptables=y\nCONFIG_PACKAGE_luci-i18n-upnp-zh-cn=y\n')
     for feed,name in [('packages','miniupnpd'),('luci','luci-app-upnp')]:
         original=target/'feeds'/feed/name;original.mkdir(parents=True);(original/'Makefile').write_text('upstream')
         link=target/'package/feeds'/feed/name;link.parent.mkdir(parents=True,exist_ok=True);link.symlink_to(original)
     other=target/'package/feeds/luci/luci-app-passwall';other.mkdir();(other/'Makefile').write_text('keep')
+    before=(target/'.config').read_bytes()
+    subprocess.run(['sh',str(root/'scripts/install-to-openwrt.sh'),'--packages-only',str(target)],check=True)
+    assert (target/'.config').read_bytes()==before
     for _ in range(2):subprocess.run(['sh',str(root/'scripts/install-to-openwrt.sh'),str(target)],check=True)
     assert not (target/'package/feeds/packages/miniupnpd').exists()
     assert (target/'feeds/packages/miniupnpd/Makefile').read_text()=='upstream'

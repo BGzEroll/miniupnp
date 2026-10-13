@@ -1,0 +1,592 @@
+安装自维护包： package/custom-upnp/miniupnpd
+安装自维护包： package/custom-upnp/luci-app-upnp
+UPnP 源码替换完成；请在固件配置选择 miniupnpd-nftables 和 luci-app-upnp。
+package/Makefile:127: T	package/linux/clean: package/kernel/linux/clean
+package/Makefile:127: T	package/linux/download: package/kernel/linux/download
+package/Makefile:127: T	package/linux/prepare: package/kernel/linux/prepare
+package/Makefile:127: T	package/linux/compile: package/kernel/linux/compile
+package/Makefile:127: T	package/linux/update: package/kernel/linux/update
+package/Makefile:127: T	package/linux/refresh: package/kernel/linux/refresh
+package/Makefile:127: T	package/linux/prereq: package/kernel/linux/prereq
+package/Makefile:127: T	package/linux/dist: package/kernel/linux/dist
+package/Makefile:127: T	package/linux/distcheck: package/kernel/linux/distcheck
+package/Makefile:127: T	package/linux/configure: package/kernel/linux/configure
+package/Makefile:127: T	package/linux/check: package/kernel/linux/check
+package/Makefile:127: T	package/linux/check-depends: package/kernel/linux/check-depends
+
+package/Makefile:127: T	package/linux/clean: package/kernel/linux/clean
+package/Makefile:127: T	package/linux/download: package/kernel/linux/download
+package/Makefile:127: T	package/linux/prepare: package/kernel/linux/prepare
+package/Makefile:127: T	package/linux/compile: package/kernel/linux/compile
+package/Makefile:127: T	package/linux/update: package/kernel/linux/update
+package/Makefile:127: T	package/linux/refresh: package/kernel/linux/refresh
+package/Makefile:127: T	package/linux/prereq: package/kernel/linux/prereq
+package/Makefile:127: T	package/linux/dist: package/kernel/linux/dist
+package/Makefile:127: T	package/linux/distcheck: package/kernel/linux/distcheck
+package/Makefile:127: T	package/linux/configure: package/kernel/linux/configure
+package/Makefile:127: T	package/linux/check: package/kernel/linux/check
+package/Makefile:127: T	package/linux/check-depends: package/kernel/linux/check-depends
+WARNING: Makefile 'package/feeds/packages/cgi-io/Makefile' has a dependency on 'libubox', which does not exist
+WARNING: Makefile 'package/feeds/packages/cgi-io/Makefile' has a dependency on 'libubus', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'eip197-mini-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8169-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'e100-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2x-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'ar3k-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'mwifiex-sdio-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb2', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'edgeport-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8152-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb3', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'amdgpu-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'radeon-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-gpio-button-hotplug', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'nu801', which does not exist
+WARNING: Makefile 'package/feeds/packages/luasrcdiet/Makefile' has a dependency on 'lua', which does not exist
+WARNING: Makefile 'package/feeds/packages/luasrcdiet/Makefile' has a build dependency on 'lua/host', which does not exist
+WARNING: Makefile 'package/custom-upnp/luci-app-upnp/Makefile' has a dependency on 'rpcd-mod-ucode', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'rpcd', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'rpcd-mod-file', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'rpcd-mod-ucode', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode-mod-fs', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode-mod-uci', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode-mod-ubus', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode-mod-math', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a build dependency on 'lua/host', which does not exist
+WARNING: Makefile 'package/feeds/luci/lucihttp/Makefile' has a dependency on 'liblua', which does not exist
+WARNING: Makefile 'package/feeds/luci/lucihttp/Makefile' has a dependency on 'libucode', which does not exist
+WARNING: Makefile 'package/custom-upnp/miniupnpd/Makefile' has a dependency on 'firewall4', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a dependency on 'rpcd', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a dependency on 'libubox', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a dependency on 'libubus', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a dependency on 'libnl-tiny', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a build dependency on 'iwinfo', which does not exist
+WARNING: Makefile 'package/feeds/luci/ucode-mod-html/Makefile' has a dependency on 'libucode', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncurses', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncurses', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncursesw', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncursesw', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncurses', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncurses', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncursesw', which does not exist
+WARNING: Not overriding core package 'miniupnpd'; use -f to force
+WARNING: Not overriding core package 'luci-app-upnp'; use -f to force
+package/Makefile:127: T	package/luci-app-upnp/clean: package/custom-upnp/luci-app-upnp/clean
+package/Makefile:127: T	package/luci-app-upnp/download: package/custom-upnp/luci-app-upnp/download
+package/Makefile:127: T	package/luci-app-upnp/prepare: package/custom-upnp/luci-app-upnp/prepare
+package/Makefile:127: T	package/luci-app-upnp/compile: package/custom-upnp/luci-app-upnp/compile
+package/Makefile:127: T	package/luci-app-upnp/update: package/custom-upnp/luci-app-upnp/update
+package/Makefile:127: T	package/luci-app-upnp/refresh: package/custom-upnp/luci-app-upnp/refresh
+package/Makefile:127: T	package/luci-app-upnp/prereq: package/custom-upnp/luci-app-upnp/prereq
+package/Makefile:127: T	package/luci-app-upnp/dist: package/custom-upnp/luci-app-upnp/dist
+package/Makefile:127: T	package/luci-app-upnp/distcheck: package/custom-upnp/luci-app-upnp/distcheck
+package/Makefile:127: T	package/luci-app-upnp/configure: package/custom-upnp/luci-app-upnp/configure
+package/Makefile:127: T	package/luci-app-upnp/check: package/custom-upnp/luci-app-upnp/check
+package/Makefile:127: T	package/luci-app-upnp/check-depends: package/custom-upnp/luci-app-upnp/check-depends
+package/Makefile:127: T	package/miniupnpd/clean: package/custom-upnp/miniupnpd/clean
+package/Makefile:127: T	package/miniupnpd/download: package/custom-upnp/miniupnpd/download
+package/Makefile:127: T	package/miniupnpd/prepare: package/custom-upnp/miniupnpd/prepare
+package/Makefile:127: T	package/miniupnpd/compile: package/custom-upnp/miniupnpd/compile
+package/Makefile:127: T	package/miniupnpd/update: package/custom-upnp/miniupnpd/update
+package/Makefile:127: T	package/miniupnpd/refresh: package/custom-upnp/miniupnpd/refresh
+package/Makefile:127: T	package/miniupnpd/prereq: package/custom-upnp/miniupnpd/prereq
+package/Makefile:127: T	package/miniupnpd/dist: package/custom-upnp/miniupnpd/dist
+package/Makefile:127: T	package/miniupnpd/distcheck: package/custom-upnp/miniupnpd/distcheck
+package/Makefile:127: T	package/miniupnpd/configure: package/custom-upnp/miniupnpd/configure
+package/Makefile:127: T	package/miniupnpd/check: package/custom-upnp/miniupnpd/check
+package/Makefile:127: T	package/miniupnpd/check-depends: package/custom-upnp/miniupnpd/check-depends
+package/Makefile:127: T	package/csstidy/host/clean: package/feeds/luci/csstidy/host/clean
+package/Makefile:127: T	package/csstidy/clean: package/feeds/luci/csstidy/clean
+package/Makefile:127: T	package/csstidy/host/download: package/feeds/luci/csstidy/host/download
+package/Makefile:127: T	package/csstidy/download: package/feeds/luci/csstidy/download
+package/Makefile:127: T	package/csstidy/host/prepare: package/feeds/luci/csstidy/host/prepare
+package/Makefile:127: T	package/csstidy/prepare: package/feeds/luci/csstidy/prepare
+package/Makefile:127: T	package/csstidy/host/compile: package/feeds/luci/csstidy/host/compile
+package/Makefile:127: T	package/csstidy/compile: package/feeds/luci/csstidy/compile
+package/Makefile:127: T	package/csstidy/host/update: package/feeds/luci/csstidy/host/update
+package/Makefile:127: T	package/csstidy/update: package/feeds/luci/csstidy/update
+package/Makefile:127: T	package/csstidy/host/refresh: package/feeds/luci/csstidy/host/refresh
+package/Makefile:127: T	package/csstidy/refresh: package/feeds/luci/csstidy/refresh
+package/Makefile:127: T	package/csstidy/host/prereq: package/feeds/luci/csstidy/host/prereq
+package/Makefile:127: T	package/csstidy/prereq: package/feeds/luci/csstidy/prereq
+package/Makefile:127: T	package/csstidy/host/dist: package/feeds/luci/csstidy/host/dist
+package/Makefile:127: T	package/csstidy/dist: package/feeds/luci/csstidy/dist
+package/Makefile:127: T	package/csstidy/host/distcheck: package/feeds/luci/csstidy/host/distcheck
+package/Makefile:127: T	package/csstidy/distcheck: package/feeds/luci/csstidy/distcheck
+package/Makefile:127: T	package/csstidy/host/configure: package/feeds/luci/csstidy/host/configure
+package/Makefile:127: T	package/csstidy/configure: package/feeds/luci/csstidy/configure
+package/Makefile:127: T	package/csstidy/host/check: package/feeds/luci/csstidy/host/check
+package/Makefile:127: T	package/csstidy/check: package/feeds/luci/csstidy/check
+package/Makefile:127: T	package/csstidy/host/check-depends: package/feeds/luci/csstidy/host/check-depends
+package/Makefile:127: T	package/csstidy/check-depends: package/feeds/luci/csstidy/check-depends
+package/Makefile:127: T	package/luci-base/host/clean: package/feeds/luci/luci-base/host/clean
+package/Makefile:127: T	package/luci-base/clean: package/feeds/luci/luci-base/clean
+package/Makefile:127: T	package/luci-base/host/download: package/feeds/luci/luci-base/host/download
+package/Makefile:127: T	package/luci-base/download: package/feeds/luci/luci-base/download
+package/Makefile:127: T	package/luci-base/host/prepare: package/feeds/luci/luci-base/host/prepare
+package/Makefile:127: T	package/luci-base/prepare: package/feeds/luci/luci-base/prepare
+package/Makefile:127: T	package/luci-base/host/compile: package/feeds/luci/luci-base/host/compile
+package/Makefile:127: T	package/luci-base/compile: package/feeds/luci/luci-base/compile
+package/Makefile:127: T	package/luci-base/host/update: package/feeds/luci/luci-base/host/update
+package/Makefile:127: T	package/luci-base/update: package/feeds/luci/luci-base/update
+package/Makefile:127: T	package/luci-base/host/refresh: package/feeds/luci/luci-base/host/refresh
+package/Makefile:127: T	package/luci-base/refresh: package/feeds/luci/luci-base/refresh
+package/Makefile:127: T	package/luci-base/host/prereq: package/feeds/luci/luci-base/host/prereq
+package/Makefile:127: T	package/luci-base/prereq: package/feeds/luci/luci-base/prereq
+package/Makefile:127: T	package/luci-base/host/dist: package/feeds/luci/luci-base/host/dist
+package/Makefile:127: T	package/luci-base/dist: package/feeds/luci/luci-base/dist
+package/Makefile:127: T	package/luci-base/host/distcheck: package/feeds/luci/luci-base/host/distcheck
+package/Makefile:127: T	package/luci-base/distcheck: package/feeds/luci/luci-base/distcheck
+package/Makefile:127: T	package/luci-base/host/configure: package/feeds/luci/luci-base/host/configure
+package/Makefile:127: T	package/luci-base/configure: package/feeds/luci/luci-base/configure
+package/Makefile:127: T	package/luci-base/host/check: package/feeds/luci/luci-base/host/check
+package/Makefile:127: T	package/luci-base/check: package/feeds/luci/luci-base/check
+package/Makefile:127: T	package/luci-base/host/check-depends: package/feeds/luci/luci-base/host/check-depends
+package/Makefile:127: T	package/luci-base/check-depends: package/feeds/luci/luci-base/check-depends
+package/Makefile:127: T	package/lucihttp/clean: package/feeds/luci/lucihttp/clean
+package/Makefile:127: T	package/lucihttp/download: package/feeds/luci/lucihttp/download
+package/Makefile:127: T	package/lucihttp/prepare: package/feeds/luci/lucihttp/prepare
+package/Makefile:127: T	package/lucihttp/compile: package/feeds/luci/lucihttp/compile
+package/Makefile:127: T	package/lucihttp/update: package/feeds/luci/lucihttp/update
+package/Makefile:127: T	package/lucihttp/refresh: package/feeds/luci/lucihttp/refresh
+package/Makefile:127: T	package/lucihttp/prereq: package/feeds/luci/lucihttp/prereq
+package/Makefile:127: T	package/lucihttp/dist: package/feeds/luci/lucihttp/dist
+package/Makefile:127: T	package/lucihttp/distcheck: package/feeds/luci/lucihttp/distcheck
+package/Makefile:127: T	package/lucihttp/configure: package/feeds/luci/lucihttp/configure
+package/Makefile:127: T	package/lucihttp/check: package/feeds/luci/lucihttp/check
+package/Makefile:127: T	package/lucihttp/check-depends: package/feeds/luci/lucihttp/check-depends
+package/Makefile:127: T	package/rpcd-mod-luci/clean: package/feeds/luci/rpcd-mod-luci/clean
+package/Makefile:127: T	package/rpcd-mod-luci/download: package/feeds/luci/rpcd-mod-luci/download
+package/Makefile:127: T	package/rpcd-mod-luci/prepare: package/feeds/luci/rpcd-mod-luci/prepare
+package/Makefile:127: T	package/rpcd-mod-luci/compile: package/feeds/luci/rpcd-mod-luci/compile
+package/Makefile:127: T	package/rpcd-mod-luci/update: package/feeds/luci/rpcd-mod-luci/update
+package/Makefile:127: T	package/rpcd-mod-luci/refresh: package/feeds/luci/rpcd-mod-luci/refresh
+package/Makefile:127: T	package/rpcd-mod-luci/prereq: package/feeds/luci/rpcd-mod-luci/prereq
+package/Makefile:127: T	package/rpcd-mod-luci/dist: package/feeds/luci/rpcd-mod-luci/dist
+package/Makefile:127: T	package/rpcd-mod-luci/distcheck: package/feeds/luci/rpcd-mod-luci/distcheck
+package/Makefile:127: T	package/rpcd-mod-luci/configure: package/feeds/luci/rpcd-mod-luci/configure
+package/Makefile:127: T	package/rpcd-mod-luci/check: package/feeds/luci/rpcd-mod-luci/check
+package/Makefile:127: T	package/rpcd-mod-luci/check-depends: package/feeds/luci/rpcd-mod-luci/check-depends
+package/Makefile:127: T	package/ucode-mod-html/clean: package/feeds/luci/ucode-mod-html/clean
+package/Makefile:127: T	package/ucode-mod-html/download: package/feeds/luci/ucode-mod-html/download
+package/Makefile:127: T	package/ucode-mod-html/prepare: package/feeds/luci/ucode-mod-html/prepare
+package/Makefile:127: T	package/ucode-mod-html/compile: package/feeds/luci/ucode-mod-html/compile
+package/Makefile:127: T	package/ucode-mod-html/update: package/feeds/luci/ucode-mod-html/update
+package/Makefile:127: T	package/ucode-mod-html/refresh: package/feeds/luci/ucode-mod-html/refresh
+package/Makefile:127: T	package/ucode-mod-html/prereq: package/feeds/luci/ucode-mod-html/prereq
+package/Makefile:127: T	package/ucode-mod-html/dist: package/feeds/luci/ucode-mod-html/dist
+package/Makefile:127: T	package/ucode-mod-html/distcheck: package/feeds/luci/ucode-mod-html/distcheck
+package/Makefile:127: T	package/ucode-mod-html/configure: package/feeds/luci/ucode-mod-html/configure
+package/Makefile:127: T	package/ucode-mod-html/check: package/feeds/luci/ucode-mod-html/check
+package/Makefile:127: T	package/ucode-mod-html/check-depends: package/feeds/luci/ucode-mod-html/check-depends
+package/Makefile:127: T	package/cgi-io/clean: package/feeds/packages/cgi-io/clean
+package/Makefile:127: T	package/cgi-io/download: package/feeds/packages/cgi-io/download
+package/Makefile:127: T	package/cgi-io/prepare: package/feeds/packages/cgi-io/prepare
+package/Makefile:127: T	package/cgi-io/compile: package/feeds/packages/cgi-io/compile
+package/Makefile:127: T	package/cgi-io/update: package/feeds/packages/cgi-io/update
+package/Makefile:127: T	package/cgi-io/refresh: package/feeds/packages/cgi-io/refresh
+package/Makefile:127: T	package/cgi-io/prereq: package/feeds/packages/cgi-io/prereq
+package/Makefile:127: T	package/cgi-io/dist: package/feeds/packages/cgi-io/dist
+package/Makefile:127: T	package/cgi-io/distcheck: package/feeds/packages/cgi-io/distcheck
+package/Makefile:127: T	package/cgi-io/configure: package/feeds/packages/cgi-io/configure
+package/Makefile:127: T	package/cgi-io/check: package/feeds/packages/cgi-io/check
+package/Makefile:127: T	package/cgi-io/check-depends: package/feeds/packages/cgi-io/check-depends
+package/Makefile:127: T	package/libcap-ng/clean: package/feeds/packages/libcap-ng/clean
+package/Makefile:127: T	package/libcap-ng/download: package/feeds/packages/libcap-ng/download
+package/Makefile:127: T	package/libcap-ng/prepare: package/feeds/packages/libcap-ng/prepare
+package/Makefile:127: T	package/libcap-ng/compile: package/feeds/packages/libcap-ng/compile
+package/Makefile:127: T	package/libcap-ng/update: package/feeds/packages/libcap-ng/update
+package/Makefile:127: T	package/libcap-ng/refresh: package/feeds/packages/libcap-ng/refresh
+package/Makefile:127: T	package/libcap-ng/prereq: package/feeds/packages/libcap-ng/prereq
+package/Makefile:127: T	package/libcap-ng/dist: package/feeds/packages/libcap-ng/dist
+package/Makefile:127: T	package/libcap-ng/distcheck: package/feeds/packages/libcap-ng/distcheck
+package/Makefile:127: T	package/libcap-ng/configure: package/feeds/packages/libcap-ng/configure
+package/Makefile:127: T	package/libcap-ng/check: package/feeds/packages/libcap-ng/check
+package/Makefile:127: T	package/libcap-ng/check-depends: package/feeds/packages/libcap-ng/check-depends
+package/Makefile:127: T	package/luasrcdiet/host/clean: package/feeds/packages/luasrcdiet/host/clean
+package/Makefile:127: T	package/luasrcdiet/clean: package/feeds/packages/luasrcdiet/clean
+package/Makefile:127: T	package/luasrcdiet/host/download: package/feeds/packages/luasrcdiet/host/download
+package/Makefile:127: T	package/luasrcdiet/download: package/feeds/packages/luasrcdiet/download
+package/Makefile:127: T	package/luasrcdiet/host/prepare: package/feeds/packages/luasrcdiet/host/prepare
+package/Makefile:127: T	package/luasrcdiet/prepare: package/feeds/packages/luasrcdiet/prepare
+package/Makefile:127: T	package/luasrcdiet/host/compile: package/feeds/packages/luasrcdiet/host/compile
+package/Makefile:127: T	package/luasrcdiet/compile: package/feeds/packages/luasrcdiet/compile
+package/Makefile:127: T	package/luasrcdiet/host/update: package/feeds/packages/luasrcdiet/host/update
+package/Makefile:127: T	package/luasrcdiet/update: package/feeds/packages/luasrcdiet/update
+package/Makefile:127: T	package/luasrcdiet/host/refresh: package/feeds/packages/luasrcdiet/host/refresh
+package/Makefile:127: T	package/luasrcdiet/refresh: package/feeds/packages/luasrcdiet/refresh
+package/Makefile:127: T	package/luasrcdiet/host/prereq: package/feeds/packages/luasrcdiet/host/prereq
+package/Makefile:127: T	package/luasrcdiet/prereq: package/feeds/packages/luasrcdiet/prereq
+package/Makefile:127: T	package/luasrcdiet/host/dist: package/feeds/packages/luasrcdiet/host/dist
+package/Makefile:127: T	package/luasrcdiet/dist: package/feeds/packages/luasrcdiet/dist
+package/Makefile:127: T	package/luasrcdiet/host/distcheck: package/feeds/packages/luasrcdiet/host/distcheck
+package/Makefile:127: T	package/luasrcdiet/distcheck: package/feeds/packages/luasrcdiet/distcheck
+package/Makefile:127: T	package/luasrcdiet/host/configure: package/feeds/packages/luasrcdiet/host/configure
+package/Makefile:127: T	package/luasrcdiet/configure: package/feeds/packages/luasrcdiet/configure
+package/Makefile:127: T	package/luasrcdiet/host/check: package/feeds/packages/luasrcdiet/host/check
+package/Makefile:127: T	package/luasrcdiet/check: package/feeds/packages/luasrcdiet/check
+package/Makefile:127: T	package/luasrcdiet/host/check-depends: package/feeds/packages/luasrcdiet/host/check-depends
+package/Makefile:127: T	package/luasrcdiet/check-depends: package/feeds/packages/luasrcdiet/check-depends
+package/Makefile:127: T	package/linux/clean: package/kernel/linux/clean
+package/Makefile:127: T	package/linux/download: package/kernel/linux/download
+package/Makefile:127: T	package/linux/prepare: package/kernel/linux/prepare
+package/Makefile:127: T	package/linux/compile: package/kernel/linux/compile
+package/Makefile:127: T	package/linux/update: package/kernel/linux/update
+package/Makefile:127: T	package/linux/refresh: package/kernel/linux/refresh
+package/Makefile:127: T	package/linux/prereq: package/kernel/linux/prereq
+package/Makefile:127: T	package/linux/dist: package/kernel/linux/dist
+package/Makefile:127: T	package/linux/distcheck: package/kernel/linux/distcheck
+package/Makefile:127: T	package/linux/configure: package/kernel/linux/configure
+package/Makefile:127: T	package/linux/check: package/kernel/linux/check
+package/Makefile:127: T	package/linux/check-depends: package/kernel/linux/check-depends
+package/Makefile:127: T	package/libmnl/clean: package/libs/libmnl/clean
+package/Makefile:127: T	package/libmnl/download: package/libs/libmnl/download
+package/Makefile:127: T	package/libmnl/prepare: package/libs/libmnl/prepare
+package/Makefile:127: T	package/libmnl/compile: package/libs/libmnl/compile
+package/Makefile:127: T	package/libmnl/update: package/libs/libmnl/update
+package/Makefile:127: T	package/libmnl/refresh: package/libs/libmnl/refresh
+package/Makefile:127: T	package/libmnl/prereq: package/libs/libmnl/prereq
+package/Makefile:127: T	package/libmnl/dist: package/libs/libmnl/dist
+package/Makefile:127: T	package/libmnl/distcheck: package/libs/libmnl/distcheck
+package/Makefile:127: T	package/libmnl/configure: package/libs/libmnl/configure
+package/Makefile:127: T	package/libmnl/check: package/libs/libmnl/check
+package/Makefile:127: T	package/libmnl/check-depends: package/libs/libmnl/check-depends
+package/Makefile:127: T	package/libnftnl/clean: package/libs/libnftnl/clean
+package/Makefile:127: T	package/libnftnl/download: package/libs/libnftnl/download
+package/Makefile:127: T	package/libnftnl/prepare: package/libs/libnftnl/prepare
+package/Makefile:127: T	package/libnftnl/compile: package/libs/libnftnl/compile
+package/Makefile:127: T	package/libnftnl/update: package/libs/libnftnl/update
+package/Makefile:127: T	package/libnftnl/refresh: package/libs/libnftnl/refresh
+package/Makefile:127: T	package/libnftnl/prereq: package/libs/libnftnl/prereq
+package/Makefile:127: T	package/libnftnl/dist: package/libs/libnftnl/dist
+package/Makefile:127: T	package/libnftnl/distcheck: package/libs/libnftnl/distcheck
+package/Makefile:127: T	package/libnftnl/configure: package/libs/libnftnl/configure
+package/Makefile:127: T	package/libnftnl/check: package/libs/libnftnl/check
+package/Makefile:127: T	package/libnftnl/check-depends: package/libs/libnftnl/check-depends
+package/Makefile:127: T	package/util-linux/clean: package/utils/util-linux/clean
+package/Makefile:127: T	package/util-linux/download: package/utils/util-linux/download
+package/Makefile:127: T	package/util-linux/prepare: package/utils/util-linux/prepare
+package/Makefile:127: T	package/util-linux/compile: package/utils/util-linux/compile
+package/Makefile:127: T	package/util-linux/update: package/utils/util-linux/update
+package/Makefile:127: T	package/util-linux/refresh: package/utils/util-linux/refresh
+package/Makefile:127: T	package/util-linux/prereq: package/utils/util-linux/prereq
+package/Makefile:127: T	package/util-linux/dist: package/utils/util-linux/dist
+package/Makefile:127: T	package/util-linux/distcheck: package/utils/util-linux/distcheck
+package/Makefile:127: T	package/util-linux/configure: package/utils/util-linux/configure
+package/Makefile:127: T	package/util-linux/check: package/utils/util-linux/check
+package/Makefile:127: T	package/util-linux/check-depends: package/utils/util-linux/check-depends
+package/Makefile:127: T	package/luci-app-upnp/clean: package/custom-upnp/luci-app-upnp/clean
+package/Makefile:127: T	package/luci-app-upnp/download: package/custom-upnp/luci-app-upnp/download
+package/Makefile:127: T	package/luci-app-upnp/prepare: package/custom-upnp/luci-app-upnp/prepare
+package/Makefile:127: T	package/luci-app-upnp/compile: package/custom-upnp/luci-app-upnp/compile
+package/Makefile:127: T	package/luci-app-upnp/update: package/custom-upnp/luci-app-upnp/update
+package/Makefile:127: T	package/luci-app-upnp/refresh: package/custom-upnp/luci-app-upnp/refresh
+package/Makefile:127: T	package/luci-app-upnp/prereq: package/custom-upnp/luci-app-upnp/prereq
+package/Makefile:127: T	package/luci-app-upnp/dist: package/custom-upnp/luci-app-upnp/dist
+package/Makefile:127: T	package/luci-app-upnp/distcheck: package/custom-upnp/luci-app-upnp/distcheck
+package/Makefile:127: T	package/luci-app-upnp/configure: package/custom-upnp/luci-app-upnp/configure
+package/Makefile:127: T	package/luci-app-upnp/check: package/custom-upnp/luci-app-upnp/check
+package/Makefile:127: T	package/luci-app-upnp/check-depends: package/custom-upnp/luci-app-upnp/check-depends
+package/Makefile:127: T	package/miniupnpd/clean: package/custom-upnp/miniupnpd/clean
+package/Makefile:127: T	package/miniupnpd/download: package/custom-upnp/miniupnpd/download
+package/Makefile:127: T	package/miniupnpd/prepare: package/custom-upnp/miniupnpd/prepare
+package/Makefile:127: T	package/miniupnpd/compile: package/custom-upnp/miniupnpd/compile
+package/Makefile:127: T	package/miniupnpd/update: package/custom-upnp/miniupnpd/update
+package/Makefile:127: T	package/miniupnpd/refresh: package/custom-upnp/miniupnpd/refresh
+package/Makefile:127: T	package/miniupnpd/prereq: package/custom-upnp/miniupnpd/prereq
+package/Makefile:127: T	package/miniupnpd/dist: package/custom-upnp/miniupnpd/dist
+package/Makefile:127: T	package/miniupnpd/distcheck: package/custom-upnp/miniupnpd/distcheck
+package/Makefile:127: T	package/miniupnpd/configure: package/custom-upnp/miniupnpd/configure
+package/Makefile:127: T	package/miniupnpd/check: package/custom-upnp/miniupnpd/check
+package/Makefile:127: T	package/miniupnpd/check-depends: package/custom-upnp/miniupnpd/check-depends
+package/Makefile:127: T	package/csstidy/host/clean: package/feeds/luci/csstidy/host/clean
+package/Makefile:127: T	package/csstidy/clean: package/feeds/luci/csstidy/clean
+package/Makefile:127: T	package/csstidy/host/download: package/feeds/luci/csstidy/host/download
+package/Makefile:127: T	package/csstidy/download: package/feeds/luci/csstidy/download
+package/Makefile:127: T	package/csstidy/host/prepare: package/feeds/luci/csstidy/host/prepare
+package/Makefile:127: T	package/csstidy/prepare: package/feeds/luci/csstidy/prepare
+package/Makefile:127: T	package/csstidy/host/compile: package/feeds/luci/csstidy/host/compile
+package/Makefile:127: T	package/csstidy/compile: package/feeds/luci/csstidy/compile
+package/Makefile:127: T	package/csstidy/host/update: package/feeds/luci/csstidy/host/update
+package/Makefile:127: T	package/csstidy/update: package/feeds/luci/csstidy/update
+package/Makefile:127: T	package/csstidy/host/refresh: package/feeds/luci/csstidy/host/refresh
+package/Makefile:127: T	package/csstidy/refresh: package/feeds/luci/csstidy/refresh
+package/Makefile:127: T	package/csstidy/host/prereq: package/feeds/luci/csstidy/host/prereq
+package/Makefile:127: T	package/csstidy/prereq: package/feeds/luci/csstidy/prereq
+package/Makefile:127: T	package/csstidy/host/dist: package/feeds/luci/csstidy/host/dist
+package/Makefile:127: T	package/csstidy/dist: package/feeds/luci/csstidy/dist
+package/Makefile:127: T	package/csstidy/host/distcheck: package/feeds/luci/csstidy/host/distcheck
+package/Makefile:127: T	package/csstidy/distcheck: package/feeds/luci/csstidy/distcheck
+package/Makefile:127: T	package/csstidy/host/configure: package/feeds/luci/csstidy/host/configure
+package/Makefile:127: T	package/csstidy/configure: package/feeds/luci/csstidy/configure
+package/Makefile:127: T	package/csstidy/host/check: package/feeds/luci/csstidy/host/check
+package/Makefile:127: T	package/csstidy/check: package/feeds/luci/csstidy/check
+package/Makefile:127: T	package/csstidy/host/check-depends: package/feeds/luci/csstidy/host/check-depends
+package/Makefile:127: T	package/csstidy/check-depends: package/feeds/luci/csstidy/check-depends
+package/Makefile:127: T	package/luci-base/host/clean: package/feeds/luci/luci-base/host/clean
+package/Makefile:127: T	package/luci-base/clean: package/feeds/luci/luci-base/clean
+package/Makefile:127: T	package/luci-base/host/download: package/feeds/luci/luci-base/host/download
+package/Makefile:127: T	package/luci-base/download: package/feeds/luci/luci-base/download
+package/Makefile:127: T	package/luci-base/host/prepare: package/feeds/luci/luci-base/host/prepare
+package/Makefile:127: T	package/luci-base/prepare: package/feeds/luci/luci-base/prepare
+package/Makefile:127: T	package/luci-base/host/compile: package/feeds/luci/luci-base/host/compile
+package/Makefile:127: T	package/luci-base/compile: package/feeds/luci/luci-base/compile
+package/Makefile:127: T	package/luci-base/host/update: package/feeds/luci/luci-base/host/update
+package/Makefile:127: T	package/luci-base/update: package/feeds/luci/luci-base/update
+package/Makefile:127: T	package/luci-base/host/refresh: package/feeds/luci/luci-base/host/refresh
+package/Makefile:127: T	package/luci-base/refresh: package/feeds/luci/luci-base/refresh
+package/Makefile:127: T	package/luci-base/host/prereq: package/feeds/luci/luci-base/host/prereq
+package/Makefile:127: T	package/luci-base/prereq: package/feeds/luci/luci-base/prereq
+package/Makefile:127: T	package/luci-base/host/dist: package/feeds/luci/luci-base/host/dist
+package/Makefile:127: T	package/luci-base/dist: package/feeds/luci/luci-base/dist
+package/Makefile:127: T	package/luci-base/host/distcheck: package/feeds/luci/luci-base/host/distcheck
+package/Makefile:127: T	package/luci-base/distcheck: package/feeds/luci/luci-base/distcheck
+package/Makefile:127: T	package/luci-base/host/configure: package/feeds/luci/luci-base/host/configure
+package/Makefile:127: T	package/luci-base/configure: package/feeds/luci/luci-base/configure
+package/Makefile:127: T	package/luci-base/host/check: package/feeds/luci/luci-base/host/check
+package/Makefile:127: T	package/luci-base/check: package/feeds/luci/luci-base/check
+package/Makefile:127: T	package/luci-base/host/check-depends: package/feeds/luci/luci-base/host/check-depends
+package/Makefile:127: T	package/luci-base/check-depends: package/feeds/luci/luci-base/check-depends
+package/Makefile:127: T	package/lucihttp/clean: package/feeds/luci/lucihttp/clean
+package/Makefile:127: T	package/lucihttp/download: package/feeds/luci/lucihttp/download
+package/Makefile:127: T	package/lucihttp/prepare: package/feeds/luci/lucihttp/prepare
+package/Makefile:127: T	package/lucihttp/compile: package/feeds/luci/lucihttp/compile
+package/Makefile:127: T	package/lucihttp/update: package/feeds/luci/lucihttp/update
+package/Makefile:127: T	package/lucihttp/refresh: package/feeds/luci/lucihttp/refresh
+package/Makefile:127: T	package/lucihttp/prereq: package/feeds/luci/lucihttp/prereq
+package/Makefile:127: T	package/lucihttp/dist: package/feeds/luci/lucihttp/dist
+package/Makefile:127: T	package/lucihttp/distcheck: package/feeds/luci/lucihttp/distcheck
+package/Makefile:127: T	package/lucihttp/configure: package/feeds/luci/lucihttp/configure
+package/Makefile:127: T	package/lucihttp/check: package/feeds/luci/lucihttp/check
+package/Makefile:127: T	package/lucihttp/check-depends: package/feeds/luci/lucihttp/check-depends
+package/Makefile:127: T	package/rpcd-mod-luci/clean: package/feeds/luci/rpcd-mod-luci/clean
+package/Makefile:127: T	package/rpcd-mod-luci/download: package/feeds/luci/rpcd-mod-luci/download
+package/Makefile:127: T	package/rpcd-mod-luci/prepare: package/feeds/luci/rpcd-mod-luci/prepare
+package/Makefile:127: T	package/rpcd-mod-luci/compile: package/feeds/luci/rpcd-mod-luci/compile
+package/Makefile:127: T	package/rpcd-mod-luci/update: package/feeds/luci/rpcd-mod-luci/update
+package/Makefile:127: T	package/rpcd-mod-luci/refresh: package/feeds/luci/rpcd-mod-luci/refresh
+package/Makefile:127: T	package/rpcd-mod-luci/prereq: package/feeds/luci/rpcd-mod-luci/prereq
+package/Makefile:127: T	package/rpcd-mod-luci/dist: package/feeds/luci/rpcd-mod-luci/dist
+package/Makefile:127: T	package/rpcd-mod-luci/distcheck: package/feeds/luci/rpcd-mod-luci/distcheck
+package/Makefile:127: T	package/rpcd-mod-luci/configure: package/feeds/luci/rpcd-mod-luci/configure
+package/Makefile:127: T	package/rpcd-mod-luci/check: package/feeds/luci/rpcd-mod-luci/check
+package/Makefile:127: T	package/rpcd-mod-luci/check-depends: package/feeds/luci/rpcd-mod-luci/check-depends
+package/Makefile:127: T	package/ucode-mod-html/clean: package/feeds/luci/ucode-mod-html/clean
+package/Makefile:127: T	package/ucode-mod-html/download: package/feeds/luci/ucode-mod-html/download
+package/Makefile:127: T	package/ucode-mod-html/prepare: package/feeds/luci/ucode-mod-html/prepare
+package/Makefile:127: T	package/ucode-mod-html/compile: package/feeds/luci/ucode-mod-html/compile
+package/Makefile:127: T	package/ucode-mod-html/update: package/feeds/luci/ucode-mod-html/update
+package/Makefile:127: T	package/ucode-mod-html/refresh: package/feeds/luci/ucode-mod-html/refresh
+package/Makefile:127: T	package/ucode-mod-html/prereq: package/feeds/luci/ucode-mod-html/prereq
+package/Makefile:127: T	package/ucode-mod-html/dist: package/feeds/luci/ucode-mod-html/dist
+package/Makefile:127: T	package/ucode-mod-html/distcheck: package/feeds/luci/ucode-mod-html/distcheck
+package/Makefile:127: T	package/ucode-mod-html/configure: package/feeds/luci/ucode-mod-html/configure
+package/Makefile:127: T	package/ucode-mod-html/check: package/feeds/luci/ucode-mod-html/check
+package/Makefile:127: T	package/ucode-mod-html/check-depends: package/feeds/luci/ucode-mod-html/check-depends
+package/Makefile:127: T	package/cgi-io/clean: package/feeds/packages/cgi-io/clean
+package/Makefile:127: T	package/cgi-io/download: package/feeds/packages/cgi-io/download
+package/Makefile:127: T	package/cgi-io/prepare: package/feeds/packages/cgi-io/prepare
+package/Makefile:127: T	package/cgi-io/compile: package/feeds/packages/cgi-io/compile
+package/Makefile:127: T	package/cgi-io/update: package/feeds/packages/cgi-io/update
+package/Makefile:127: T	package/cgi-io/refresh: package/feeds/packages/cgi-io/refresh
+package/Makefile:127: T	package/cgi-io/prereq: package/feeds/packages/cgi-io/prereq
+package/Makefile:127: T	package/cgi-io/dist: package/feeds/packages/cgi-io/dist
+package/Makefile:127: T	package/cgi-io/distcheck: package/feeds/packages/cgi-io/distcheck
+package/Makefile:127: T	package/cgi-io/configure: package/feeds/packages/cgi-io/configure
+package/Makefile:127: T	package/cgi-io/check: package/feeds/packages/cgi-io/check
+package/Makefile:127: T	package/cgi-io/check-depends: package/feeds/packages/cgi-io/check-depends
+package/Makefile:127: T	package/libcap-ng/clean: package/feeds/packages/libcap-ng/clean
+package/Makefile:127: T	package/libcap-ng/download: package/feeds/packages/libcap-ng/download
+package/Makefile:127: T	package/libcap-ng/prepare: package/feeds/packages/libcap-ng/prepare
+package/Makefile:127: T	package/libcap-ng/compile: package/feeds/packages/libcap-ng/compile
+package/Makefile:127: T	package/libcap-ng/update: package/feeds/packages/libcap-ng/update
+package/Makefile:127: T	package/libcap-ng/refresh: package/feeds/packages/libcap-ng/refresh
+package/Makefile:127: T	package/libcap-ng/prereq: package/feeds/packages/libcap-ng/prereq
+package/Makefile:127: T	package/libcap-ng/dist: package/feeds/packages/libcap-ng/dist
+package/Makefile:127: T	package/libcap-ng/distcheck: package/feeds/packages/libcap-ng/distcheck
+package/Makefile:127: T	package/libcap-ng/configure: package/feeds/packages/libcap-ng/configure
+package/Makefile:127: T	package/libcap-ng/check: package/feeds/packages/libcap-ng/check
+package/Makefile:127: T	package/libcap-ng/check-depends: package/feeds/packages/libcap-ng/check-depends
+package/Makefile:127: T	package/luasrcdiet/host/clean: package/feeds/packages/luasrcdiet/host/clean
+package/Makefile:127: T	package/luasrcdiet/clean: package/feeds/packages/luasrcdiet/clean
+package/Makefile:127: T	package/luasrcdiet/host/download: package/feeds/packages/luasrcdiet/host/download
+package/Makefile:127: T	package/luasrcdiet/download: package/feeds/packages/luasrcdiet/download
+package/Makefile:127: T	package/luasrcdiet/host/prepare: package/feeds/packages/luasrcdiet/host/prepare
+package/Makefile:127: T	package/luasrcdiet/prepare: package/feeds/packages/luasrcdiet/prepare
+package/Makefile:127: T	package/luasrcdiet/host/compile: package/feeds/packages/luasrcdiet/host/compile
+package/Makefile:127: T	package/luasrcdiet/compile: package/feeds/packages/luasrcdiet/compile
+package/Makefile:127: T	package/luasrcdiet/host/update: package/feeds/packages/luasrcdiet/host/update
+package/Makefile:127: T	package/luasrcdiet/update: package/feeds/packages/luasrcdiet/update
+package/Makefile:127: T	package/luasrcdiet/host/refresh: package/feeds/packages/luasrcdiet/host/refresh
+package/Makefile:127: T	package/luasrcdiet/refresh: package/feeds/packages/luasrcdiet/refresh
+package/Makefile:127: T	package/luasrcdiet/host/prereq: package/feeds/packages/luasrcdiet/host/prereq
+package/Makefile:127: T	package/luasrcdiet/prereq: package/feeds/packages/luasrcdiet/prereq
+package/Makefile:127: T	package/luasrcdiet/host/dist: package/feeds/packages/luasrcdiet/host/dist
+package/Makefile:127: T	package/luasrcdiet/dist: package/feeds/packages/luasrcdiet/dist
+package/Makefile:127: T	package/luasrcdiet/host/distcheck: package/feeds/packages/luasrcdiet/host/distcheck
+package/Makefile:127: T	package/luasrcdiet/distcheck: package/feeds/packages/luasrcdiet/distcheck
+package/Makefile:127: T	package/luasrcdiet/host/configure: package/feeds/packages/luasrcdiet/host/configure
+package/Makefile:127: T	package/luasrcdiet/configure: package/feeds/packages/luasrcdiet/configure
+package/Makefile:127: T	package/luasrcdiet/host/check: package/feeds/packages/luasrcdiet/host/check
+package/Makefile:127: T	package/luasrcdiet/check: package/feeds/packages/luasrcdiet/check
+package/Makefile:127: T	package/luasrcdiet/host/check-depends: package/feeds/packages/luasrcdiet/host/check-depends
+package/Makefile:127: T	package/luasrcdiet/check-depends: package/feeds/packages/luasrcdiet/check-depends
+package/Makefile:127: T	package/linux/clean: package/kernel/linux/clean
+package/Makefile:127: T	package/linux/download: package/kernel/linux/download
+package/Makefile:127: T	package/linux/prepare: package/kernel/linux/prepare
+package/Makefile:127: T	package/linux/compile: package/kernel/linux/compile
+package/Makefile:127: T	package/linux/update: package/kernel/linux/update
+package/Makefile:127: T	package/linux/refresh: package/kernel/linux/refresh
+package/Makefile:127: T	package/linux/prereq: package/kernel/linux/prereq
+package/Makefile:127: T	package/linux/dist: package/kernel/linux/dist
+package/Makefile:127: T	package/linux/distcheck: package/kernel/linux/distcheck
+package/Makefile:127: T	package/linux/configure: package/kernel/linux/configure
+package/Makefile:127: T	package/linux/check: package/kernel/linux/check
+package/Makefile:127: T	package/linux/check-depends: package/kernel/linux/check-depends
+package/Makefile:127: T	package/libmnl/clean: package/libs/libmnl/clean
+package/Makefile:127: T	package/libmnl/download: package/libs/libmnl/download
+package/Makefile:127: T	package/libmnl/prepare: package/libs/libmnl/prepare
+package/Makefile:127: T	package/libmnl/compile: package/libs/libmnl/compile
+package/Makefile:127: T	package/libmnl/update: package/libs/libmnl/update
+package/Makefile:127: T	package/libmnl/refresh: package/libs/libmnl/refresh
+package/Makefile:127: T	package/libmnl/prereq: package/libs/libmnl/prereq
+package/Makefile:127: T	package/libmnl/dist: package/libs/libmnl/dist
+package/Makefile:127: T	package/libmnl/distcheck: package/libs/libmnl/distcheck
+package/Makefile:127: T	package/libmnl/configure: package/libs/libmnl/configure
+package/Makefile:127: T	package/libmnl/check: package/libs/libmnl/check
+package/Makefile:127: T	package/libmnl/check-depends: package/libs/libmnl/check-depends
+package/Makefile:127: T	package/libnftnl/clean: package/libs/libnftnl/clean
+package/Makefile:127: T	package/libnftnl/download: package/libs/libnftnl/download
+package/Makefile:127: T	package/libnftnl/prepare: package/libs/libnftnl/prepare
+package/Makefile:127: T	package/libnftnl/compile: package/libs/libnftnl/compile
+package/Makefile:127: T	package/libnftnl/update: package/libs/libnftnl/update
+package/Makefile:127: T	package/libnftnl/refresh: package/libs/libnftnl/refresh
+package/Makefile:127: T	package/libnftnl/prereq: package/libs/libnftnl/prereq
+package/Makefile:127: T	package/libnftnl/dist: package/libs/libnftnl/dist
+package/Makefile:127: T	package/libnftnl/distcheck: package/libs/libnftnl/distcheck
+package/Makefile:127: T	package/libnftnl/configure: package/libs/libnftnl/configure
+package/Makefile:127: T	package/libnftnl/check: package/libs/libnftnl/check
+package/Makefile:127: T	package/libnftnl/check-depends: package/libs/libnftnl/check-depends
+package/Makefile:127: T	package/util-linux/clean: package/utils/util-linux/clean
+package/Makefile:127: T	package/util-linux/download: package/utils/util-linux/download
+package/Makefile:127: T	package/util-linux/prepare: package/utils/util-linux/prepare
+package/Makefile:127: T	package/util-linux/compile: package/utils/util-linux/compile
+package/Makefile:127: T	package/util-linux/update: package/utils/util-linux/update
+package/Makefile:127: T	package/util-linux/refresh: package/utils/util-linux/refresh
+package/Makefile:127: T	package/util-linux/prereq: package/utils/util-linux/prereq
+package/Makefile:127: T	package/util-linux/dist: package/utils/util-linux/dist
+package/Makefile:127: T	package/util-linux/distcheck: package/utils/util-linux/distcheck
+package/Makefile:127: T	package/util-linux/configure: package/utils/util-linux/configure
+package/Makefile:127: T	package/util-linux/check: package/utils/util-linux/check
+package/Makefile:127: T	package/util-linux/check-depends: package/utils/util-linux/check-depends
+WARNING: Makefile 'package/feeds/packages/cgi-io/Makefile' has a dependency on 'libubox', which does not exist
+WARNING: Makefile 'package/feeds/packages/cgi-io/Makefile' has a dependency on 'libubus', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'eip197-mini-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8169-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'e100-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'bnx2x-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'ar3k-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'mwifiex-sdio-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb2', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'edgeport-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'r8152-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-phy-bcm-ns-usb3', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'amdgpu-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'radeon-firmware', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'kmod-gpio-button-hotplug', which does not exist
+WARNING: Makefile 'package/kernel/linux/Makefile' has a dependency on 'nu801', which does not exist
+WARNING: Makefile 'package/feeds/packages/luasrcdiet/Makefile' has a dependency on 'lua', which does not exist
+WARNING: Makefile 'package/feeds/packages/luasrcdiet/Makefile' has a build dependency on 'lua/host', which does not exist
+WARNING: Makefile 'package/custom-upnp/luci-app-upnp/Makefile' has a dependency on 'rpcd-mod-ucode', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'rpcd', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'rpcd-mod-file', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'rpcd-mod-ucode', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode-mod-fs', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode-mod-uci', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode-mod-ubus', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a dependency on 'ucode-mod-math', which does not exist
+WARNING: Makefile 'package/feeds/luci/luci-base/Makefile' has a build dependency on 'lua/host', which does not exist
+WARNING: Makefile 'package/feeds/luci/lucihttp/Makefile' has a dependency on 'liblua', which does not exist
+WARNING: Makefile 'package/feeds/luci/lucihttp/Makefile' has a dependency on 'libucode', which does not exist
+WARNING: Makefile 'package/custom-upnp/miniupnpd/Makefile' has a dependency on 'firewall4', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a dependency on 'rpcd', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a dependency on 'libubox', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a dependency on 'libubus', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a dependency on 'libnl-tiny', which does not exist
+WARNING: Makefile 'package/feeds/luci/rpcd-mod-luci/Makefile' has a build dependency on 'iwinfo', which does not exist
+WARNING: Makefile 'package/feeds/luci/ucode-mod-html/Makefile' has a dependency on 'libucode', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncurses', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncurses', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncursesw', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncursesw', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncurses', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncurses', which does not exist
+WARNING: Makefile 'package/utils/util-linux/Makefile' has a dependency on 'libncursesw', which does not exist
+tmp/.config-package.in:70:warning: ignoring type redefinition of 'PACKAGE_libc' from 'bool' to 'tristate'
+tmp/.config-package.in:98:warning: ignoring type redefinition of 'PACKAGE_libgcc' from 'bool' to 'tristate'
+tmp/.config-package.in:219:warning: ignoring type redefinition of 'PACKAGE_libpthread' from 'bool' to 'tristate'
+tmp/.config-package.in:247:warning: ignoring type redefinition of 'PACKAGE_librt' from 'bool' to 'tristate'
+tmp/.config-package.in:478:warning: ignoring type redefinition of 'PACKAGE_libblkid' from 'bool' to 'tristate'
+tmp/.config-package.in:515:warning: ignoring type redefinition of 'PACKAGE_libfdisk' from 'bool' to 'tristate'
+tmp/.config-package.in:527:warning: ignoring type redefinition of 'PACKAGE_liblucihttp' from 'bool' to 'tristate'
+tmp/.config-package.in:536:warning: ignoring type redefinition of 'PACKAGE_liblucihttp-lua' from 'bool' to 'tristate'
+tmp/.config-package.in:547:warning: ignoring type redefinition of 'PACKAGE_liblucihttp-ucode' from 'bool' to 'tristate'
+tmp/.config-package.in:558:warning: ignoring type redefinition of 'PACKAGE_libmnl' from 'bool' to 'tristate'
+tmp/.config-package.in:600:warning: ignoring type redefinition of 'PACKAGE_libnftnl' from 'bool' to 'tristate'
+tmp/.config-package.in:612:warning: ignoring type redefinition of 'PACKAGE_libsmartcols' from 'bool' to 'tristate'
+tmp/.config-package.in:623:warning: ignoring type redefinition of 'PACKAGE_libuuid' from 'bool' to 'tristate'
+tmp/.config-package.in:637:warning: ignoring type redefinition of 'PACKAGE_rpcd-mod-luci' from 'bool' to 'tristate'
+tmp/.config-package.in:655:warning: ignoring type redefinition of 'PACKAGE_luci-base' from 'bool' to 'tristate'
+tmp/.config-package.in:692:warning: ignoring type redefinition of 'LUCI_LANG_ar' from 'bool' to 'tristate'
+tmp/.config-package.in:695:warning: ignoring type redefinition of 'LUCI_LANG_bg' from 'bool' to 'tristate'
+tmp/.config-package.in:698:warning: ignoring type redefinition of 'LUCI_LANG_bn_BD' from 'bool' to 'tristate'
+tmp/.config-package.in:701:warning: ignoring type redefinition of 'LUCI_LANG_ca' from 'bool' to 'tristate'
+tmp/.config-package.in:704:warning: ignoring type redefinition of 'LUCI_LANG_cs' from 'bool' to 'tristate'
+tmp/.config-package.in:707:warning: ignoring type redefinition of 'LUCI_LANG_da' from 'bool' to 'tristate'
+tmp/.config-package.in:710:warning: ignoring type redefinition of 'LUCI_LANG_de' from 'bool' to 'tristate'
+tmp/.config-package.in:713:warning: ignoring type redefinition of 'LUCI_LANG_el' from 'bool' to 'tristate'
+tmp/.config-package.in:716:warning: ignoring type redefinition of 'LUCI_LANG_es' from 'bool' to 'tristate'
+tmp/.config-package.in:719:warning: ignoring type redefinition of 'LUCI_LANG_fi' from 'bool' to 'tristate'
+tmp/.config-package.in:722:warning: ignoring type redefinition of 'LUCI_LANG_fr' from 'bool' to 'tristate'
+tmp/.config-package.in:725:warning: ignoring type redefinition of 'LUCI_LANG_he' from 'bool' to 'tristate'
+tmp/.config-package.in:728:warning: ignoring type redefinition of 'LUCI_LANG_hi' from 'bool' to 'tristate'
+tmp/.config-package.in:731:warning: ignoring type redefinition of 'LUCI_LANG_hu' from 'bool' to 'tristate'
+tmp/.config-package.in:734:warning: ignoring type redefinition of 'LUCI_LANG_it' from 'bool' to 'tristate'
+tmp/.config-package.in:737:warning: ignoring type redefinition of 'LUCI_LANG_ja' from 'bool' to 'tristate'
+tmp/.config-package.in:740:warning: ignoring type redefinition of 'LUCI_LANG_ko' from 'bool' to 'tristate'
+tmp/.config-package.in:743:warning: ignoring type redefinition of 'LUCI_LANG_lt' from 'bool' to 'tristate'
+tmp/.config-package.in:746:warning: ignoring type redefinition of 'LUCI_LANG_mr' from 'bool' to 'tristate'
+tmp/.config-package.in:749:warning: ignoring type redefinition of 'LUCI_LANG_ms' from 'bool' to 'tristate'
+tmp/.config-package.in:752:warning: ignoring type redefinition of 'LUCI_LANG_nb_NO' from 'bool' to 'tristate'
+tmp/.config-package.in:755:warning: ignoring type redefinition of 'LUCI_LANG_nl' from 'bool' to 'tristate'
+tmp/.config-package.in:758:warning: ignoring type redefinition of 'LUCI_LANG_pl' from 'bool' to 'tristate'
+tmp/.config-package.in:761:warning: ignoring type redefinition of 'LUCI_LANG_pt' from 'bool' to 'tristate'
+tmp/.config-package.in:764:warning: ignoring type redefinition of 'LUCI_LANG_pt_BR' from 'bool' to 'tristate'
+tmp/.config-package.in:767:warning: ignoring type redefinition of 'LUCI_LANG_ro' from 'bool' to 'tristate'
+tmp/.config-package.in:770:warning: ignoring type redefinition of 'LUCI_LANG_ru' from 'bool' to 'tristate'
+tmp/.config-package.in:773:warning: ignoring type redefinition of 'LUCI_LANG_sk' from 'bool' to 'tristate'
+tmp/.config-package.in:776:warning: ignoring type redefinition of 'LUCI_LANG_sv' from 'bool' to 'tristate'
+tmp/.config-package.in:779:warning: ignoring type redefinition of 'LUCI_LANG_tr' from 'bool' to 'tristate'
+tmp/.config-package.in:782:warning: ignoring type redefinition of 'LUCI_LANG_uk' from 'bool' to 'tristate'
+tmp/.config-package.in:785:warning: ignoring type redefinition of 'LUCI_LANG_vi' from 'bool' to 'tristate'
+tmp/.config-package.in:788:warning: ignoring type redefinition of 'LUCI_LANG_zh_Hans' from 'bool' to 'tristate'
+tmp/.config-package.in:791:warning: ignoring type redefinition of 'LUCI_LANG_zh_Hant' from 'bool' to 'tristate'
+tmp/.config-package.in:1131:warning: ignoring type redefinition of 'PACKAGE_luci-i18n-base-zh-cn' from 'bool' to 'tristate'
+tmp/.config-package.in:1172:warning: ignoring type redefinition of 'PACKAGE_cgi-io' from 'bool' to 'tristate'
+tmp/.config-package.in:1255:warning: ignoring type redefinition of 'PACKAGE_fdisk' from 'bool' to 'tristate'
+tmp/.config-package.in:1294:warning: ignoring type redefinition of 'PACKAGE_partx-utils' from 'bool' to 'tristate'
+tmp/.config-package.in:1740:warning: ignoring type redefinition of 'PACKAGE_ucode-mod-html' from 'bool' to 'tristate'
+Config-build.in:1639:warning: defaults for choice values not supported
+Config-build.in:1643:warning: defaults for choice values not supported
+Config-build.in:1647:warning: defaults for choice values not supported
+#
+# No change to .config
+#
+
+PASS：真实 SDK scripts/feeds install -a 与 make defconfig 成功；自维护两个包是唯一被扫描版本；IPv6 与两个软件包选择保持有效。
+Source-Makefile: package/custom-upnp/luci-app-upnp/Makefile
+Source-Makefile: package/custom-upnp/miniupnpd/Makefile

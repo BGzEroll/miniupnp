@@ -1,5 +1,11 @@
+安装自维护包： package/custom-upnp/miniupnpd
+安装自维护包： package/custom-upnp/luci-app-upnp
+UPnP 源码替换完成；请在固件配置选择 miniupnpd-nftables 和 luci-app-upnp。
 移除旧包链接： package/feeds/packages/miniupnpd
 移除旧包链接： package/feeds/luci/luci-app-upnp
+安装自维护包： package/custom-upnp/miniupnpd
+安装自维护包： package/custom-upnp/luci-app-upnp
+UPnP 源码替换完成；请在固件配置选择 miniupnpd-nftables 和 luci-app-upnp。
 安装自维护包： package/custom-upnp/miniupnpd
 安装自维护包： package/custom-upnp/luci-app-upnp
 UPnP 替换完成；接下来执行 make defconfig。中文词典已包含在 luci-app-upnp 中。

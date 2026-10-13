@@ -93,3 +93,9 @@ PassWall 4.78-1 的实际 app.sh/nftables.sh 在隔离拓扑中生成规则，6/
 结束后 PassWall 配置恢复、enabled=0，无待提交配置、实验节点、实验 namespace、PassWall nft 表或策略路由残留；MiniUPnPd 继续运行，见 passwall-cleanup.txt。daemon、控制工具和 init SHA256 与此前回归版本一致。
 
 源码改为 net/miniupnpd、applications/luci-app-upnp，测试放 tests，构建与 CI 替换工具放 scripts。替换脚本重复执行检查通过，保留 PassWall 包及无关配置、移除旧 UPnP 包链接，见 ci-install-test.txt。用同一替换入口实际完成 x86_64 SDK 构建，见 ci-sdk-build.log；SDK 仅扫描两个自维护包的 Source-Makefile。工作流补丁对 CI 仓库 7bc8e0bae90a88845fb318cf57e568068fd0ce6d 的 360T7 工作流执行 git apply --check 通过。没有推送远程 CI，也没有运行完整 aarch64 固件构建。
+
+## 2026-10-13 改为 Load_custom_feeds.sh 拉取集成
+
+按用户要求，新增 --packages-only 模式，允许在固件 .config 尚未加载时安装源码，不改配置。CI 拉取片段位于 ci/Load_custom_feeds-upnp.sh，填写实际 GitHub 地址和分支后追加到 Load_custom_feeds.sh；固件配置显式选择两个包和 IPv6。原工作流补丁已移除，不再需要独立替换步骤。
+
+模拟构建树验证无 .config 可安装、已有 .config 不被修改及默认安装模式仍正常。真实 SDK 执行 feeds install -a 和 make defconfig 成功，元数据仅包含 package/custom-upnp 中两个自维护包，未重新安装同名 feed 包，选项仍有效；见 ci-feeds-integration.txt。SDK 全 feeds 安装包含原有缺失 lua 等依赖提示，本次未进行额外的全固件编译。

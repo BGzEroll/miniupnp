@@ -1,13 +1,20 @@
 #!/bin/sh
-# Run after the last feeds install and after loading the firmware .config.
+# Default: run after feeds installation and .config loading.
+# --packages-only: run before feeds update; the firmware config selects packages.
 set -eu
 TASK_SOURCE=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
-TASK_TARGET=${1:?Usage: install-to-openwrt.sh OPENWRT_ROOT}
-python3 - "$TASK_SOURCE" "$TASK_TARGET" <<'PY'
+TASK_MODE=full
+if [ "${1:-}" = --packages-only ]; then
+	TASK_MODE=packages-only
+	shift
+fi
+TASK_TARGET=${1:?Usage: install-to-openwrt.sh [--packages-only] OPENWRT_ROOT}
+python3 - "$TASK_SOURCE" "$TASK_TARGET" "$TASK_MODE" <<'PY'
 import pathlib,re,shutil,sys,time
 source=pathlib.Path(sys.argv[1]).resolve();target=pathlib.Path(sys.argv[2]).resolve()
 assert (target/'rules.mk').is_file() and (target/'scripts/feeds').is_file(), 'Not an OpenWrt build tree'
-assert (target/'.config').is_file(), 'Load the firmware .config before replacing UPnP'
+packages_only=sys.argv[3]=='packages-only'
+if not packages_only:assert (target/'.config').is_file(), 'Load the firmware .config before replacing UPnP'
 destination=target/'package/custom-upnp'
 assert not destination.is_symlink(), 'Refusing a symlink at package/custom-upnp'
 assert not destination.exists() or (destination/'.managed-by-upnp').is_file(), 'Destination is not managed by this installer'
@@ -30,14 +37,15 @@ for name,recipe in recipes.items():
     if path.is_symlink():path.unlink()
     elif path.exists():shutil.rmtree(path)
     shutil.copytree(recipe,path);print('安装自维护包：',path.relative_to(target))
-config=target/'.config';lines=config.read_text().splitlines()
-keys=('CONFIG_PACKAGE_miniupnpd','CONFIG_PACKAGE_miniupnpd-nftables','CONFIG_PACKAGE_miniupnpd-iptables',
-      'CONFIG_PACKAGE_luci-app-upnp','CONFIG_PACKAGE_luci-i18n-upnp-zh-cn','CONFIG_IPV6')
-lines=[line for line in lines if not any(re.match(r'^(?:# )?'+re.escape(key)+r'(?:=| is not set$)',line) for key in keys)]
-lines+=['CONFIG_IPV6=y','CONFIG_PACKAGE_miniupnpd-nftables=y','CONFIG_PACKAGE_luci-app-upnp=y',
-        '# CONFIG_PACKAGE_miniupnpd-iptables is not set','# CONFIG_PACKAGE_luci-i18n-upnp-zh-cn is not set']
-config.write_text('\n'.join(lines)+'\n')
+if not packages_only:
+    config=target/'.config';lines=config.read_text().splitlines()
+    keys=('CONFIG_PACKAGE_miniupnpd','CONFIG_PACKAGE_miniupnpd-nftables','CONFIG_PACKAGE_miniupnpd-iptables',
+          'CONFIG_PACKAGE_luci-app-upnp','CONFIG_PACKAGE_luci-i18n-upnp-zh-cn','CONFIG_IPV6')
+    lines=[line for line in lines if not any(re.match(r'^(?:# )?'+re.escape(key)+r'(?:=| is not set$)',line) for key in keys)]
+    lines+=['CONFIG_IPV6=y','CONFIG_PACKAGE_miniupnpd-nftables=y','CONFIG_PACKAGE_luci-app-upnp=y',
+            '# CONFIG_PACKAGE_miniupnpd-iptables is not set','# CONFIG_PACKAGE_luci-i18n-upnp-zh-cn is not set']
+    config.write_text('\n'.join(lines)+'\n')
 for name in ('.packageinfo','.packagedeps','.config-package.in'):
     (target/'tmp'/name).unlink(missing_ok=True)
-print('UPnP 替换完成；接下来执行 make defconfig。中文词典已包含在 luci-app-upnp 中。')
+print('UPnP 源码替换完成；请在固件配置选择 miniupnpd-nftables 和 luci-app-upnp。' if packages_only else 'UPnP 替换完成；接下来执行 make defconfig。中文词典已包含在 luci-app-upnp 中。')
 PY

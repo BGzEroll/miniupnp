@@ -6,7 +6,7 @@
 - `applications/luci-app-upnp/`：23.05 页面，内置标准简体中文 LMO 翻译，读取真实 nft JSON、展示 IPv6 Pinhole，通过 root 专用控制接口删除实际映射。
 - `scripts/`：SDK 构建与 CI 包替换入口。
 - `tests/`：隔离拓扑、协议转发、PassWall 规则共存、浏览器与资源测试。
-- `ci/`：360T7 工作流替换补丁和接入说明。
+- `ci/`：Load_custom_feeds.sh 拉取片段和接入说明。
 - `sources.json`、`reports/upstream.md`：源码锁定及选用理由。
 - `reports/`：实际通过/失败记录、日志、规则和浏览器证据。
 - [测试报告](reports/TEST-REPORT.md)：最终结果、修复过程及尚未验证的范围。
@@ -116,4 +116,4 @@ IDLE_SECONDS=3600 ./tests/run-vm-tests.sh root@192.168.114.210
 
 ## 接入自己的 CI
 
-[360T7 CI 接入说明](ci/README.md)提供针对现有工作流的补丁。将 `artifacts/upnp-ci-overlay.tar.gz` 解压到 CI 仓库根目录，再应用其中的工作流补丁。替换入口为 `scripts/install-to-openwrt.sh OPENWRT_ROOT`，在 feeds 安装、自定义配置加载之后执行；SDK 构建也使用同一入口。源码替换会选择 miniupnpd-nftables、luci-app-upnp 和 IPv6，移除旧包链接并保留其他软件包配置。
+推送本项目到 GitHub 后，将 [拉取片段](ci/Load_custom_feeds-upnp.sh) 追加到 CI 的 `script/Load_custom_feeds.sh`，填入真实仓库地址和分支。它在 feeds 更新前安装两个包；后续 feeds 安装保留自维护版本。固件配置选择 miniupnpd-nftables、luci-app-upnp 和 IPv6，无需新增工作流步骤。完整操作见 [CI 接入说明](ci/README.md)。
