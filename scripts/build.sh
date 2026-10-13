@@ -22,7 +22,8 @@ fi
 [ "$(git -C "$TASK_CORE" rev-parse HEAD)" = "$TASK_CORE_COMMIT" ] || { echo 'Unexpected core recipe revision' >&2; exit 1; }
 mkdir -p "$TASK_SDK/package/libs"
 cp -a "$TASK_CORE/package/libs/libmnl" "$TASK_CORE/package/libs/libnftnl" "$TASK_SDK/package/libs/"
-cat > "$TASK_SDK/feeds.conf.default" <<'EOT'
+printf 'src-link --force custom_upnp %s\n' "$TASK_ROOT" > "$TASK_SDK/feeds.conf.default"
+cat >> "$TASK_SDK/feeds.conf.default" <<'EOT'
 src-git packages https://github.com/immortalwrt/packages.git^9d567f8ed5f99833e4bffe734e047d0a01b57ce5
 src-git luci https://github.com/immortalwrt/luci.git^d4189db0d76c02e24087298327ec40a59fcfb2aa
 EOT
@@ -41,13 +42,14 @@ CONFIG_PACKAGE_libcap-ng=y
 CONFIG_PACKAGE_libmnl=y
 CONFIG_PACKAGE_libnftnl=y
 EOT
-"$TASK_ROOT/scripts/install-to-openwrt.sh" "$TASK_SDK"
-(cd "$TASK_SDK" && make defconfig && make package/custom-upnp/miniupnpd/clean && make package/custom-upnp/miniupnpd/compile -j"${JOBS:-4}" V=s)
+(cd "$TASK_SDK" && ./scripts/feeds update custom_upnp && ./scripts/feeds install -p custom_upnp miniupnpd luci-app-upnp)
+(cd "$TASK_SDK" && make defconfig && make package/feeds/custom_upnp/miniupnpd/clean && make package/feeds/custom_upnp/miniupnpd/compile -j"${JOBS:-4}" V=s)
 # LuCI consists of data files and is built through the SDK package recipe.
 # Its existing runtime dependencies are not rebuilt or upgraded on the VM.
-(cd "$TASK_SDK/package/custom-upnp/luci-app-upnp" && make TOPDIR="$TASK_SDK" compile V=s)
-cp "$TASK_SDK"/bin/packages/x86_64/base/miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk "$TASK_ROOT/artifacts/"
-cp "$TASK_SDK"/bin/packages/x86_64/base/luci-app-upnp_23.05-custom-4_all.ipk "$TASK_ROOT/artifacts/"
+(cd "$TASK_SDK/package/feeds/custom_upnp/luci-app-upnp" && make TOPDIR="$TASK_SDK" compile V=s)
+find "$TASK_SDK/bin/packages/x86_64" -type f \
+    \( -name 'miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk' -o -name 'luci-app-upnp_23.05-custom-4_all.ipk' \) \
+    -exec cp -t "$TASK_ROOT/artifacts" {} +
 for old in luci-app-upnp_23.05-custom-3_all.ipk miniupnpd-nftables_2.3.11-git20261009-2_x86_64.ipk miniupnpd-nftables_2.3.11-git20261009-1_x86_64.ipk luci-app-upnp_23.05-custom-1_all.ipk luci-app-upnp_23.05-custom-2_all.ipk; do
 	[ ! -f "$TASK_ROOT/artifacts/$old" ] || mv "$TASK_ROOT/artifacts/$old" "$TASK_WORK/"
 done

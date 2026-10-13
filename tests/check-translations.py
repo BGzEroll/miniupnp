@@ -6,7 +6,7 @@ import pathlib
 import re
 
 root = pathlib.Path(__file__).resolve().parent.parent
-package = root / 'applications/luci-app-upnp'
+package = root / 'luci-app-upnp'
 catalog = {}
 key = value = None
 field = None

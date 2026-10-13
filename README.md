@@ -6,16 +6,47 @@
 
 | 目录 | 内容 |
 |---|---|
-| net/miniupnpd | 包定义、服务集成、默认配置和源码补丁 |
-| applications/luci-app-upnp | LuCI 页面、RPC 与中文翻译 |
-| scripts | SDK 构建与源码替换工具 |
+| miniupnpd | 包定义、服务集成、默认配置和源码补丁 |
+| luci-app-upnp | LuCI 页面、RPC 与中文翻译 |
+| scripts | 可选的本地 SDK 构建工具 |
 | tests | 可复用的协议、生命周期、浏览器及共存测试工具 |
 | docs | 上游对照与测试说明 |
 | licenses | 上游许可证 |
 
 源码版本、SDK、feeds 与补丁校验值固定在 [sources.json](sources.json)。上游基线为 MiniUPnP 2.3.11 后的 f8c4f4c3320820e615b281147b3043f66c195f17。
 
-## 构建
+## OpenWrt / ImmortalWrt feed 接入
+
+本仓库是标准的 OpenWrt 包 feed，CI 只需添加包源并使用 OpenWrt 自带的 feeds 工具，不调用本仓库的任何脚本。
+
+在 23.05 源码的 feeds.conf.default 最前面添加：
+
+```text
+src-git --force custom_upnp https://github.com/BGzEroll/miniupnp.git;master
+```
+
+然后在全新的源码树中执行：
+
+```sh
+./scripts/feeds update -a
+./scripts/feeds install -a
+```
+
+custom_upnp 放在最前面以优先提供同名包，--force 允许覆盖源码树中的同名核心包。自维护包会链接到 package/feeds/custom_upnp/。在固件配置中选择：
+
+```text
+CONFIG_IPV6=y
+CONFIG_PACKAGE_miniupnpd-nftables=y
+CONFIG_PACKAGE_luci-app-upnp=y
+# CONFIG_PACKAGE_miniupnpd-iptables is not set
+# CONFIG_PACKAGE_luci-i18n-upnp-zh-cn is not set
+```
+
+随后执行 make defconfig，再按正常流程下载和编译。中文翻译包含在 luci-app-upnp 内。BGzErol-OpenWRT-CI 的 23.05 x86 和 360 T7 已按此方式配置。
+
+本地开发可将第一行替换为 src-link --force custom_upnp /home/bgzerol/openwrt/upnp，再使用相同的 feeds 流程；其余包源保持原值。
+
+## 可选的本地 SDK 构建
 
 在 Linux x86_64 上执行：
 

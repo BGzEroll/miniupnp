@@ -13,7 +13,7 @@ import pathlib,shutil,sys
 p=pathlib.Path(sys.argv[1]);shutil.rmtree(p,ignore_errors=True);p.mkdir(parents=True)
 PY
 tar -xzf "$TASK_SDK/dl/miniupnp-f8c4f4c3320820e615b281147b3043f66c195f17.tar.gz" -C "$TASK_TEST_SOURCE" --strip-components=1
-for patchfile in "$TASK_ROOT"/net/miniupnpd/patches/*.patch; do patch -d "$TASK_TEST_SOURCE" -p1 < "$patchfile"; done
+for patchfile in "$TASK_ROOT"/miniupnpd/patches/*.patch; do patch -d "$TASK_TEST_SOURCE" -p1 < "$patchfile"; done
 export STAGING_DIR_HOST="$TASK_SDK/staging_dir/host"
 export STAGING_DIR="$TASK_TARGET"
 export STAGING_PREFIX="$TASK_TARGET/usr"
