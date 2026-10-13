@@ -16,7 +16,7 @@
 | SSDP MX=0 | 8f13b7a，上游 Changelog 关联 CVE-2026-107159 |
 | PinholeVerification 堆溢出、PCP option 解析、nft userdata 长度 | 2.3.11 正式版内的修复；上游/打包 PR 引用 CVE-2026-5720 |
 
-完整 commit 列表见 [upstream-commits.txt](upstream-commits.txt)，所有完整 SHA 可核对 `sources.json` 的源码 commit 树。发布版基础 commit 为 `b91c025446d3ec3d9161cd56c91e200484af7906`。
+完整源码基线与补丁校验值见 [sources.json](../sources.json)；详细调查记录已随原始测试报告归档。发布版基础 commit 为 `b91c025446d3ec3d9161cd56c91e200484af7906`。
 
 ## OpenWrt 与未合并 PR
 

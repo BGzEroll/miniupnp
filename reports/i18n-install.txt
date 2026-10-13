@@ -1,4 +1,0 @@
-Upgrading luci-app-upnp on root from 23.05-custom-1 to 23.05-custom-2...
-Configuring luci-app-upnp.
--rw-r--r--    1 1000     1000          2216 Oct 10 05:54 /usr/lib/lua/luci/i18n/upnp.zh-cn.lmo
-9490

@@ -8,4 +8,4 @@
 - 本地修改：forward hook 放到 chain-pre，接口从 IIF/ifindex 改为 IIFNAME，IPv6 增加 counter，userdata 使用标准 nft comment TLV；未新增自定义名称前缀。
 - 未启用 PCP PEER，因此省略上游 OpenWrt 的 upnp_postrouting 空链。
 
-实际规则见 [luci-fixture.nft](luci-fixture.nft)，来自 VM 内隔离实验，现已清理。
+实际规则已在 VM 隔离实验中验证，实验现已清理；原始 nft 记录随历史测试报告在仓库外归档。

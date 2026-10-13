@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "/tmp/passwall.py", line 4, in <module>
-    import pathlib
-  File "/usr/lib/python3.11/pathlib.py", line 14, in <module>
-ModuleNotFoundError: No module named 'urllib'

@@ -2,6 +2,7 @@
 set -eu
 TASK_ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 TASK_VM=root@192.168.114.210
+mkdir -p "$TASK_ROOT/reports"
 scp -O "$TASK_ROOT/tests/lab.sh" "$TASK_ROOT/tests/integration.py" "$TASK_ROOT/tests/passwall.py" "$TASK_ROOT/tests/passwall-driver.sh" "$TASK_VM:/tmp/"
 ssh "$TASK_VM" 'set -e; test "$(uci -q get passwall.@global[0].enabled)" = 0; test -z "$(uci changes passwall)"; test ! -d /root/upnp-passwall-backup; mkdir /root/upnp-passwall-backup; cp /etc/config/passwall /root/upnp-passwall-backup/config; sysctl -n net.bridge.bridge-nf-call-iptables > /root/upnp-passwall-backup/bridge4 2>/dev/null || :; sysctl -n net.bridge.bridge-nf-call-ip6tables > /root/upnp-passwall-backup/bridge6 2>/dev/null || :; if [ -f /var/etc/passwall.include ]; then cp /var/etc/passwall.include /root/upnp-passwall-backup/include; fi'
 restore_vm() {

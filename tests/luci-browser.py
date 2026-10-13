@@ -12,6 +12,7 @@ from playwright.sync_api import sync_playwright
 
 VM = 'root@192.168.114.210'
 REPORTS = pathlib.Path(__file__).resolve().parent.parent / 'reports'
+REPORTS.mkdir(parents=True, exist_ok=True)
 LOCALE = os.environ.get('BROWSER_LOCALE', 'en-US')
 SUFFIX = '-zh' if LOCALE.lower().startswith('zh') else ''
 

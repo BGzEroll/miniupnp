@@ -1,6 +1,0 @@
-PASS PassWall rules coexist with dual-stack UPnP mappings 
-PASS Isolated public WAN inbound mappings bypass PassWall proxy policy 
-PASS Repeated fw4 reload preserves both tables and UPnP IDs 
-PASS PassWall stop and rule reload leave fw4 UPnP rules intact 
-PASS Proxy hooks are active while mapped inbound traffic stays direct 
-PASS Deleting all mappings leaves no UPnP residual rules 

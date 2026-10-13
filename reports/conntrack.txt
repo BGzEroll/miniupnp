@@ -1,6 +1,0 @@
-ipv4     2 tcp      6 119 TIME_WAIT src=198.19.0.2 dst=198.19.0.1 sport=44106 dport=42000 packets=5 bytes=292 src=198.18.0.2 dst=198.19.0.2 sport=42000 dport=44106 packets=5 bytes=292 [ASSURED] mark=0 zone=0 use=2
-ipv4     2 tcp      6 119 TIME_WAIT src=198.19.0.2 dst=198.19.0.1 sport=47472 dport=43000 packets=5 bytes=292 src=198.18.0.2 dst=198.19.0.2 sport=42001 dport=47472 packets=5 bytes=292 [ASSURED] mark=0 zone=0 use=2
-ipv4     2 udp      17 59 src=198.19.0.2 dst=198.19.0.1 sport=49828 dport=42000 packets=1 bytes=52 src=198.18.0.2 dst=198.19.0.2 sport=42000 dport=49828 packets=1 bytes=52 mark=0 zone=0 use=2
-ipv4     2 tcp      6 118 TIME_WAIT src=198.19.0.2 dst=198.19.0.1 sport=44106 dport=42000 packets=5 bytes=292 src=198.18.0.2 dst=198.19.0.2 sport=42000 dport=44106 packets=5 bytes=292 [ASSURED] mark=0 zone=0 use=2
-ipv4     2 tcp      6 118 TIME_WAIT src=198.19.0.2 dst=198.19.0.1 sport=47472 dport=43000 packets=5 bytes=292 src=198.18.0.2 dst=198.19.0.2 sport=42001 dport=47472 packets=5 bytes=292 [ASSURED] mark=0 zone=0 use=2
-ipv4     2 udp      17 59 src=198.19.0.2 dst=198.19.0.1 sport=39560 dport=43000 packets=1 bytes=52 src=198.18.0.2 dst=198.19.0.2 sport=42001 dport=39560 packets=1 bytes=52 mark=0 zone=0 use=2

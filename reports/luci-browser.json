@@ -1,8 +1,0 @@
-{
-  "status": "PASS",
-  "url": "http://192.168.114.210/cgi-bin/luci/admin/services/upnp",
-  "js_errors": [],
-  "displayed_rules": "Protocol\tExternal Port\tClient Address\tHost\tClient Port\tDescription\t\nIPv4 TCP\t51910\t198.18.0.2\tUnknown\t51911\tupnp-lab\t\nDelete\n\nIPv6 TCP\t\u2014\tfd42:100::2\tUnknown\t51912\tIGD2 pinhole\t\nDelete",
-  "delete_preserved_pid": "14055",
-  "enabled_save_apply": true
-}

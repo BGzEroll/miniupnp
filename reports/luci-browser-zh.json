@@ -1,9 +1,0 @@
-{
-  "status": "PASS",
-  "locale": "zh-CN",
-  "url": "http://192.168.114.210/cgi-bin/luci/admin/services/upnp",
-  "js_errors": [],
-  "displayed_rules": "\u534f\u8bae\t\u5916\u90e8\u7aef\u53e3\t\u5ba2\u6237\u7aef\u5730\u5740\t\u4e3b\u673a\t\u5ba2\u6237\u7aef\u7aef\u53e3\t\u63cf\u8ff0\t\nIPv4 TCP\t51910\t198.18.0.2\t\u672a\u77e5\t51911\tupnp-lab\t\n\u5220\u9664\n\nIPv6 TCP\t\u2014\tfd42:100::2\t\u672a\u77e5\t51912\tIGD2 pinhole\t\n\u5220\u9664",
-  "delete_preserved_pid": "11168",
-  "enabled_save_apply": true
-}

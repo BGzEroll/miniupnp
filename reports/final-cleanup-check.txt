@@ -1,1 +1,0 @@
-PASS: network/firewall/upnpd restored, no lab namespaces, enabled and running

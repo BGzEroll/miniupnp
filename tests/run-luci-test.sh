@@ -3,6 +3,7 @@
 set -eu
 TASK_ROOT=$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)
 TASK_VM=root@192.168.114.210
+mkdir -p "$TASK_ROOT/reports"
 TASK_BROWSER_PYTHON=${BROWSER_PYTHON:-python3}
 scp -O "$TASK_ROOT/tests/lab.sh" "$TASK_ROOT/tests/integration.py" "$TASK_VM:/tmp/"
 ssh "$TASK_VM" '/tmp/lab.sh setup'

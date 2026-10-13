@@ -1,4 +1,0 @@
-PASS: clean rebuild of the updated LuCI IPK has identical SHA256.
-05b4f4539918de4160736654ed8aa4556d014afd198e7cc9349d479b3960e59d  ./libcap-ng_0.8.3-2_x86_64.ipk
-9c7df548f84f0d85dcc1c7244a296889024f1b995bb86b3d021eb2740970aa13  ./luci-app-upnp_23.05-custom-2_all.ipk
-2e845e28f53cc2e76f24aa929df3419393a98c7b02fb51f1c4b51b803496ad8b  ./miniupnpd-nftables_2.3.11-git20261009-1_x86_64.ipk

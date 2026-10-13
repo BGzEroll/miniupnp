@@ -1,8 +1,0 @@
-{
-  "status": "PASS",
-  "package": "miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk",
-  "default_comments": [
-    "Allow high ports",
-    "Default deny"
-  ]
-}
