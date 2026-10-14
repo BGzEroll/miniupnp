@@ -18,11 +18,12 @@ if [ ! -f "$TASK_SDK/rules.mk" ]; then
 fi
 if [ ! -d "$TASK_CORE/.git" ]; then
 	git clone --depth 1 --branch v23.05.4 --filter=blob:none --sparse https://github.com/immortalwrt/immortalwrt.git "$TASK_CORE"
-	git -C "$TASK_CORE" sparse-checkout set package/libs/libmnl package/libs/libnftnl
 fi
 [ "$(git -C "$TASK_CORE" rev-parse HEAD)" = "$TASK_CORE_COMMIT" ] || { echo 'Unexpected core recipe revision' >&2; exit 1; }
-mkdir -p "$TASK_SDK/package/libs"
+git -C "$TASK_CORE" sparse-checkout set package/libs/libmnl package/libs/libnftnl package/utils/util-linux
+mkdir -p "$TASK_SDK/package/libs" "$TASK_SDK/package/utils"
 cp -a "$TASK_CORE/package/libs/libmnl" "$TASK_CORE/package/libs/libnftnl" "$TASK_SDK/package/libs/"
+cp -a "$TASK_CORE/package/utils/util-linux" "$TASK_SDK/package/utils/"
 # Expose only the two recipes; the project root also contains the SDK cache.
 mkdir -p "$TASK_FEED"
 for recipe in miniupnpd luci-app-upnp; do
@@ -48,9 +49,10 @@ CONFIG_PACKAGE_luci-app-upnp=m
 CONFIG_PACKAGE_libcap-ng=y
 CONFIG_PACKAGE_libmnl=y
 CONFIG_PACKAGE_libnftnl=y
+CONFIG_PACKAGE_libuuid=y
 EOT
 (cd "$TASK_SDK" && make defconfig)
-for package in miniupnpd-nftables luci-app-upnp; do
+for package in miniupnpd-nftables luci-app-upnp libuuid; do
 	grep -Eq "^CONFIG_PACKAGE_$package=[ym]$" "$TASK_SDK/.config" || {
 		echo "Package not selected after defconfig: $package" >&2
 		exit 1
@@ -60,12 +62,12 @@ done
 # LuCI consists of data files and is built through the SDK package recipe.
 # Its existing runtime dependencies are not rebuilt or upgraded on the VM.
 (cd "$TASK_SDK/package/feeds/custom_upnp/luci-app-upnp" && make TOPDIR="$TASK_SDK" compile V=s)
-for package in miniupnpd-nftables_2.3.11-git20261009-4_x86_64.ipk luci-app-upnp_23.05-custom-5_all.ipk; do
+for package in miniupnpd-nftables_2.3.11-git20261009-5_x86_64.ipk luci-app-upnp_23.05-custom-5_all.ipk 'libuuid_*.ipk'; do
 	TASK_IPK=$(find "$TASK_SDK/bin/packages/x86_64" -type f -name "$package" -print -quit)
 	[ -n "$TASK_IPK" ] || { echo "Missing build artifact: $package" >&2; exit 1; }
 	cp "$TASK_IPK" "$TASK_ROOT/artifacts/"
 done
-for old in miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk luci-app-upnp_23.05-custom-4_all.ipk luci-app-upnp_23.05-custom-3_all.ipk miniupnpd-nftables_2.3.11-git20261009-2_x86_64.ipk miniupnpd-nftables_2.3.11-git20261009-1_x86_64.ipk luci-app-upnp_23.05-custom-1_all.ipk luci-app-upnp_23.05-custom-2_all.ipk; do
+for old in miniupnpd-nftables_2.3.11-git20261009-4_x86_64.ipk miniupnpd-nftables_2.3.11-git20261009-3_x86_64.ipk luci-app-upnp_23.05-custom-4_all.ipk luci-app-upnp_23.05-custom-3_all.ipk miniupnpd-nftables_2.3.11-git20261009-2_x86_64.ipk miniupnpd-nftables_2.3.11-git20261009-1_x86_64.ipk luci-app-upnp_23.05-custom-1_all.ipk luci-app-upnp_23.05-custom-2_all.ipk; do
 	[ ! -f "$TASK_ROOT/artifacts/$old" ] || mv "$TASK_ROOT/artifacts/$old" "$TASK_WORK/"
 done
 cp "$TASK_SDK"/bin/packages/x86_64/packages/libcap-ng_*.ipk "$TASK_ROOT/artifacts/"

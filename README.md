@@ -56,7 +56,7 @@ CONFIG_PACKAGE_luci-app-upnp=y
 
 脚本自动下载并校验 ImmortalWrt 23.05.4 x86_64 SDK，使用 GCC 12.3.0/musl、libmnl 1.0.5 和 libnftnl 1.2.6。主机需要常见 OpenWrt SDK 构建依赖，包括 make、gcc/g++、git、curl、Python 3、perl、patch、xz、file、rsync 等；首次构建需要约 4 GB 空间。
 
-SDK 和下载缓存位于 .work/，IPK 与校验值输出到 artifacts/；两者不加入 Git。运行依赖为 libc、libmnl、libnftnl、libcap-ng、fw4 及现有 LuCI/RPC 组件。未提供 iptables 变体，未启用 PCP PEER。
+SDK 和下载缓存位于 .work/，IPK 与校验值输出到 artifacts/；两者不加入 Git。运行依赖为 libc、libmnl、libnftnl、libcap-ng、libuuid、fw4 及现有 LuCI/RPC 组件。构建脚本使用固定核心仓库中的 util-linux 配方提供 libuuid，并将其 IPK 一并输出。未提供 iptables 变体，未启用 PCP PEER。
 
 ## 安装与使用
 

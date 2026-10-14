@@ -72,3 +72,9 @@ BROWSER_PYTHON=/path/to/playwright/python ./tests/run-delete-tests.sh
 最终版本完整回归 45/45 通过（主协议 28、生命周期 8、扩展 9），包括真实双栈 TCP/UDP 转发、租约到期、fw4 reload、服务重启、同名 WAN 设备重建及安全边界。另完成 320 次并发双栈 PCP 创建/删除；本轮空闲观察为 60 秒，RSS 1048 → 1044 KiB、FD 保持 14、空闲 CPU ticks 增量 0、PID 不变且无残留规则。该时长不等同于多天稳定性证明。
 
 正常 LuCI 双栈列表、实际删除及保存应用的禁用/再启用也通过。测试结束逐项核对 network/firewall/upnpd 与安装前备份一致；无实验 namespace、故障库或故障进程残留，定制服务启用并运行，列表为空。
+
+## libuuid 打包依赖修复（2026-10-14）
+
+完整固件 CI 的旧版 -3 在 IPK 打包检查时报缺少 libuuid.so.1 依赖声明。固定上游 configure 会自动检测 uuid；之前的隔离 SDK 日志显示 uuid not found，因此没有覆盖存在该库时的构建路径。现在补回上游原有的 +libuuid 依赖，MiniUPnPd 包修订号更新为 -5，LuCI 版本不变。
+
+本地构建脚本同步提供固定核心仓库中的 util-linux 配方，兼顾已有 sparse checkout 缓存；检查 libuuid 包选择并将其 IPK 一同输出。此次只完成脚本语法、静态检查、版本与引用一致性检查，未执行新版本的 SDK 编译、VM 升级或完整固件 CI。上节的构建及 VM 结果属于 -4 版本。
