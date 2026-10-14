@@ -5,6 +5,7 @@
 'require uci';
 'require rpc';
 'require form';
+'require ui';
 
 var callInitAction, callUpnpGetStatus, callUpnpDeleteRule, handleDelRule;
 
@@ -25,15 +26,31 @@ callUpnpDeleteRule = rpc.declare({
 	object: 'luci.upnp',
 	method: 'delete_rule',
 	params: [ 'token' ],
-	expect: { result : "OK" },
+	expect: { result : "Failed" },
 });
 
 handleDelRule = function(num, ev) {
-	dom.parent(ev.currentTarget, '.tr').style.opacity = 0.5;
-	ev.currentTarget.classList.add('spinning');
-	ev.currentTarget.disabled = true;
-	ev.currentTarget.blur();
-	callUpnpDeleteRule(num);
+	var button = ev.currentTarget, row = dom.parent(button, '.tr');
+	row.style.opacity = 0.5;
+	button.classList.add('spinning');
+	button.disabled = true;
+	button.blur();
+	return callUpnpDeleteRule(num).then(function(result) {
+		if (result != 'OK' && result != 'Not found')
+			ui.addNotification(null, E('p', _('Failed to delete the mapping. Please try again.')), 'error');
+	}, function() {
+		ui.addNotification(null, E('p', _('The deletion request did not complete. Refresh the list to confirm its status.')), 'error');
+	}).then(function() {
+		return callUpnpGetStatus();
+	}).then(L.bind(function(status) {
+		this.poll_status(document, [status]);
+	}, this), function() {
+		ui.addNotification(null, E('p', _('Failed to refresh the mapping list.')), 'error');
+	}).finally(function() {
+		row.style.opacity = '';
+		button.classList.remove('spinning');
+		button.disabled = false;
+	});
 };
 
 return view.extend({
@@ -45,6 +62,7 @@ return view.extend({
 	},
 
 	poll_status: function(nodes, data) {
+		var view = this;
 
 		var rules = Array.isArray(data[0].rules) ? data[0].rules : [];
 
@@ -58,7 +76,7 @@ return view.extend({
 				'%h'.format(rule.descr),
 				E('button', {
 					'class': 'btn cbi-button-remove',
-					'click': L.bind(handleDelRule, this, rule.num)
+					'click': L.bind(handleDelRule, view, rule.num)
 				}, [ _('Delete') ])
 			];
 		});
@@ -102,7 +120,7 @@ return view.extend({
 					'%h'.format(rule.descr),
 					E('button', {
 						'class': 'btn cbi-button-remove',
-						'click': L.bind(handleDelRule, this, rule.num)
+						'click': L.bind(handleDelRule, view, rule.num)
 					}, [ _('Delete') ])
 				];
 			});

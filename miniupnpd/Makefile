@@ -4,7 +4,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=miniupnpd
 PKG_VERSION:=2.3.11-git20261009
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 UPSTREAM_COMMIT:=f8c4f4c3320820e615b281147b3043f66c195f17
 PKG_SOURCE:=miniupnp-$(UPSTREAM_COMMIT).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/miniupnp/miniupnp/tar.gz/$(UPSTREAM_COMMIT)?

@@ -76,7 +76,8 @@ return { 'luci.upnp': {
 			if (!fd) return { result: 'Failed' };
 			const response = trim(fd.read('all'));
 			fd.close();
-			return { result: response == 'OK' ? 'OK' : 'Failed' };
+			return { result: response == 'OK' ? 'OK' :
+			                 response == 'NOT_FOUND' ? 'Not found' : 'Failed' };
 		}
 	}
 } };

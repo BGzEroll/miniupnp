@@ -75,5 +75,6 @@ IPv4/IPv6 租约文件分别为 /var/run/miniupnpd.leases 和 /var/run/miniupnpd
 - fw4 reload 向已有 daemon 发送恢复信号；配置未变化时避免重复重启，冷启动等待 LAN 就绪。
 - 保留禁用状态的 procd 配置触发器，LuCI 可重新启用服务。
 - LuCI 展示真实双栈规则，通过权限为 0600 的本地控制 socket 删除映射。
+- IPv4 删除在同一 nft 事务中完成；删除结果传递到 LuCI，失败保留租约，已不存在时正常刷新。
 
 详见 [上游与补丁说明](docs/upstream.md)、[nft 命名对照](docs/nft-format.md)和[测试结果与复现](docs/testing.md)。fw4 reload 与租约恢复之间存在短暂规则空窗；已建立连接遵循正常 conntrack 行为。

@@ -254,3 +254,12 @@ msgstr "记录正常的端口映射请求"
 
 msgid "Grant access to UPnP IGD & PCP/NAT-PMP"
 msgstr "授予访问 UPnP IGD 和 PCP/NAT-PMP 的权限"
+
+msgid "Failed to delete the mapping. Please try again."
+msgstr "删除映射失败，请重试。"
+
+msgid "The deletion request did not complete. Refresh the list to confirm its status."
+msgstr "删除请求未完成，请刷新列表确认实际状态。"
+
+msgid "Failed to refresh the mapping list."
+msgstr "刷新映射列表失败。"

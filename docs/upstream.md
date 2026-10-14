@@ -39,3 +39,5 @@
 nft forward hook 放在 `chain-pre/forward`，以便新 IPv6 请求到达动态 Pinhole 链；原 `chain-post` 会在 WAN zone 已拒绝后才运行。删除无用 postrouting 链。fw4 的 post-script include 只向服务发送恢复信号。
 
 发现后复核确认：IPv6 lease_file6_add 中的“先加 epoch 再减 uptime”是正确的时间基准转换，没有把它误改成相对租约。实际缺陷是续期时写了传入 uid 到所有行、重复换行、查询缺失条目返回成功以及计数器缓存等。
+
+`140-nft-delete-errors-and-atomic-ipv4.patch`：IPv4 DNAT 与对应放行规则在同一 nft 事务中删除，只请求末条操作的成功 ACK；失败后重置接收状态并只读确认规则是否仍在，不重发删除。IPv6 同样检查删除结果。已不存在与实际失败分开返回，失败保留租约；过期清理仅移除内核确认删除成功的 UID 对应记录。包仍仅启用 PCP MAP/ANNOUNCE，PCP PEER 不参与构建。

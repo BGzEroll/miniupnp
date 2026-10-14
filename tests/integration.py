@@ -201,6 +201,8 @@ def run_suite(output):
                     ok(mapping(ep,ip,pn,120));assert nft('upnp_prerouting').count('dnat ip to')==1
                     ct=sh('cat','/proc/net/nf_conntrack')
                     lines=[x for x in ct.splitlines() if 'src=198.19.0.2 ' in x and 'dst=198.19.0.1 ' in x and 'dport='+str(ep)+' ' in x and 'src='+LAN4+' ' in x and 'sport='+str(ip)+' ' in x]
+                    if not lines:
+                        with open(output+'.conntrack-failure','w') as f:f.write(ct)
                     assert lines,('missing conntrack DNAT evidence',ep,ip)
                     with open(output+'.conntrack','a') as f:f.write('\n'.join(lines)+'\n')
                     ok(delete(ep,pn));traffic(ep,proto,expected=False)
